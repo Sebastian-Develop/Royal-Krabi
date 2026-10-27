@@ -1,0 +1,1 @@
+import{Z as e,d as t,f as n}from"./index-CBIPxDlr.js";var r=e();function i({title:e,notice:i,sections:a}){return(0,r.jsxs)(r.Fragment,{children:[(0,r.jsx)(n,{title:e}),(0,r.jsxs)(`main`,{className:`container legal-content`,children:[i&&(0,r.jsx)(t,{children:i}),a.map(e=>(0,r.jsxs)(`section`,{children:[(0,r.jsx)(`h2`,{children:e.title}),e.body]},e.title))]})]})}export{i as t};

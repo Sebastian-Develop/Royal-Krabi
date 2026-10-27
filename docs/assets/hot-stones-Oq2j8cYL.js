@@ -1,0 +1,1 @@
+var e=`/Royal-Krabi/assets/hot-stones-BzzG1RBc.jpg`;export{e as t};

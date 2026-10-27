@@ -1,0 +1,1 @@
+import{t as e}from"./shop-products-CoqgY4IM.js";import{Z as t}from"./index-CBIPxDlr.js";var n=t(),r=()=>(0,n.jsx)(e,{kinds:[`five`,`ten`],title:`Abos`,intro:`Regelmäßige Erholung mit Preisvorteil – für Ihre persönliche Auszeit.`,lead:`Vorausbezahlte Mehrfachkarten ohne automatische Verlängerung.`});export{r as component};

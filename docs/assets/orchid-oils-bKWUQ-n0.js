@@ -1,0 +1,1 @@
+var e=`/Royal-Krabi/assets/orchid-oils-B1PWbQYH.jpg`;export{e as t};

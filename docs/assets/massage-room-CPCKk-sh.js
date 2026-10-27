@@ -1,0 +1,1 @@
+var e=`/Royal-Krabi/assets/massage-room-kAyBCosr.jpg`;export{e as t};

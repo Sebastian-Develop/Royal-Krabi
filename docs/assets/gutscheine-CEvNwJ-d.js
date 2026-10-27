@@ -1,0 +1,1 @@
+import{t as e}from"./shop-products-CoqgY4IM.js";import{Z as t}from"./index-CBIPxDlr.js";var n=t(),r=()=>(0,n.jsx)(e,{kinds:[`voucher`],title:`Gutscheine`,intro:`Schenken Sie Zeit, Ruhe und Wohlbefinden – für besondere Menschen.`,lead:`Gutscheine für ausgewählte Massagen – ein Geschenk, das in Erinnerung bleibt.`});export{r as component};
