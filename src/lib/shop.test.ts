@@ -19,6 +19,15 @@ test("Pickup needs no postal address; post needs a German address", () => {
   expect(orderSchema.safeParse({ ...input, delivery: "post", street: "Teststraße 1", postalCode: "63075", city: "Offenbach" }).success).toBe(true);
   expect(orderSchema.safeParse({ ...input, country: "AT" }).success).toBe(false);
 });
+test("Missing or wrong entries report understandable German messages", () => {
+  const first = (values: Record<string, unknown>) => orderSchema.safeParse({ ...input, ...values }).error?.issues[0]?.message;
+  expect(first({ acceptTerms: false })).toBe("Bitte akzeptieren Sie unsere AGB.");
+  expect(first({ acknowledgePrivacy: false })).toBe("Bitte nehmen Sie die Datenschutzerklärung zur Kenntnis.");
+  expect(first({ phone: "12" })).toBe("Bitte geben Sie Ihre Telefonnummer an.");
+  expect(first({ email: "keine-email" })).toBe("Bitte geben Sie eine gültige E-Mail-Adresse an.");
+  expect(first({ delivery: "post", street: "Teststraße 1", postalCode: "6307", city: "Offenbach" })).toBe("Bitte geben Sie eine fünfstellige deutsche Postleitzahl an.");
+  expect(first({ delivery: "post", street: "Teststraße 1", postalCode: "63075", city: "" })).toBe("Bitte geben Sie den Ort an.");
+});
 test("Reject unknown product, missing acceptance and unsafe links", () => {
   expect(orderSchema.safeParse({ ...input, productId: "unknown" }).success).toBe(false);
   expect(orderSchema.safeParse({ ...input, acceptTerms: false }).success).toBe(false);

@@ -31,7 +31,7 @@ export function isPublicComingSoon(hostname: string) {
 }
 
 export function isLaunchPage(path: string) {
-  return ["/", "/impressum", "/datenschutz"].includes(path);
+  return ["/", "/impressum", "/datenschutz", "/jobs"].includes(path);
 }
 
 /** Exact page allowlist; no query string can bypass the public launch gate. */

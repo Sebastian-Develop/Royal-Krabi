@@ -13,6 +13,7 @@ function useAnsicht(): { ansicht?: "website" | "coming-soon" } {
   return ansicht === "website" || ansicht === "coming-soon" ? { ansicht } : {};
 }
 import { contact, mailHref, mailHrefPlain, mapsRouteHint, mapsRouteUrl } from "@/lib/contact";
+import { vatNotice } from "@/lib/content";
 import { CONSENT_EVENT, loadTidio, readConsent, saveConsent } from "@/lib/consent";
 
 export const address = `${contact.street}, ${contact.city}`;
@@ -109,6 +110,11 @@ export function Field({ label, type = "text", children, required = true }: { lab
 }
 
 export function Notice({ children }: { children: ReactNode }) { return <div className="notice">{children}</div>; }
+
+/** Subtle VAT note placed directly beneath every displayed price list. */
+export function PriceVatNotice({ align = "start" }: { align?: "start" | "center" }) {
+  return <p className={`price-vat-notice${align === "center" ? " price-vat-center" : ""}`}>{vatNotice}</p>;
+}
 
 export function openCookieSettings() { window.dispatchEvent(new Event("rk-open-cookies")); }
 

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowUpRight, Briefcase } from "lucide-react";
 import logoMark from "@/assets/royal-krabi-logo-trimmed.webp";
 import { contact } from "@/lib/contact";
 import { launch, websiteStartStatus } from "@/lib/launch";
@@ -20,6 +20,7 @@ export function ComingSoon() {
       <h1 id="launch-title">{launch.heading}</h1>
       <p className="launch-welcome">{launch.welcome}</p>
       <p className="launch-description">{launch.introduction}</p>
+      <div className="launch-jobs"><Link to="/jobs" search={{ ansicht: "coming-soon" }} className="btn btn-gold"><Briefcase size={18}/> JOBS BEI ROYAL KRABI – JETZT BEWERBEN</Link></div>
     </section>
     <section className="launch-update" aria-labelledby="launch-update-title">
       <span className="launch-status"><span aria-hidden="true"/>{websiteStartStatus()}</span>

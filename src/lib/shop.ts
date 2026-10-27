@@ -20,10 +20,10 @@ export const orderSchema = z.object({
   productId: text(80).refine(id => shopProducts.some(p => p.id === id), "Bitte wählen Sie ein vorhandenes Produkt."),
   fullName: text(100).min(2, "Bitte geben Sie Ihren Vor- und Nachnamen an.").refine(name => name.split(/\s+/).length >= 2, "Bitte geben Sie Vor- und Nachnamen an."),
   email: text(255).email("Bitte geben Sie eine gültige E-Mail-Adresse an."),
-  phone: text(40).min(5).regex(/^[+\d\s()./-]+$/, "Bitte geben Sie eine gültige Telefonnummer an."),
-  delivery: z.enum(["pickup", "post"]), street: text(150), postalCode: text(5), city: text(100), country: z.literal("DE"),
+  phone: text(40).min(5, "Bitte geben Sie Ihre Telefonnummer an.").regex(/^[+\d\s()./-]+$/, "Bitte geben Sie eine gültige Telefonnummer an."),
+  delivery: z.enum(["pickup", "post"], { message: "Bitte wählen Sie eine Lieferart." }), street: text(150), postalCode: text(5), city: text(100), country: z.literal("DE"),
   recipient: text(100), giftText: text(500), notes: text(1000),
-  acceptTerms: z.literal(true), acknowledgePrivacy: z.literal(true),
+  acceptTerms: z.boolean().refine(v => v === true, "Bitte akzeptieren Sie unsere AGB."), acknowledgePrivacy: z.boolean().refine(v => v === true, "Bitte nehmen Sie die Datenschutzerklärung zur Kenntnis."),
 }).superRefine((data, ctx) => {
   if (data.delivery !== "post") return;
   if (data.street.length < 3) ctx.addIssue({ code: "custom", path: ["street"], message: "Bitte geben Sie Straße und Hausnummer an." });

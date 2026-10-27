@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { PageHero } from "@/components/site";
+import { PageHero, PriceVatNotice } from "@/components/site";
 import { Button } from "@/components/ui/button";
 import { cartLines, cartTotal, MAX_QUANTITY, useCart } from "@/lib/cart";
 import { pageHead } from "@/lib/meta";
@@ -22,7 +22,7 @@ function Page() {
         <span className="cart-subtotal">Zwischensumme: <strong>{l.subtotal} €</strong></span>
         <Button variant="ghost" className="cart-remove" onClick={() => remove(l.product.id)}><Trash2 size={16}/> Entfernen</Button>
       </li>)}</ul>
-      <div className="cart-total"><p>Versand innerhalb Deutschlands mit DHL, kostenfrei.</p><p className="cart-total-sum">Gesamtsumme: <strong>{cartTotal(cart)} €</strong></p></div>
+      <div className="cart-total"><p>Versand innerhalb Deutschlands mit DHL, kostenfrei.</p><p className="cart-total-sum">Gesamtsumme: <strong>{cartTotal(cart)} €</strong></p></div><PriceVatNotice/>
       <div className="cart-actions"><Link className="btn btn-outline" to="/gutscheine">Weitere Gutscheine</Link><Link className="btn btn-outline" to="/abos">Weitere Abos</Link><Link className="btn btn-gold" to="/checkout">Zur Kasse</Link></div>
     </>}
   </main></>;

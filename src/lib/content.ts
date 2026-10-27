@@ -3,6 +3,8 @@ export const categoryBadges = { classic: "KLASSISCH", premium: "PREMIUM", signat
 export const partialBadge = "FOKUS";
 export const pairBadge = "KLASSISCH · PREMIUM-OPTION";
 export const upgradeBadge = "PREMIUM-OPTION";
+/** Price note shown beneath every displayed price list. */
+export const vatNotice = "Alle Preise inklusive Mehrwertsteuer.";
 export const massages: Massage[] = [
   { name: "Royal Thai Massage – ohne Öl", desc: "Traditionelle Thai-Massage mit gezielten Drucktechniken und Dehnbewegungen.", category: "classic", prices: [[60,59],[90,85],[120,109]] },
   { name: "Royal Thai Massage", desc: "Traditionelle Massagetechniken, durchgeführt mit Öl – das Öl ist im Preis enthalten.", category: "classic", prices: [[60,65],[90,92],[120,119]] },

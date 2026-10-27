@@ -9,7 +9,7 @@ test("Flyer destination stays the permanent primary address", () => {
   expect(launch.permanentUrl).toBe("https://royalkrabi-thaimassage.de");
 });
 test("Only home and the two legal pages remain public during launch", () => {
-  for (const path of ["/", "/impressum", "/datenschutz"]) {
+  for (const path of ["/", "/impressum", "/datenschutz", "/jobs"]) {
     expect(shouldRedirectDuringLaunch(new URL(`https://royalkrabi-thaimassage.de${path}`))).toBe(false);
   }
   for (const path of ["/massagen-preise", "/gutscheine", "/abos", "/warenkorb", "/checkout", "/termine", "/cookies", "/api/public/test", "/impressum/extra", "/?ansicht=website"]) {

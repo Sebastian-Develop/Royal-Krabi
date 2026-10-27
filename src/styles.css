@@ -401,3 +401,18 @@ a.address-link-block{display:inline-block}
 .launch-footer a:hover,.launch-contact-links a:hover{color:var(--gold)}
 @media(max-width:760px){.launch-header{padding:26px 16px 30px}.launch-header img{width:clamp(205px,62vw,290px)}.coming-soon{width:calc(100% - 40px);padding-top:20px;padding-bottom:36px}.coming-soon h1{font-size:44px}.launch-divider{margin-bottom:24px}.launch-welcome{font-size:25px;margin-top:24px}.launch-description{font-size:14px;line-height:1.8}.launch-introduction{padding-bottom:30px}.launch-update{padding:24px 16px}.launch-update h2{font-size:27px}.launch-update p{font-size:12px}.launch-contact-links{flex-direction:column;align-items:center;gap:0}.launch-contact-links a{font-size:12px}.launch-address{font-size:12px}.launch-footer{width:calc(100% - 40px);flex-direction:column;text-align:center;gap:12px}.launch-contact{padding-top:28px}}
 @media(max-width:360px){.launch-header img{width:clamp(210px,66vw,225px)}.coming-soon h1{font-size:38px}.launch-contact-links a{font-size:10px}.launch-contact-links a>svg:last-child{display:none}}
+
+.launch-jobs{display:flex;justify-content:center;margin-top:28px}.launch-jobs .btn{max-width:100%;text-align:center;white-space:normal}
+
+.price-vat-notice{display:flex;align-items:center;gap:10px;margin:18px 0 0;font-size:.82rem;line-height:1.5;letter-spacing:.02em;color:color-mix(in oklab,var(--muted-foreground) 72%,var(--gold-soft))}
+.price-vat-notice::before,.price-vat-notice::after{content:"";width:20px;height:1px;background:var(--gold);opacity:.6;flex:none}
+.price-vat-notice::after{display:none}
+.price-vat-center{justify-content:center}
+.price-vat-center::after{display:block}
+@media(max-width:760px){.price-vat-notice{font-size:.78rem}}
+.form-confirmation{display:flex;align-items:flex-start;gap:14px;padding:20px 22px;margin:20px 0;border:1px solid var(--gold);border-left-width:3px;border-radius:6px;background:color-mix(in oklab,var(--gold) 16%,var(--panel));box-shadow:0 10px 30px color-mix(in oklab,var(--gold) 12%,transparent)}
+.form-confirmation>svg{flex:none;color:var(--gold);margin-top:2px}
+.form-confirmation h3{font-size:1.2rem;line-height:1.25;color:var(--gold-soft);margin-bottom:8px}
+.form-confirmation p{font-size:.92rem;line-height:1.65;color:var(--foreground)}
+.form-error{padding:16px 18px;margin:18px 0;border:1px solid oklch(.58 .14 32);border-left-width:3px;border-radius:6px;background:color-mix(in oklab,oklch(.5 .15 30) 16%,var(--panel));color:var(--foreground);font-size:.9rem;line-height:1.6}
+@media(max-width:760px){.form-confirmation{padding:18px}.form-confirmation h3{font-size:1.1rem}.form-confirmation p{font-size:.88rem}.form-error{padding:15px 16px;font-size:.86rem}}
