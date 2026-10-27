@@ -3209,7 +3209,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 500;
-  src: url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-ext-500-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-ext-500-normal.woff") format("woff");
+  src: url("../assets/cormorant-garamond-latin-ext-500-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-ext-500-normal.woff") format("woff");
   unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -3218,7 +3218,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 500;
-  src: url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-500-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-500-normal.woff") format("woff");
+  src: url("../assets/cormorant-garamond-latin-500-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-500-normal.woff") format("woff");
   unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -3254,7 +3254,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 600;
-  src: url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-ext-600-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-ext-600-normal.woff") format("woff");
+  src: url("../assets/cormorant-garamond-latin-ext-600-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-ext-600-normal.woff") format("woff");
   unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -3263,7 +3263,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 600;
-  src: url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-normal.woff") format("woff");
+  src: url("../assets/cormorant-garamond-latin-600-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-normal.woff") format("woff");
   unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -3299,7 +3299,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 700;
-  src: url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-ext-700-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-ext-700-normal.woff") format("woff");
+  src: url("../assets/cormorant-garamond-latin-ext-700-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-ext-700-normal.woff") format("woff");
   unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -3308,7 +3308,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 700;
-  src: url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-700-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-700-normal.woff") format("woff");
+  src: url("../assets/cormorant-garamond-latin-700-normal.woff2") format("woff2"), url("/node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-700-normal.woff") format("woff");
   unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -3344,7 +3344,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 400;
-  src: url("/node_modules/@fontsource/montserrat/files/montserrat-latin-ext-400-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-ext-400-normal.woff") format("woff");
+  src: url("../assets/montserrat-latin-ext-400-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-ext-400-normal.woff") format("woff");
   unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -3353,7 +3353,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 400;
-  src: url("/node_modules/@fontsource/montserrat/files/montserrat-latin-400-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-400-normal.woff") format("woff");
+  src: url("../assets/montserrat-latin-400-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-400-normal.woff") format("woff");
   unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -3389,7 +3389,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 500;
-  src: url("/node_modules/@fontsource/montserrat/files/montserrat-latin-ext-500-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-ext-500-normal.woff") format("woff");
+  src: url("../assets/montserrat-latin-ext-500-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-ext-500-normal.woff") format("woff");
   unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -3398,7 +3398,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 500;
-  src: url("/node_modules/@fontsource/montserrat/files/montserrat-latin-500-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-500-normal.woff") format("woff");
+  src: url("../assets/montserrat-latin-500-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-500-normal.woff") format("woff");
   unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -3434,7 +3434,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 600;
-  src: url("/node_modules/@fontsource/montserrat/files/montserrat-latin-ext-600-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-ext-600-normal.woff") format("woff");
+  src: url("../assets/montserrat-latin-ext-600-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-ext-600-normal.woff") format("woff");
   unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -3443,7 +3443,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 600;
-  src: url("/node_modules/@fontsource/montserrat/files/montserrat-latin-600-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-600-normal.woff") format("woff");
+  src: url("../assets/montserrat-latin-600-normal.woff2") format("woff2"), url("/node_modules/@fontsource/montserrat/files/montserrat-latin-600-normal.woff") format("woff");
   unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -3452,7 +3452,7 @@
   font-style: normal;
   font-weight: 400 700;
   font-display: swap;
-  src: url("/node_modules/@fontsource/montserrat/files/montserrat-latin-400-normal.woff2") format("woff2");
+  src: url("../assets/montserrat-latin-400-normal.woff2") format("woff2");
   unicode-range: U+2D, U+2010-2015, U+2212;
 }
 
@@ -5763,7 +5763,7 @@ body:before {
   content: "" !important;
   z-index: -10 !important;
   opacity: 1 !important;
-  background: #4a210f url("/__l5e/assets-v1/628e20bc-8147-4b52-b4a0-e5531372cf7c/royal-krabi-background.png") center / cover no-repeat !important;
+  background: #4a210f url("../assets/royal-krabi-background.png") center / cover no-repeat !important;
   display: block !important;
   position: fixed !important;
   inset: 0 !important;
@@ -5786,7 +5786,7 @@ body:before {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   background-color: #4a210f !important;
-  background-image: linear-gradient(#431d0c59, #431d0c59), url("/__l5e/assets-v1/628e20bc-8147-4b52-b4a0-e5531372cf7c/royal-krabi-background.png") !important;
+  background-image: linear-gradient(#431d0c59, #431d0c59), url("../assets/royal-krabi-background.png") !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
   background-size: auto, cover !important;
@@ -5794,7 +5794,7 @@ body:before {
 }
 
 .site-header.header-solid {
-  background-image: linear-gradient(#431d0c80, #431d0c80), url("/__l5e/assets-v1/628e20bc-8147-4b52-b4a0-e5531372cf7c/royal-krabi-background.png") !important;
+  background-image: linear-gradient(#431d0c80, #431d0c80), url("../assets/royal-krabi-background.png") !important;
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -5823,7 +5823,7 @@ body:before {
 
 .hero-watermark, .page-watermark, .footer-watermark, .section:before, .benefits:before, .split-feature:before, .location-band:after, .booking-cta:after {
   aspect-ratio: 1390 / 1195;
-  background: url("/__l5e/assets-v1/6af03517-c914-4a69-acbd-d7c24875a9f5/royal-krabi-watermark.png") center / contain no-repeat !important;
+  background: url("../assets/royal-krabi-watermark.png") center / contain no-repeat !important;
   height: auto !important;
 }
 
@@ -5846,7 +5846,7 @@ body:before {
   translate: -50% -50%;
   opacity: .2 !important;
   z-index: 1 !important;
-  background: url("/__l5e/assets-v1/6af03517-c914-4a69-acbd-d7c24875a9f5/royal-krabi-watermark.png") center / contain no-repeat !important;
+  background: url("../assets/royal-krabi-watermark.png") center / contain no-repeat !important;
   width: clamp(160px, 16vw, 220px) !important;
   top: 40% !important;
   left: 49% !important;
