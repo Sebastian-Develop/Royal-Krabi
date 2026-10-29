@@ -21,3 +21,7 @@
 - Exclude Bun test files from the browser application TypeScript program because Bun's global fetch augmentation conflicts with generated Cloud fetch adapters; run the tests separately with Bun.
 - Centralize interim launch copy and the public/full-site switch in the launch module; enforce the public exact-path allowlist at the server entry and root navigation boundary so draft pages cannot be opened directly while previews retain all existing routes.
 - Select launch presentation from the request hostname using an isomorphic helper, never forwarded headers or a public query bypass; preview-only view selection preserves internal full-site editing without creating customer accounts.
+- Protect applicant-email text with Gmail-only screen/difference blend wrappers, excluding images; fixed social-image cells and versioned URLs keep icons independent of text recoloring and stale image-proxy caches.
+
+## GitHub sync
+- Push site changes to github.com/Sebastian-Develop/Royal-Krabi (branch main) after each meaningful change via https://connector-gateway.lovable.dev/github with headers `Authorization: Bearer $LOVABLE_API_KEY` and `X-Connection-Api-Key: $GITHUB_API_KEY`; use Git Data API with `base_tree` and only changed files, since full-tree posts (155 entries) fail with 422.

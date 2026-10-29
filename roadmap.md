@@ -5,5 +5,6 @@
 - [x] MwSt.-Hinweis „Alle Preise inklusive Mehrwertsteuer." auf allen Preisseiten (27.10.2026)
 - [x] Klare Bestätigung nach Formular-Absenden (Jobs, Kasse) + verständliche Pflichtfeld-Fehler (27.10.2026)
 - [x] Aktuellen Stand erneut ins GitHub-Repository hochgeladen (27.10.2026, main 5c288eff)
-- [ ] Automatische Eingangsbestätigung an Bewerberadresse einrichten (29.10.2026)
-- [ ] Altersauswahl im Bewerbungsformular als Pflichtfeld (29.10.2026)
+- [x] Automatische Eingangsbestätigung an Bewerberadresse eingerichtet (29.10.2026)
+- [x] Altersauswahl im Bewerbungsformular als Pflichtfeld (29.10.2026)
+- [x] Bewerbungsbestätigung: Gmail-Farbschutz und feste Social-Symbolanzeige ergänzt; Browseransicht und nachgestellte Farbumkehr geprüft, echtes Gmail-Postfach noch ungetestet; nicht veröffentlicht.
