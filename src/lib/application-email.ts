@@ -70,10 +70,10 @@ export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: A
     .join("");
   const bg = abs(bgAsset.url);
 
-  const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>${esc(applicationConfirmationSubject)}</title>
+  const html = `<!doctype html><html lang="de" style="color-scheme:only light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"><title>${esc(applicationConfirmationSubject)}</title>
 </head>
-<body style="margin:0;padding:0;font-variant-numeric:lining-nums;background:${MAHOGANY}">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${MAHOGANY}" background="${bg}" style="background:${MAHOGANY} url('${bg}') center top/cover no-repeat">
+<body bgcolor="${MAHOGANY}" style="margin:0;padding:0;font-variant-numeric:lining-nums;color-scheme:only light;background-color:${MAHOGANY};background-image:linear-gradient(${MAHOGANY},${MAHOGANY})">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${MAHOGANY}" background="${bg}" style="background-color:${MAHOGANY};background-image:url('${bg}'),linear-gradient(${MAHOGANY},${MAHOGANY});background-position:center top;background-size:cover;background-repeat:no-repeat">
 <tr><td align="center" style="padding:28px 20px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;font-family:${BODY}">
 <tr><td style="padding:0 0 6px;text-align:center">
