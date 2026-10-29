@@ -1,4 +1,24 @@
 import { contact } from "./contact";
+import bgAsset from "@/assets/email/email-bg.jpg.asset.json";
+import logoAsset from "@/assets/email/email-logo.png.asset.json";
+import igAsset from "@/assets/email/icon-instagram.png.asset.json";
+import ttAsset from "@/assets/email/icon-tiktok.png.asset.json";
+import fbAsset from "@/assets/email/icon-facebook.png.asset.json";
+import liAsset from "@/assets/email/icon-linkedin.png.asset.json";
+import taAsset from "@/assets/email/icon-tripadvisor.png.asset.json";
+
+/** E-Mail-Programme brauchen absolute Bildadressen. */
+const SITE = "https://royalkrabi-thaimassage.de";
+const abs = (u: string) => (u.startsWith("http") ? u : SITE + u);
+
+/** Social-Media-Profile; leere Adresse = Symbol wird ohne Link gezeigt. */
+export const emailSocials = [
+  { name: "Instagram", icon: abs(igAsset.url), href: "" },
+  { name: "TikTok", icon: abs(ttAsset.url), href: "" },
+  { name: "Facebook", icon: abs(fbAsset.url), href: "" },
+  { name: "LinkedIn", icon: abs(liAsset.url), href: "" },
+  { name: "Tripadvisor", icon: abs(taAsset.url), href: "" },
+];
 
 /**
  * Automatische Eingangsbestätigung für Bewerberinnen und Bewerber.
@@ -20,7 +40,8 @@ const MAHOGANY = "#4A210F";
 const PANEL = "#431D0C";
 const GOLD = "#F1C66B";
 const CREAM = "#F7E8C8";
-const DARK = "#3F1B0D";
+const DISPLAY = "'Cinzel','Cormorant Garamond',Georgia,'Times New Roman',serif";
+const BODY = "'Cormorant Garamond',Georgia,'Times New Roman',serif";
 
 const esc = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
@@ -28,7 +49,7 @@ const esc = (s: string) =>
 const divider = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 0"><tr><td style="border-top:1px solid ${GOLD};opacity:.75">&nbsp;</td><td width="18" align="center" style="color:${GOLD};font-size:11px;line-height:1;vertical-align:middle;padding:0 6px">&#9670;</td><td style="border-top:1px solid ${GOLD};opacity:.75">&nbsp;</td></tr></table>`;
 
 const row = (label: string, value: string) =>
-  `<tr><td style="padding:7px 0;color:${GOLD};font-size:12px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;vertical-align:top;padding-right:16px">${esc(label)}</td><td style="padding:7px 0;color:${CREAM};font-size:15px;line-height:1.55">${esc(value)}</td></tr>`;
+  `<tr><td style="padding:7px 0;color:${GOLD};font-family:${DISPLAY};font-size:12px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;vertical-align:top;padding-right:16px">${esc(label)}</td><td style="padding:7px 0;color:${CREAM};font-size:17px;line-height:1.5">${esc(value)}</td></tr>`;
 
 /** Betreff und HTML-Text der Eingangsbestätigung; der Name erscheint nur, wenn er angegeben wurde. */
 export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: ApplicationEmailData) => {
@@ -40,30 +61,40 @@ export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: A
     row("Unterlagen", hasCv ? "Lebenslauf liegt bei" : "Kein Lebenslauf beigefügt"),
   ].join("");
 
-  const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(applicationConfirmationSubject)}</title></head>
-<body style="margin:0;padding:0;background:#ffffff">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff">
-<tr><td align="center" style="padding:28px 16px">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${MAHOGANY};border:1px solid ${GOLD};border-radius:14px;overflow:hidden;font-family:Georgia,'Times New Roman',serif">
-<tr><td style="background:${PANEL};padding:26px 28px;text-align:center">
-<div style="color:${GOLD};font-size:11px;letter-spacing:.22em;text-transform:uppercase">Royal Krabi</div>
-<div style="color:${CREAM};font-size:19px;letter-spacing:.06em;margin-top:6px">Serenity Thaimassage</div>
+  const socials = emailSocials
+    .map((x) => {
+      const img = `<img src="${x.icon}" width="34" height="34" alt="${x.name}" style="display:block;border:0;width:34px;height:34px">`;
+      return `<td style="padding:0 6px">${x.href ? `<a href="${esc(x.href)}" target="_blank" title="${x.name}">${img}</a>` : img}</td>`;
+    })
+    .join("");
+  const bg = abs(bgAsset.url);
+
+  const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>${esc(applicationConfirmationSubject)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body style="margin:0;padding:0;background:${MAHOGANY}">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${MAHOGANY}" background="${bg}" style="background:${MAHOGANY} url('${bg}') center top/cover no-repeat">
+<tr><td align="center" style="padding:36px 44px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:rgba(67,29,12,.86);border:1px solid ${GOLD};border-radius:14px;overflow:hidden;font-family:${BODY}">
+<tr><td style="padding:26px 28px 6px;text-align:center">
+<img src="${abs(logoAsset.url)}" width="170" alt="Royal Krabi Serenity Thaimassage" style="display:inline-block;border:0;width:170px;height:auto">
 ${divider}
 </td></tr>
-<tr><td style="padding:30px 28px 8px">
-<h1 style="margin:0 0 14px;color:${GOLD};font-size:22px;line-height:1.3;font-weight:600">Vielen Dank für Ihre Bewerbung.</h1>
-<p style="margin:0 0 14px;color:${CREAM};font-size:15px;line-height:1.65">${greeting} wir haben Ihre Bewerbung erhalten. Ihre Unterlagen sind bei uns eingegangen und wir melden uns schnellstmöglich bei Ihnen.</p>
-<p style="margin:0 0 22px;color:${CREAM};font-size:15px;line-height:1.65">Falls Sie etwas ergänzen oder berichtigen möchten, antworten Sie einfach auf diese E-Mail.</p>
+<tr><td style="padding:22px 28px 8px">
+<h1 style="margin:0 0 14px;color:${GOLD};font-family:${DISPLAY};font-size:22px;line-height:1.3;font-weight:600;text-align:center">Vielen Dank für Ihre Bewerbung.</h1>
+<p style="margin:0 0 14px;color:${CREAM};font-size:17px;line-height:1.6">${greeting} wir haben Ihre Bewerbung erhalten. Ihre Unterlagen sind bei uns eingegangen und wir melden uns schnellstmöglich bei Ihnen.</p>
+<p style="margin:0 0 22px;color:${CREAM};font-size:17px;line-height:1.6">Falls Sie etwas ergänzen oder berichtigen möchten, antworten Sie einfach auf diese E-Mail.</p>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${PANEL};border:1px solid rgba(241,198,107,.45);border-radius:10px;padding:4px 16px;margin:0 0 24px">
-<tr><td colspan="2" style="padding:12px 0 2px;color:${GOLD};font-size:11px;letter-spacing:.16em;text-transform:uppercase">Ihre Angaben</td></tr>
+<tr><td colspan="2" style="padding:12px 0 2px;color:${GOLD};font-family:${DISPLAY};font-size:11px;letter-spacing:.16em;text-transform:uppercase">Ihre Angaben</td></tr>
 ${rows}
 <tr><td colspan="2" style="padding:0 0 12px">&nbsp;</td></tr>
 </table>
-<p style="margin:0 0 6px;color:${GOLD};font-size:11px;letter-spacing:.16em;text-transform:uppercase">Royal Krabi Serenity Thaimassage</p>
-<p style="margin:0 0 10px;color:${CREAM};font-size:14px;line-height:1.6">${esc(contact.street)}, ${esc(contact.city)}<br>${esc(contact.hoursOpen)} &middot; ${esc(contact.hoursClosed)}<br>Telefon: ${esc(contact.phone)} &middot; ${esc(contact.email)}</p>
+<p style="margin:0 0 6px;color:${GOLD};font-family:${DISPLAY};font-size:12px;letter-spacing:.14em;text-transform:uppercase">Royal Krabi Serenity Thaimassage</p>
+<p style="margin:0 0 10px;color:${CREAM};font-size:16px;line-height:1.6">${esc(contact.street)}, ${esc(contact.city)}<br>${esc(contact.hoursOpen)} &middot; ${esc(contact.hoursClosed)}<br>Telefon: ${esc(contact.phone)} &middot; ${esc(contact.email)}</p>
 </td></tr>
-<tr><td style="background:${PANEL};border-top:1px solid rgba(241,198,107,.4);padding:16px 28px;text-align:center">
-<div style="color:${GOLD};font-size:11px;letter-spacing:.14em;text-transform:uppercase">Offenbacher Str. 32 &middot; 63075 Offenbach am Main</div>
+<tr><td style="background:${PANEL};border-top:1px solid rgba(241,198,107,.4);padding:20px 28px 18px;text-align:center">
+<table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin:0 auto 14px"><tr>${socials}</tr></table>
+<div style="color:${GOLD};font-family:${DISPLAY};font-size:11px;letter-spacing:.14em;text-transform:uppercase">Offenbacher Str. 32 &middot; 63075 Offenbach am Main</div>
 </td></tr>
 </table>
 </td></tr>
