@@ -32,6 +32,7 @@ import { Route as TreuepassRouteImport } from './routes/treuepass'
 import { Route as UeberUnsRouteImport } from './routes/ueber-uns'
 import { Route as WarenkorbRouteImport } from './routes/warenkorb'
 import { Route as WiderrufRouteImport } from './routes/widerruf'
+import { Route as ApiPublicBewerbungRouteImport } from './routes/api/public/bewerbung'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -148,6 +149,11 @@ const WiderrufRoute = WiderrufRouteImport.update({
   path: '/widerruf',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicBewerbungRoute = ApiPublicBewerbungRouteImport.update({
+  id: '/api/public/bewerbung',
+  path: '/api/public/bewerbung',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -173,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/ueber-uns': typeof UeberUnsRoute
   '/warenkorb': typeof WarenkorbRoute
   '/widerruf': typeof WiderrufRoute
+  '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -198,6 +205,7 @@ export interface FileRoutesByTo {
   '/ueber-uns': typeof UeberUnsRoute
   '/warenkorb': typeof WarenkorbRoute
   '/widerruf': typeof WiderrufRoute
+  '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -224,6 +232,7 @@ export interface FileRoutesById {
   '/ueber-uns': typeof UeberUnsRoute
   '/warenkorb': typeof WarenkorbRoute
   '/widerruf': typeof WiderrufRoute
+  '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/ueber-uns'
     | '/warenkorb'
     | '/widerruf'
+    | '/api/public/bewerbung'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/ueber-uns'
     | '/warenkorb'
     | '/widerruf'
+    | '/api/public/bewerbung'
   id:
     | '__root__'
     | '/'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '/ueber-uns'
     | '/warenkorb'
     | '/widerruf'
+    | '/api/public/bewerbung'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -327,6 +339,7 @@ export interface RootRouteChildren {
   UeberUnsRoute: typeof UeberUnsRoute
   WarenkorbRoute: typeof WarenkorbRoute
   WiderrufRoute: typeof WiderrufRoute
+  ApiPublicBewerbungRoute: typeof ApiPublicBewerbungRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -492,6 +505,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WiderrufRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/bewerbung': {
+      id: '/api/public/bewerbung'
+      path: '/api/public/bewerbung'
+      fullPath: '/api/public/bewerbung'
+      preLoaderRoute: typeof ApiPublicBewerbungRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -519,6 +539,7 @@ const rootRouteChildren: RootRouteChildren = {
   UeberUnsRoute: UeberUnsRoute,
   WarenkorbRoute: WarenkorbRoute,
   WiderrufRoute: WiderrufRoute,
+  ApiPublicBewerbungRoute: ApiPublicBewerbungRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

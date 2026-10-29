@@ -39,6 +39,7 @@ export function shouldRedirectDuringLaunch(url: URL) {
   if (!isPublicComingSoon(url.hostname) || isLaunchPage(url.pathname)) return false;
   // Hosting serves bundled/static resources separately; keep their fallback requests usable.
   if (/^\/(?:assets|__l5e\/assets-v1)\//.test(url.pathname)) return false;
+  if (url.pathname === "/api/public/bewerbung") return false;
   if (["/favicon.png", "/favicon.ico", "/robots.txt"].includes(url.pathname)) return false;
   return true;
 }
