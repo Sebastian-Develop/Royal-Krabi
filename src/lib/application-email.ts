@@ -1,5 +1,5 @@
 import { contact } from "./contact";
-import bgAsset from "@/assets/email/email-bg.jpg.asset.json";
+import bgAsset from "@/assets/email/email-bg-center.jpg.asset.json";
 import logoAsset from "@/assets/email/email-logo.png.asset.json";
 import igAsset from "@/assets/email/icon-instagram.png.asset.json";
 import ttAsset from "@/assets/email/icon-tiktok.png.asset.json";
