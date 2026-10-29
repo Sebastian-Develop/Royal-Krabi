@@ -46,7 +46,7 @@ const GOLD = "#F1C66B";
 /** Sämtliche Schriften – Überschriften, Beschriftungen und Fließtexte – in reinem Weiß. */
 const CREAM = "#FFFFFF";
 /** Inline text fill limits automatic dark-mode recoloring in supporting email clients. */
-const WHITE_TEXT = `color:${CREAM} !important;-webkit-text-fill-color:${CREAM}`;
+const WHITE_TEXT = `color:${CREAM} !important;-webkit-text-fill-color:${CREAM};mso-style-textfill-type:solid;mso-style-textfill-fill-color:${CREAM};mso-style-textfill-fill-alpha:100%`;
 /** Gmail iOS ignores color-scheme and can invert even important inline colors.
  * Screen/difference layers protect only text; never blend the original artwork. */
 const protectText = (html: string) => `<span class="gmail-blend-screen" style="display:block"><span class="gmail-blend-difference" style="display:block;${WHITE_TEXT}">${html}</span></span>`;
@@ -58,7 +58,9 @@ const NUM = "font-family:'Montserrat',Arial,Helvetica,sans-serif;font-variant-nu
 const esc = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
 
-const divider = `<img src="${abs(dividerAsset.url)}" width="1200" height="80" alt="" role="presentation" style="display:block;border:0;width:100%;height:auto;margin:18px 0 0">`;
+// Word-based Outlook ignores responsive image sizing: use a proportionate
+// fixed-width version only there, leaving the full-width original elsewhere.
+const divider = `<!--[if mso]><img src="${abs(dividerAsset.url)}" width="560" height="37" alt="" role="presentation" style="display:block;border:0;width:560px;height:37px"><![endif]--><!--[if !mso]><!--><img src="${abs(dividerAsset.url)}" width="1200" height="80" alt="" role="presentation" style="display:block;border:0;width:100%;height:auto;margin:18px 0 0"><!--<![endif]-->`;
 
 const row = (label: string, value: string) =>
   `<tr><td style="padding:10px 0 2px;${WHITE_TEXT};font-family:${DISPLAY};font-size:12px;line-height:1.5;text-transform:uppercase">${protectText(esc(label))}</td></tr><tr><td style="padding:0 0 8px;${WHITE_TEXT};${NUM};font-size:15px;line-height:1.5;overflow-wrap:anywhere">${protectText(esc(value))}</td></tr>`;
@@ -83,24 +85,32 @@ export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: A
     .join("");
   const bg = abs(bgAsset.url);
 
-  const html = `<!doctype html><html lang="de" style="color-scheme:only light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"><title>${esc(applicationConfirmationSubject)}</title>
+  const html = `<!doctype html><html lang="de" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" style="color-scheme:only light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"><title>${esc(applicationConfirmationSubject)}</title>
+<!--[if mso]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><style>table {border-collapse:collapse;} td,p,h1 {mso-line-height-rule:at-least;} .gmail-blend-screen,.gmail-blend-difference {background:transparent !important;}</style><![endif]-->
 <style>
 :root { color-scheme: only light; supported-color-schemes: light; }
+body { width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+table { border-spacing:0; mso-table-lspace:0pt; mso-table-rspace:0pt; }
+img { -ms-interpolation-mode:bicubic; }
 u + .body .gmail-blend-screen { background:#000; mix-blend-mode:screen; }
 u + .body .gmail-blend-difference { background:#000; mix-blend-mode:difference; }
-body, table, td, h1, p, div, a { ${WHITE_TEXT}; }
+body, table, td, h1, p, div, span, a { ${WHITE_TEXT}; }
 a[x-apple-data-detectors], #MessageViewBody a { ${WHITE_TEXT}; text-decoration:none; }
 @media (prefers-color-scheme: dark) {
-  body, table, td, h1, p, div, a { ${WHITE_TEXT}; }
+  body, table, td, h1, p, div, span, a { ${WHITE_TEXT}; }
+  .email-background { background-color:${MAHOGANY} !important; }
 }
-[data-ogsc] body, [data-ogsc] table, [data-ogsc] td, [data-ogsc] h1, [data-ogsc] p, [data-ogsc] div, [data-ogsc] a { ${WHITE_TEXT}; }
+[data-ogsc] body, [data-ogsc] table, [data-ogsc] td, [data-ogsc] h1, [data-ogsc] p, [data-ogsc] div, [data-ogsc] span, [data-ogsc] a,
+[data-ogsb] body, [data-ogsb] table, [data-ogsb] td, [data-ogsb] h1, [data-ogsb] p, [data-ogsb] div, [data-ogsb] span, [data-ogsb] a { ${WHITE_TEXT}; }
+[data-ogsc] .email-background, [data-ogsb] .email-background { background-color:${MAHOGANY} !important; }
 </style></head>
 <body class="body" bgcolor="${MAHOGANY}" style="margin:0;padding:0;${WHITE_TEXT};font-variant-numeric:lining-nums;color-scheme:only light;background-color:${MAHOGANY};background-image:linear-gradient(${MAHOGANY},${MAHOGANY})">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${MAHOGANY}" background="${bg}" style="background-color:${MAHOGANY};background-image:url('${bg}'),linear-gradient(${MAHOGANY},${MAHOGANY});background-position:center top;background-size:cover;background-repeat:no-repeat">
+<!--[if mso]><v:background fill="true"><v:fill type="tile" src="${bg}" color="${MAHOGANY}"/></v:background><![endif]-->
+<table class="email-background" role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${MAHOGANY}" background="${bg}" style="background-color:${MAHOGANY};background-image:url('${bg}'),linear-gradient(${MAHOGANY},${MAHOGANY});background-position:center top;background-size:cover;background-repeat:no-repeat">
 <tr><td align="center" style="padding:28px 20px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;${WHITE_TEXT};font-family:${BODY}">
 <tr><td style="padding:0 0 6px;text-align:center">
-<img src="${abs(logoAsset.url)}" width="240" alt="Royal Krabi Serenity Thaimassage" style="display:inline-block;border:0;width:240px;max-width:100%;height:auto">
+<img src="${abs(logoAsset.url)}" width="240" height="206" alt="Royal Krabi Serenity Thaimassage" style="display:inline-block;border:0;width:240px;max-width:100%;height:auto">
 ${divider}
 </td></tr>
 <tr><td style="padding:22px 0 8px">

@@ -8,3 +8,4 @@
 - [x] Automatische Eingangsbestätigung an Bewerberadresse eingerichtet (29.10.2026)
 - [x] Altersauswahl im Bewerbungsformular als Pflichtfeld (29.10.2026)
 - [x] Bewerbungsbestätigung: Gmail-Farbschutz und feste Social-Symbolanzeige ergänzt; Browseransicht und nachgestellte Farbumkehr geprüft, echtes Gmail-Postfach noch ungetestet; nicht veröffentlicht.
+- [x] Gesamte Bewerbungsbestätigung mit Gmail-/Outlook-Farbschutz, Outlook-Hintergrund und stabilen Bildgrößen angepasst; Browservorschau geprüft, echte Gmail-/Outlook-Postfächer ungetestet; nicht veröffentlicht.
