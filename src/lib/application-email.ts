@@ -43,8 +43,8 @@ export interface ApplicationEmailData {
 
 const MAHOGANY = "#4A210F";
 const GOLD = "#F1C66B";
-/** Sämtliche Schriften – Überschriften, Beschriftungen und Fließtexte – in reinem Weiß. */
-const CREAM = "#FFFFFF";
+/** Sämtliche Schriften in dem Creme-Gold der Coming-soon-Überschrift (Vorgabe 29.10.2026). */
+const CREAM = "#EAD19F";
 /** Inline text fill limits automatic dark-mode recoloring in supporting email clients. */
 const WHITE_TEXT = `color:${CREAM} !important;-webkit-text-fill-color:${CREAM};mso-style-textfill-type:solid;mso-style-textfill-fill-color:${CREAM};mso-style-textfill-fill-alpha:100%`;
 /** Gmail iOS ignores color-scheme and can invert even important inline colors.
