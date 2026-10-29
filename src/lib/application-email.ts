@@ -43,9 +43,7 @@ export interface ApplicationEmailData {
 
 const MAHOGANY = "#4A210F";
 const GOLD = "#F1C66B";
-/** Überschriften und Beschriftungen in Schwarz. */
-const INK = "#000000";
-/** Alle Fließtexte in reinem Weiß. */
+/** Sämtliche Schriften – Überschriften, Beschriftungen und Fließtexte – in reinem Weiß. */
 const CREAM = "#FFFFFF";
 const DISPLAY = "'Cinzel','Cormorant Garamond',Georgia,'Times New Roman',serif";
 const BODY = "'Cormorant Garamond',Georgia,'Times New Roman',serif";
@@ -58,7 +56,7 @@ const esc = (s: string) =>
 const divider = `<img src="${abs(dividerAsset.url)}" width="1200" height="80" alt="" role="presentation" style="display:block;border:0;width:100%;height:auto;margin:18px 0 0">`;
 
 const row = (label: string, value: string) =>
-  `<tr><td style="padding:10px 0 2px;color:${INK};font-family:${DISPLAY};font-size:12px;line-height:1.5;text-transform:uppercase">${esc(label)}</td></tr><tr><td style="padding:0 0 8px;color:${CREAM};${NUM};font-size:15px;line-height:1.5;overflow-wrap:anywhere">${esc(value)}</td></tr>`;
+  `<tr><td style="padding:10px 0 2px;color:${CREAM};font-family:${DISPLAY};font-size:12px;line-height:1.5;text-transform:uppercase">${esc(label)}</td></tr><tr><td style="padding:0 0 8px;color:${CREAM};${NUM};font-size:15px;line-height:1.5;overflow-wrap:anywhere">${esc(value)}</td></tr>`;
 
 /** Betreff und HTML-Text der Eingangsbestätigung; der Name erscheint nur, wenn er angegeben wurde. */
 export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: ApplicationEmailData) => {
@@ -89,14 +87,14 @@ export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: A
 ${divider}
 </td></tr>
 <tr><td style="padding:22px 0 8px">
-<h1 style="margin:0 0 14px;color:${INK};font-family:${DISPLAY};font-size:22px;line-height:1.3;font-weight:600;text-align:center">Vielen Dank für Ihre Bewerbung.</h1>
+<h1 style="margin:0 0 14px;color:${CREAM};font-family:${DISPLAY};font-size:22px;line-height:1.3;font-weight:600;text-align:center">Vielen Dank für Ihre Bewerbung.</h1>
 <p style="margin:0 0 14px;color:${CREAM};font-size:17px;line-height:1.6">${greeting} wir haben Ihre Bewerbung erhalten. Ihre Unterlagen sind bei uns eingegangen und wir melden uns schnellstmöglich bei Ihnen.</p>
 <p style="margin:0 0 22px;color:${CREAM};font-size:17px;line-height:1.6">Falls Sie etwas ergänzen oder berichtigen möchten, antworten Sie einfach auf diese E-Mail.</p>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;margin:0 0 24px">
-<tr><td style="padding:12px 0 2px;color:${INK};font-family:${DISPLAY};font-size:13px;text-transform:uppercase">Ihre Angaben</td></tr>
+<tr><td style="padding:12px 0 2px;color:${CREAM};font-family:${DISPLAY};font-size:13px;text-transform:uppercase">Ihre Angaben</td></tr>
 ${rows}
 </table>
-<p style="margin:0 0 14px;color:${INK};font-family:${DISPLAY};font-size:16px;line-height:1.5">${esc(contact.name)}</p>
+<p style="margin:0 0 14px;color:${CREAM};font-family:${DISPLAY};font-size:16px;line-height:1.5">${esc(contact.name)}</p>
 <p style="margin:0 0 10px;color:${CREAM};${NUM};font-size:14px;line-height:1.7">Öffnungszeiten:<br>${esc(contact.hoursOpen)} &middot; ${esc(contact.hoursClosed)}<br>Telefon: <a href="${contact.phoneHref}" style="color:${CREAM};text-decoration:none">${esc(contact.phone)}</a> &middot; <a href="mailto:${contact.email}" style="color:${CREAM};text-decoration:none;white-space:nowrap">${esc(contact.email)}</a></p>
 </td></tr>
 <tr><td style="border-top:1px solid ${GOLD};padding:20px 0 0;text-align:center">
