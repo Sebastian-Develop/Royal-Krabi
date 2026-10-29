@@ -42,6 +42,8 @@ const GOLD = "#F1C66B";
 const CREAM = "#F7E8C8";
 const DISPLAY = "'Cinzel','Cormorant Garamond',Georgia,'Times New Roman',serif";
 const BODY = "'Cormorant Garamond',Georgia,'Times New Roman',serif";
+/** Zahlen (Telefon, Adresse, Zeiten) in gerader, gleich hoher Schrift wie auf der Website. */
+const NUM = "font-family:'Montserrat',Arial,Helvetica,sans-serif;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:'lnum' 1,'tnum' 1";
 
 const esc = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
@@ -49,7 +51,7 @@ const esc = (s: string) =>
 const divider = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 0"><tr><td style="border-top:1px solid ${GOLD};opacity:.75">&nbsp;</td><td width="18" align="center" style="color:${GOLD};font-size:11px;line-height:1;vertical-align:middle;padding:0 6px">&#9670;</td><td style="border-top:1px solid ${GOLD};opacity:.75">&nbsp;</td></tr></table>`;
 
 const row = (label: string, value: string) =>
-  `<tr><td style="padding:7px 0;color:${GOLD};font-family:${DISPLAY};font-size:12px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;vertical-align:top;padding-right:16px">${esc(label)}</td><td style="padding:7px 0;color:${CREAM};font-size:17px;line-height:1.5">${esc(value)}</td></tr>`;
+  `<tr><td style="padding:7px 0;color:${GOLD};font-family:${DISPLAY};font-size:12px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;vertical-align:top;padding-right:16px">${esc(label)}</td><td style="padding:7px 0;color:${CREAM};${NUM};font-size:15px;line-height:1.5">${esc(value)}</td></tr>`;
 
 /** Betreff und HTML-Text der Eingangsbestätigung; der Name erscheint nur, wenn er angegeben wurde. */
 export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: ApplicationEmailData) => {
@@ -70,9 +72,9 @@ export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: A
   const bg = abs(bgAsset.url);
 
   const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>${esc(applicationConfirmationSubject)}</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@400;500&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
 </head>
-<body style="margin:0;padding:0;background:${MAHOGANY}">
+<body style="margin:0;padding:0;font-variant-numeric:lining-nums;background:${MAHOGANY}">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${MAHOGANY}" background="${bg}" style="background:${MAHOGANY} url('${bg}') center top/cover no-repeat">
 <tr><td align="center" style="padding:36px 44px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:rgba(67,29,12,.86);border:1px solid ${GOLD};border-radius:14px;overflow:hidden;font-family:${BODY}">
@@ -90,7 +92,7 @@ ${rows}
 <tr><td colspan="2" style="padding:0 0 12px">&nbsp;</td></tr>
 </table>
 <p style="margin:0 0 6px;color:${GOLD};font-family:${DISPLAY};font-size:12px;letter-spacing:.14em;text-transform:uppercase">Royal Krabi Serenity Thaimassage</p>
-<p style="margin:0 0 10px;color:${CREAM};font-size:16px;line-height:1.6">${esc(contact.street)}, ${esc(contact.city)}<br>${esc(contact.hoursOpen)} &middot; ${esc(contact.hoursClosed)}<br>Telefon: ${esc(contact.phone)} &middot; ${esc(contact.email)}</p>
+<p style="margin:0 0 10px;color:${CREAM};${NUM};font-size:14px;line-height:1.7">${esc(contact.street)}, ${esc(contact.city)}<br>${esc(contact.hoursOpen)} &middot; ${esc(contact.hoursClosed)}<br>Telefon: ${esc(contact.phone)} &middot; ${esc(contact.email)}</p>
 </td></tr>
 <tr><td style="background:${PANEL};border-top:1px solid rgba(241,198,107,.4);padding:20px 28px 18px;text-align:center">
 <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin:0 auto 14px"><tr>${socials}</tr></table>
