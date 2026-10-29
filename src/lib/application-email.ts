@@ -1,1 +1,131 @@
-aW1wb3J0IHsgY29udGFjdCB9IGZyb20gIi4vY29udGFjdCI7CmltcG9ydCBiZ0Fzc2V0IGZyb20gIkAvYXNzZXRzL2VtYWlsL2VtYWlsLWJnLWNlbnRlci5qcGcuYXNzZXQuanNvbiI7CmltcG9ydCBkaXZpZGVyQXNzZXQgZnJvbSAiQC9hc3NldHMvZW1haWwvZW1haWwtZ29sZC1kaXZpZGVyLnBuZy5hc3NldC5qc29uIjsKaW1wb3J0IGxvZ29Bc3NldCBmcm9tICJAL2Fzc2V0cy9lbWFpbC9lbWFpbC1sb2dvLnBuZy5hc3NldC5qc29uIjsKaW1wb3J0IGlnQXNzZXQgZnJvbSAiQC9hc3NldHMvZW1haWwvaWNvbi1pbnN0YWdyYW0ucG5nLmFzc2V0Lmpzb24iOwppbXBvcnQgdHRBc3NldCBmcm9tICJAL2Fzc2V0cy9lbWFpbC9pY29uLXRpa3Rvay5wbmcuYXNzZXQuanNvbiI7CmltcG9ydCBmYkFzc2V0IGZyb20gIkAvYXNzZXRzL2VtYWlsL2ljb24tZmFjZWJvb2sucG5nLmFzc2V0Lmpzb24iOwppbXBvcnQgbGlBc3NldCBmcm9tICJAL2Fzc2V0cy9lbWFpbC9pY29uLWxpbmtlZGluLnBuZy5hc3NldC5qc29uIjsKaW1wb3J0IHRhQXNzZXQgZnJvbSAiQC9hc3NldHMvZW1haWwvaWNvbi10cmlwYWR2aXNvci5wbmcuYXNzZXQuanNvbiI7CgovKiogRS1NYWlsLVByb2dyYW1tZSBicmF1Y2hlbiBhYnNvbHV0ZSBCaWxkYWRyZXNzZW4uICovCmNvbnN0IFNJVEUgPSAiaHR0cHM6Ly9yb3lhbGtyYWJpLXRoYWltYXNzYWdlLmRlIjsKY29uc3QgYWJzID0gKHU6IHN0cmluZykgPT4gKHUuc3RhcnRzV2l0aCgiaHR0cCIpID8gdSA6IFNJVEUgKyB1KTsKCi8qKiBTb2NpYWwtTWVkaWEtUHJvZmlsZTsgbGVlcmUgQWRyZXNzZSA9IFN5bWJvbCB3aXJkIG9obmUgTGluayBnZXplaWd0LiAqLwpleHBvcnQgY29uc3QgZW1haWxTb2NpYWxzID0gWwogIHsgbmFtZTogIkluc3RhZ3JhbSIsIGljb246IGFicyhpZ0Fzc2V0LnVybCksIGhyZWY6ICIiIH0sCiAgeyBuYW1lOiAiVGlrVG9rIiwgaWNvbjogYWJzKHR0QXNzZXQudXJsKSwgaHJlZjogIiIgfSwKICB7IG5hbWU6ICJGYWNlYm9vayIsIGljb246IGFicyhmYkFzc2V0LnVybCksIGhyZWY6ICIiIH0sCiAgeyBuYW1lOiAiTGlua2VkSW4iLCBpY29uOiBhYnMobGlBc3NldC51cmwpLCBocmVmOiAiIiB9LAogIHsgbmFtZTogIlRyaXBhZHZpc29yIiwgaWNvbjogYWJzKHRhQXNzZXQudXJsKSwgaHJlZjogIiIgfSwKXTsKCi8qKgogKiBBdXRvbWF0aXNjaGUgRWluZ2FuZ3NiZXN0w6R0aWd1bmcgZsO8ciBCZXdlcmJlcmlubmVuIHVuZCBCZXdlcmJlci4KICogTnVyIGRpZXNlIGVpbmUgRS1NYWlsIGRhcmYgYW4gZGllIGltIEZvcm11bGFyIGFuZ2VnZWJlbmUgQWRyZXNzZSBnZWhlbjoKICogc2llIGJlc3TDpHRpZ3QgZGVuIEVpbmdhbmcgZWluZXIga29ua3JldGVuIEJld2VyYnVuZyB1bmQgZW50aMOkbHQga2VpbmUgV2VyYnVuZy4KICovCmV4cG9ydCBjb25zdCBhcHBsaWNhdGlvbkNvbmZpcm1hdGlvblN1YmplY3QgPSBgQmV3ZXJidW5nc2Vpbmdhbmcg4oCTICR7Y29udGFjdC5uYW1lfWA7CgpleHBvcnQgaW50ZXJmYWNlIEFwcGxpY2F0aW9uRW1haWxEYXRhIHsKICBuYW1lOiBzdHJpbmc7CiAgdGVsOiBzdHJpbmc7CiAgZW1haWw6IHN0cmluZzsKICBhcmVhPzogc3RyaW5nOwogIHR5cGU/OiBzdHJpbmc7CiAgaGFzQ3Y6IGJvb2xlYW47Cn0KCmNvbnN0IE1BSE9HQU5ZID0gIiM0QTIxMEYiOwpjb25zdCBHT0xEID0gIiNGMUM2NkIiOwovKiogw5xiZXJzY2hyaWZ0ZW4gdW5kIEJlc2NocmlmdHVuZ2VuIGluIFNjaHdhcnouICovCmNvbnN0IElOSyA9ICIjMDAwMDAwIjsKLyoqIEFsbGUgRmxpZcOfdGV4dGUgaW4gcmVpbmVtIFdlacOfLiAqLwpjb25zdCBDUkVBTSA9ICIjRkZGRkZGIjsKY29uc3QgRElTUExBWSA9ICInQ2luemVsJywnQ29ybW9yYW50IEdhcmFtb25kJyxHZW9yZ2lhLCdUaW1lcyBOZXcgUm9tYW4nLHNlcmlmIjsKY29uc3QgQk9EWSA9ICInQ29ybW9yYW50IEdhcmFtb25kJyxHZW9yZ2lhLCdUaW1lcyBOZXcgUm9tYW4nLHNlcmlmIjsKLyoqIFphaGxlbiAoVGVsZWZvbiwgQWRyZXNzZSwgWmVpdGVuKSBpbiBnZXJhZGVyLCBnbGVpY2ggaG9oZXIgU2NocmlmdCB3aWUgYXVmIGRlciBXZWJzaXRlLiAqLwpjb25zdCBOVU0gPSAiZm9udC1mYW1pbHk6J01vbnRzZXJyYXQnLEFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2ZvbnQtdmFyaWFudC1udW1lcmljOmxpbmluZy1udW1zIHRhYnVsYXItbnVtcztmb250LWZlYXR1cmUtc2V0dGluZ3M6J2xudW0nIDEsJ3RudW0nIDEiOwoKY29uc3QgZXNjID0gKHM6IHN0cmluZykgPT4KICBzLnJlcGxhY2UoL1smPD4iJ10vZywgKGMpID0+ICh7ICImIjogIiZhbXA7IiwgIjwiOiAiJmx0OyIsICI+IjogIiZndDsiLCAnIic6ICImcXVvdDsiLCAiJyI6ICImIzM5OyIgfSlbY10gPz8gYyk7Cgpjb25zdCBkaXZpZGVyID0gYDxpbWcgc3JjPSIke2FicyhkaXZpZGVyQXNzZXQudXJsKX0iIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjgwIiBhbHQ9IiIgcm9sZT0icHJlc2VudGF0aW9uIiBzdHlsZT0iZGlzcGxheTpibG9jaztib3JkZXI6MDt3aWR0aDoxMDAlO2hlaWdodDphdXRvO21hcmdpbjoxOHB4IDAgMCI+YDsKCmNvbnN0IHJvdyA9IChsYWJlbDogc3RyaW5nLCB2YWx1ZTogc3RyaW5nKSA9PgogIGA8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjEwcHggMCAycHg7Y29sb3I6JHtJTkt9O2ZvbnQtZmFtaWx5OiR7RElTUExBWX07Zm9udC1zaXplOjEycHg7bGluZS1oZWlnaHQ6MS41O3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZSI+JHtlc2MobGFiZWwpfTwvdGQ+PC90cj48dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjAgMCA4cHg7Y29sb3I6JHtDUkVBTX07JHtOVU19O2ZvbnQtc2l6ZToxNXB4O2xpbmUtaGVpZ2h0OjEuNTtvdmVyZmxvdy13cmFwOmFueXdoZXJlIj4ke2VzYyh2YWx1ZSl9PC90ZD48L3RyPmA7CgovKiogQmV0cmVmZiB1bmQgSFRNTC1UZXh0IGRlciBFaW5nYW5nc2Jlc3TDpHRpZ3VuZzsgZGVyIE5hbWUgZXJzY2hlaW50IG51ciwgd2VubiBlciBhbmdlZ2ViZW4gd3VyZGUuICovCmV4cG9ydCBjb25zdCBhcHBsaWNhdGlvbkNvbmZpcm1hdGlvbkVtYWlsID0gKHsgbmFtZSwgdGVsLCBhcmVhLCB0eXBlLCBoYXNDdiB9OiBBcHBsaWNhdGlvbkVtYWlsRGF0YSkgPT4gewogIGNvbnN0IGdyZWV0aW5nID0gbmFtZS50cmltKCkgPyBgR3V0ZW4gVGFnICR7ZXNjKG5hbWUudHJpbSgpKX0sYCA6ICJHdXRlbiBUYWcsIjsKICBjb25zdCByb3dzID0gWwogICAgYXJlYT8udHJpbSgpID8gcm93KCJHZXfDvG5zY2h0ZSBTdGVsbGUiLCBhcmVhLnRyaW0oKSkgOiAiIiwKICAgIHR5cGU/LnRyaW0oKSA/IHJvdygiQmVzY2jDpGZ0aWd1bmdzYXJ0IiwgdHlwZS50cmltKCkpIDogIiIsCiAgICByb3coIlRlbGVmb24iLCB0ZWwudHJpbSgpIHx8ICItIiksCiAgICByb3coIlVudGVybGFnZW4iLCBoYXNDdiA/ICJMZWJlbnNsYXVmIGxpZWd0IGJlaSIgOiAiS2VpbiBMZWJlbnNsYXVmIGJlaWdlZsO8Z3QiKSwKICBdLmpvaW4oIiIpOwoKICBjb25zdCBzb2NpYWxzID0gZW1haWxTb2NpYWxzCiAgICAubWFwKCh4KSA9PiB7CiAgICAgIGNvbnN0IGltZyA9IGA8aW1nIHNyYz0iJHt4Lmljb259IiB3aWR0aD0iMzQiIGhlaWdodD0iMzQiIGFsdD0iJHt4Lm5hbWV9IiBzdHlsZT0iZGlzcGxheTpibG9jaztib3JkZXI6MDt3aWR0aDozNHB4O2hlaWdodDozNHB4Ij5gOwogICAgICByZXR1cm4gYDx0ZCBzdHlsZT0icGFkZGluZzowIDZweCI+JHt4LmhyZWYgPyBgPGEgaHJlZj0iJHtlc2MoeC5ocmVmKX0iIHRhcmdldD0iX2JsYW5rIiB0aXRsZT0iJHt4Lm5hbWV9Ij4ke2ltZ308L2E+YCA6IGltZ308L3RkPmA7CiAgICB9KQogICAgLmpvaW4oIiIpOwogIGNvbnN0IGJnID0gYWJzKGJnQXNzZXQudXJsKTsKCiAgY29uc3QgaHRtbCA9IGA8IWRvY3R5cGUgaHRtbD48aHRtbCBsYW5nPSJkZSIgc3R5bGU9ImNvbG9yLXNjaGVtZTpvbmx5IGxpZ2h0Ij48aGVhZD48bWV0YSBjaGFyc2V0PSJ1dGYtOCI+PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPjxtZXRhIG5hbWU9ImNvbG9yLXNjaGVtZSIgY29udGVudD0ibGlnaHQiPjxtZXRhIG5hbWU9InN1cHBvcnRlZC1jb2xvci1zY2hlbWVzIiBjb250ZW50PSJsaWdodCI+PHRpdGxlPiR7ZXNjKGFwcGxpY2F0aW9uQ29uZmlybWF0aW9uU3ViamVjdCl9PC90aXRsZT4KPC9oZWFkPgo8Ym9keSBiZ2NvbG9yPSIke01BSE9HQU5ZfSIgc3R5bGU9Im1hcmdpbjowO3BhZGRpbmc6MDtmb250LXZhcmlhbnQtbnVtZXJpYzpsaW5pbmctbnVtcztjb2xvci1zY2hlbWU6b25seSBsaWdodDtiYWNrZ3JvdW5kLWNvbG9yOiR7TUFIT0dBTll9O2JhY2tncm91bmQtaW1hZ2U6bGluZWFyLWdyYWRpZW50KCR7TUFIT0dBTll9LCR7TUFIT0dBTll9KSI+Cjx0YWJsZSByb2xlPSJwcmVzZW50YXRpb24iIHdpZHRoPSIxMDAlIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjAiIGJnY29sb3I9IiR7TUFIT0dBTll9IiBiYWNrZ3JvdW5kPSIke2JnfSIgc3R5bGU9ImJhY2tncm91bmQtY29sb3I6JHtNQUhPR0FOWX07YmFja2dyb3VuZC1pbWFnZTp1cmwoJyR7Ymd9JyksbGluZWFyLWdyYWRpZW50KCR7TUFIT0dBTll9LCR7TUFIT0dBTll9KTtiYWNrZ3JvdW5kLXBvc2l0aW9uOmNlbnRlciB0b3A7YmFja2dyb3VuZC1zaXplOmNvdmVyO2JhY2tncm91bmQtcmVwZWF0Om5vLXJlcGVhdCI+Cjx0cj48dGQgYWxpZ249ImNlbnRlciIgc3R5bGU9InBhZGRpbmc6MjhweCAyMHB4Ij4KPHRhYmxlIHJvbGU9InByZXNlbnRhdGlvbiIgd2lkdGg9IjEwMCUiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCIgc3R5bGU9IndpZHRoOjEwMCU7dGFibGUtbGF5b3V0OmZpeGVkO2ZvbnQtZmFtaWx5OiR7Qk9EWX0iPgo8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjAgMCA2cHg7dGV4dC1hbGlnbjpjZW50ZXIiPgo8aW1nIHNyYz0iJHthYnMobG9nb0Fzc2V0LnVybCl9IiB3aWR0aD0iMjQwIiBhbHQ9IlJveWFsIEtyYWJpIFNlcmVuaXR5IFRoYWltYXNzYWdlIiBzdHlsZT0iZGlzcGxheTppbmxpbmUtYmxvY2s7Ym9yZGVyOjA7d2lkdGg6MjQwcHg7bWF4LXdpZHRoOjEwMCU7aGVpZ2h0OmF1dG8iPgoke2RpdmlkZXJ9CjwvdGQ+PC90cj4KPHRyPjx0ZCBzdHlsZT0icGFkZGluZzoyMnB4IDAgOHB4Ij4KPGgxIHN0eWxlPSJtYXJnaW46MCAwIDE0cHg7Y29sb3I6JHtJTkt9O2ZvbnQtZmFtaWx5OiR7RElTUExBWX07Zm9udC1zaXplOjIycHg7bGluZS1oZWlnaHQ6MS4zO2ZvbnQtd2VpZ2h0OjYwMDt0ZXh0LWFsaWduOmNlbnRlciI+VmllbGVuIERhbmsgZsO8ciBJaHJlIEJld2VyYnVuZy48L2gxPgo8cCBzdHlsZT0ibWFyZ2luOjAgMCAxNHB4O2NvbG9yOiR7Q1JFQU19O2ZvbnQtc2l6ZToxN3B4O2xpbmUtaGVpZ2h0OjEuNiI+JHtncmVldGluZ30gd2lyIGhhYmVuIElocmUgQmV3ZXJidW5nIGVyaGFsdGVuLiBJaHJlIFVudGVybGFnZW4gc2luZCBiZWkgdW5zIGVpbmdlZ2FuZ2VuIHVuZCB3aXIgbWVsZGVuIHVucyBzY2huZWxsc3Rtw7ZnbGljaCBiZWkgSWhuZW4uPC9wPgo8cCBzdHlsZT0ibWFyZ2luOjAgMCAyMnB4O2NvbG9yOiR7Q1JFQU19O2ZvbnQtc2l6ZToxN3B4O2xpbmUtaGVpZ2h0OjEuNiI+RmFsbHMgU2llIGV0d2FzIGVyZ8OkbnplbiBvZGVyIGJlcmljaHRpZ2VuIG3DtmNodGVuLCBhbnR3b3J0ZW4gU2llIGVpbmZhY2ggYXVmIGRpZXNlIEUtTWFpbC48L3A+Cjx0YWJsZSByb2xlPSJwcmVzZW50YXRpb24iIHdpZHRoPSIxMDAlIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjAiIHN0eWxlPSJ3aWR0aDoxMDAlO3RhYmxlLWxheW91dDpmaXhlZDttYXJnaW46MCAwIDI0cHgiPgo8dHI+PHRkIHN0eWxlPSJwYWRkaW5nOjEycHggMCAycHg7Y29sb3I6JHtJTkt9O2ZvbnQtZmFtaWx5OiR7RElTUExBWX07Zm9udC1zaXplOjEzcHg7dGV4dC10cmFuc2Zvcm06dXBwZXJjYXNlIj5JaHJlIEFuZ2FiZW48L3RkPjwvdHI+CiR7cm93c30KPC90YWJsZT4KPHAgc3R5bGU9Im1hcmdpbjowIDAgMTRweDtjb2xvcjoke0lOS307Zm9udC1mYW1pbHk6JHtESVNQTEFZfTtmb250LXNpemU6MTZweDtsaW5lLWhlaWdodDoxLjUiPiR7ZXNjKGNvbnRhY3QubmFtZSl9PC9wPgo8cCBzdHlsZT0ibWFyZ2luOjAgMCAxMHB4O2NvbG9yOiR7Q1JFQU19OyR7TlVNfTtmb250LXNpemU6MTRweDtsaW5lLWhlaWdodDoxLjciPsOWZmZudW5nc3plaXRlbjo8YnI+JHtlc2MoY29udGFjdC5ob3Vyc09wZW4pfSAmbWlkZG90OyAke2VzYyhjb250YWN0LmhvdXJzQ2xvc2VkKX08YnI+VGVsZWZvbjogPGEgaHJlZj0iJHtjb250YWN0LnBob25lSHJlZn0iIHN0eWxlPSJjb2xvcjoke0NSRUFNfTt0ZXh0LWRlY29yYXRpb246bm9uZSI+JHtlc2MoY29udGFjdC5waG9uZSl9PC9hPiAmbWlkZG90OyA8YSBocmVmPSJtYWlsdG86JHtjb250YWN0LmVtYWlsfSIgc3R5bGU9ImNvbG9yOiR7Q1JFQU19O3RleHQtZGVjb3JhdGlvbjpub25lO3doaXRlLXNwYWNlOm5vd3JhcCI+JHtlc2MoY29udGFjdC5lbWFpbCl9PC9hPjwvcD4KPC90ZD48L3RyPgo8dHI+PHRkIHN0eWxlPSJib3JkZXItdG9wOjFweCBzb2xpZCAke0dPTER9O3BhZGRpbmc6MjBweCAwIDA7dGV4dC1hbGlnbjpjZW50ZXIiPgo8dGFibGUgcm9sZT0icHJlc2VudGF0aW9uIiBhbGlnbj0iY2VudGVyIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjAiIHN0eWxlPSJtYXJnaW46MCBhdXRvIDE0cHgiPjx0cj4ke3NvY2lhbHN9PC90cj48L3RhYmxlPgo8ZGl2IHN0eWxlPSJjb2xvcjoke0NSRUFNfTtmb250LWZhbWlseToke0RJU1BMQVl9O2ZvbnQtc2l6ZToxMXB4O2xldHRlci1zcGFjaW5nOi4xNGVtO3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZSI+T2ZmZW5iYWNoZXIgU3RyLiAzMiAmbWlkZG90OyA2MzA3NSBPZmZlbmJhY2ggYW0gTWFpbjwvZGl2Pgo8L3RkPjwvdHI+CjwvdGFibGU+CjwvdGQ+PC90cj4KPC90YWJsZT4KPC9ib2R5PjwvaHRtbD5gOwoKICBjb25zdCB0ZXh0ID0gWwogICAgIlZpZWxlbiBEYW5rIGbDvHIgSWhyZSBCZXdlcmJ1bmcuIiwKICAgICIiLAogICAgYCR7bmFtZS50cmltKCkgPyBgR3V0ZW4gVGFnICR7bmFtZS50cmltKCl9LGAgOiAiR3V0ZW4gVGFnLCJ9IHdpciBoYWJlbiBJaHJlIEJld2VyYnVuZyBlcmhhbHRlbi4gSWhyZSBVbnRlcmxhZ2VuIHNpbmQgYmVpIHVucyBlaW5nZWdhbmdlbiB1bmQgd2lyIG1lbGRlbiB1bnMgc2NobmVsbHN0bcO2Z2xpY2ggYmVpIElobmVuLmAsCiAgICAiIiwKICAgICJJaHJlIEFuZ2FiZW46IiwKICAgIGFyZWE/LnRyaW0oKSA/IGAtIEdld8O8bnNjaHRlIFN0ZWxsZTogJHthcmVhLnRyaW0oKX1gIDogIiIsCiAgICB0eXBlPy50cmltKCkgPyBgLSBCZXNjaMOkZnRpZ3VuZ3NhcnQ6ICR7dHlwZS50cmltKCl9YCA6ICIiLAogICAgYC0gVGVsZWZvbjogJHt0ZWwudHJpbSgpIHx8ICItIn1gLAogICAgYC0gVW50ZXJsYWdlbjogJHtoYXNDdiA/ICJMZWJlbnNsYXVmIGxpZWd0IGJlaSIgOiAiS2VpbiBMZWJlbnNsYXVmIGJlaWdlZsO8Z3QifWAsCiAgICAiIiwKICAgIGAke2NvbnRhY3QubmFtZX1gLAogICAgIsOWZmZudW5nc3plaXRlbjoiLAogICAgYCR7Y29udGFjdC5ob3Vyc09wZW59IMK3ICR7Y29udGFjdC5ob3Vyc0Nsb3NlZH1gLAogICAgYFRlbGVmb246ICR7Y29udGFjdC5waG9uZX0gwrcgJHtjb250YWN0LmVtYWlsfWAsCiAgXQogICAgLmZpbHRlcigobGluZSkgPT4gbGluZSAhPT0gIiIpCiAgICAuam9pbigiXG4iKTsKCiAgcmV0dXJuIHsgc3ViamVjdDogYXBwbGljYXRpb25Db25maXJtYXRpb25TdWJqZWN0LCBodG1sLCB0ZXh0IH07Cn07Cg==
+import { contact } from "./contact";
+import bgAsset from "@/assets/email/email-bg-center.jpg.asset.json";
+import dividerAsset from "@/assets/email/email-gold-divider.png.asset.json";
+import logoAsset from "@/assets/email/email-logo.png.asset.json";
+import igAsset from "@/assets/email/icon-instagram.png.asset.json";
+import ttAsset from "@/assets/email/icon-tiktok.png.asset.json";
+import fbAsset from "@/assets/email/icon-facebook.png.asset.json";
+import liAsset from "@/assets/email/icon-linkedin.png.asset.json";
+import taAsset from "@/assets/email/icon-tripadvisor.png.asset.json";
+
+/** E-Mail-Programme brauchen absolute Bildadressen. */
+const SITE = "https://royalkrabi-thaimassage.de";
+const abs = (u: string) => (u.startsWith("http") ? u : SITE + u);
+
+/** Social-Media-Profile; leere Adresse = Symbol wird ohne Link gezeigt. */
+export const emailSocials = [
+  { name: "Instagram", icon: abs(igAsset.url), href: "https://www.instagram.com/royalkrabithaimassage" },
+  { name: "TikTok", icon: abs(ttAsset.url), href: "" },
+  { name: "Facebook", icon: abs(fbAsset.url), href: "https://www.facebook.com/share/1hXpHYZZo6/" },
+  { name: "LinkedIn", icon: abs(liAsset.url), href: "" },
+  {
+    name: "Tripadvisor",
+    icon: abs(taAsset.url),
+    href: "https://www.tripadvisor.de/Attraction_Review-g187344-d34753495-Reviews-Royal_Krabi_Serenity_Thaimassage-Offenbach_Hesse.html",
+  },
+];
+
+/**
+ * Automatische Eingangsbestätigung für Bewerberinnen und Bewerber.
+ * Nur diese eine E-Mail darf an die im Formular angegebene Adresse gehen:
+ * sie bestätigt den Eingang einer konkreten Bewerbung und enthält keine Werbung.
+ */
+export const applicationConfirmationSubject = `Bewerbungseingang – ${contact.name}`;
+
+export interface ApplicationEmailData {
+  name: string;
+  tel: string;
+  email: string;
+  area?: string;
+  type?: string;
+  hasCv: boolean;
+}
+
+const MAHOGANY = "#4A210F";
+const GOLD = "#F1C66B";
+/** Überschriften und Beschriftungen in Schwarz. */
+const INK = "#000000";
+/** Alle Fließtexte in reinem Weiß. */
+const CREAM = "#FFFFFF";
+const DISPLAY = "'Cinzel','Cormorant Garamond',Georgia,'Times New Roman',serif";
+const BODY = "'Cormorant Garamond',Georgia,'Times New Roman',serif";
+/** Zahlen (Telefon, Adresse, Zeiten) in gerader, gleich hoher Schrift wie auf der Website. */
+const NUM = "font-family:'Montserrat',Arial,Helvetica,sans-serif;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:'lnum' 1,'tnum' 1";
+
+const esc = (s: string) =>
+  s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
+
+const divider = `<img src="${abs(dividerAsset.url)}" width="1200" height="80" alt="" role="presentation" style="display:block;border:0;width:100%;height:auto;margin:18px 0 0">`;
+
+const row = (label: string, value: string) =>
+  `<tr><td style="padding:10px 0 2px;color:${INK};font-family:${DISPLAY};font-size:12px;line-height:1.5;text-transform:uppercase">${esc(label)}</td></tr><tr><td style="padding:0 0 8px;color:${CREAM};${NUM};font-size:15px;line-height:1.5;overflow-wrap:anywhere">${esc(value)}</td></tr>`;
+
+/** Betreff und HTML-Text der Eingangsbestätigung; der Name erscheint nur, wenn er angegeben wurde. */
+export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: ApplicationEmailData) => {
+  const greeting = name.trim() ? `Guten Tag ${esc(name.trim())},` : "Guten Tag,";
+  const rows = [
+    area?.trim() ? row("Gewünschte Stelle", area.trim()) : "",
+    type?.trim() ? row("Beschäftigungsart", type.trim()) : "",
+    row("Telefon", tel.trim() || "-"),
+    row("Unterlagen", hasCv ? "Lebenslauf liegt bei" : "Kein Lebenslauf beigefügt"),
+  ].join("");
+
+  const socials = emailSocials
+    .map((x) => {
+      const img = `<img src="${x.icon}" width="34" height="34" alt="${x.name}" style="display:block;border:0;width:34px;height:34px">`;
+      return `<td style="padding:0 6px">${x.href ? `<a href="${esc(x.href)}" target="_blank" title="${x.name}">${img}</a>` : img}</td>`;
+    })
+    .join("");
+  const bg = abs(bgAsset.url);
+
+  const html = `<!doctype html><html lang="de" style="color-scheme:only light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"><title>${esc(applicationConfirmationSubject)}</title>
+</head>
+<body bgcolor="${MAHOGANY}" style="margin:0;padding:0;font-variant-numeric:lining-nums;color-scheme:only light;background-color:${MAHOGANY};background-image:linear-gradient(${MAHOGANY},${MAHOGANY})">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${MAHOGANY}" background="${bg}" style="background-color:${MAHOGANY};background-image:url('${bg}'),linear-gradient(${MAHOGANY},${MAHOGANY});background-position:center top;background-size:cover;background-repeat:no-repeat">
+<tr><td align="center" style="padding:28px 20px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;font-family:${BODY}">
+<tr><td style="padding:0 0 6px;text-align:center">
+<img src="${abs(logoAsset.url)}" width="240" alt="Royal Krabi Serenity Thaimassage" style="display:inline-block;border:0;width:240px;max-width:100%;height:auto">
+${divider}
+</td></tr>
+<tr><td style="padding:22px 0 8px">
+<h1 style="margin:0 0 14px;color:${INK};font-family:${DISPLAY};font-size:22px;line-height:1.3;font-weight:600;text-align:center">Vielen Dank für Ihre Bewerbung.</h1>
+<p style="margin:0 0 14px;color:${CREAM};font-size:17px;line-height:1.6">${greeting} wir haben Ihre Bewerbung erhalten. Ihre Unterlagen sind bei uns eingegangen und wir melden uns schnellstmöglich bei Ihnen.</p>
+<p style="margin:0 0 22px;color:${CREAM};font-size:17px;line-height:1.6">Falls Sie etwas ergänzen oder berichtigen möchten, antworten Sie einfach auf diese E-Mail.</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;margin:0 0 24px">
+<tr><td style="padding:12px 0 2px;color:${INK};font-family:${DISPLAY};font-size:13px;text-transform:uppercase">Ihre Angaben</td></tr>
+${rows}
+</table>
+<p style="margin:0 0 14px;color:${INK};font-family:${DISPLAY};font-size:16px;line-height:1.5">${esc(contact.name)}</p>
+<p style="margin:0 0 10px;color:${CREAM};${NUM};font-size:14px;line-height:1.7">Öffnungszeiten:<br>${esc(contact.hoursOpen)} &middot; ${esc(contact.hoursClosed)}<br>Telefon: <a href="${contact.phoneHref}" style="color:${CREAM};text-decoration:none">${esc(contact.phone)}</a> &middot; <a href="mailto:${contact.email}" style="color:${CREAM};text-decoration:none;white-space:nowrap">${esc(contact.email)}</a></p>
+</td></tr>
+<tr><td style="border-top:1px solid ${GOLD};padding:20px 0 0;text-align:center">
+<table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin:0 auto 14px"><tr>${socials}</tr></table>
+<div style="color:${CREAM};font-family:${DISPLAY};font-size:11px;letter-spacing:.14em;text-transform:uppercase">Offenbacher Str. 32 &middot; 63075 Offenbach am Main</div>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>`;
+
+  const text = [
+    "Vielen Dank für Ihre Bewerbung.",
+    "",
+    `${name.trim() ? `Guten Tag ${name.trim()},` : "Guten Tag,"} wir haben Ihre Bewerbung erhalten. Ihre Unterlagen sind bei uns eingegangen und wir melden uns schnellstmöglich bei Ihnen.`,
+    "",
+    "Ihre Angaben:",
+    area?.trim() ? `- Gewünschte Stelle: ${area.trim()}` : "",
+    type?.trim() ? `- Beschäftigungsart: ${type.trim()}` : "",
+    `- Telefon: ${tel.trim() || "-"}`,
+    `- Unterlagen: ${hasCv ? "Lebenslauf liegt bei" : "Kein Lebenslauf beigefügt"}`,
+    "",
+    `${contact.name}`,
+    "Öffnungszeiten:",
+    `${contact.hoursOpen} · ${contact.hoursClosed}`,
+    `Telefon: ${contact.phone} · ${contact.email}`,
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
+
+  return { subject: applicationConfirmationSubject, html, text };
+};
