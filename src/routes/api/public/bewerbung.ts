@@ -3,7 +3,7 @@ import { contact } from "@/lib/contact";
 import { missingApplicationFields } from "@/lib/forms";
 import { applicationConfirmationEmail } from "@/lib/application-email";
 
-const MAX_BYTES = 5 * 1024 * 1024;
+const MAX_BYTES = 20 * 1024 * 1024;
 const ALLOWED = /\.(pdf|docx?)$/i;
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 const json = (status: number, body: object) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/api/public/bewerbung")({
         const file = f.get("cv");
         if (file && typeof file !== "string" && file.size > 0) {
           if (!ALLOWED.test(file.name)) return json(400, { error: "Bitte laden Sie den Lebenslauf als PDF, DOC oder DOCX hoch." });
-          if (file.size > MAX_BYTES) return json(400, { error: "Der Lebenslauf darf höchstens 5 MB groß sein." });
+          if (file.size > MAX_BYTES) return json(400, { error: "Der Lebenslauf darf höchstens 20 MB groß sein." });
           attachments.push({ filename: file.name.replace(/[^\w.\- ]/g, "_"), content: toBase64(await file.arrayBuffer()) });
         }
         const rows: [string, string][] = [["Name", values.name], ["Telefon", values.tel], ["E-Mail", values.email], ["Altersangabe", values.age || "-"], ["Gewünschte Stelle", area || "-"], ["Beschäftigungsart", type || "-"]];
