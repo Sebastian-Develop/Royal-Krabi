@@ -28,7 +28,7 @@ export const emailSocials = [
 /**
  * Automatische Eingangsbestätigung für Bewerberinnen und Bewerber.
  * Nur diese eine E-Mail darf an die im Formular angegebene Adresse gehen:
- * sie bestätigt den Eingang einer konkreten Bewerbung und enthält keine Werbung.
+ * sie bestätigt den Eingang einer konkreten Bewerbung.
  */
 export const applicationConfirmationSubject = `Bewerbungseingang – ${contact.name}`;
 
@@ -108,6 +108,7 @@ ${rows}
 <p style="margin:0 0 10px;${WHITE_TEXT};${NUM};font-size:14px;line-height:1.7">Öffnungszeiten:<br>${esc(contact.hoursOpen)} &middot; ${esc(contact.hoursClosed)}<br>Telefon: <a href="${contact.phoneHref}" style="${WHITE_TEXT};text-decoration:none">${esc(contact.phone)}</a> &middot; <a href="mailto:${contact.email}" style="${WHITE_TEXT};text-decoration:none;white-space:nowrap">${esc(contact.email)}</a></p>
 </td></tr>
 <tr><td style="border-top:1px solid ${GOLD};padding:20px 0 0;text-align:center">
+<p style="margin:0 0 12px;${WHITE_TEXT};font-family:${BODY};font-size:15px;line-height:1.5">Folgen Sie uns für Neuigkeiten und Einblicke.</p>
 <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin:0 auto 14px"><tr>${socials}</tr></table>
 <div style="${WHITE_TEXT};font-family:${DISPLAY};font-size:11px;letter-spacing:.14em;text-transform:uppercase">Offenbacher Str. 32 &middot; 63075 Offenbach am Main</div>
 </td></tr>
