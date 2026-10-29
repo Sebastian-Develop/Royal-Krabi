@@ -37,7 +37,6 @@ export interface ApplicationEmailData {
 }
 
 const MAHOGANY = "#4A210F";
-const PANEL = "#431D0C";
 const GOLD = "#F1C66B";
 const CREAM = "#F7E8C8";
 const DISPLAY = "'Cinzel','Cormorant Garamond',Georgia,'Times New Roman',serif";
@@ -46,12 +45,12 @@ const BODY = "'Cormorant Garamond',Georgia,'Times New Roman',serif";
 const NUM = "font-family:'Montserrat',Arial,Helvetica,sans-serif;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:'lnum' 1,'tnum' 1";
 
 const esc = (s: string) =>
-  s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+  s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
 
 const divider = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 0"><tr><td style="border-top:1px solid ${GOLD};opacity:.75">&nbsp;</td><td width="18" align="center" style="color:${GOLD};font-size:11px;line-height:1;vertical-align:middle;padding:0 6px">&#9670;</td><td style="border-top:1px solid ${GOLD};opacity:.75">&nbsp;</td></tr></table>`;
 
 const row = (label: string, value: string) =>
-  `<tr><td style="padding:7px 0;color:${GOLD};font-family:${DISPLAY};font-size:12px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;vertical-align:top;padding-right:16px">${esc(label)}</td><td style="padding:7px 0;color:${CREAM};${NUM};font-size:15px;line-height:1.5">${esc(value)}</td></tr>`;
+  `<tr><td style="padding:10px 0 2px;color:${GOLD};font-family:${DISPLAY};font-size:12px;line-height:1.5;text-transform:uppercase">${esc(label)}</td></tr><tr><td style="padding:0 0 8px;color:${CREAM};${NUM};font-size:15px;line-height:1.5;overflow-wrap:anywhere">${esc(value)}</td></tr>`;
 
 /** Betreff und HTML-Text der Eingangsbestätigung; der Name erscheint nur, wenn er angegeben wurde. */
 export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: ApplicationEmailData) => {
@@ -72,29 +71,27 @@ export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: A
   const bg = abs(bgAsset.url);
 
   const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>${esc(applicationConfirmationSubject)}</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@400;500&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body style="margin:0;padding:0;font-variant-numeric:lining-nums;background:${MAHOGANY}">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${MAHOGANY}" background="${bg}" style="background:${MAHOGANY} url('${bg}') center top/cover no-repeat">
-<tr><td align="center" style="padding:36px 44px">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:rgba(67,29,12,.86);border:1px solid ${GOLD};border-radius:14px;overflow:hidden;font-family:${BODY}">
-<tr><td style="padding:26px 28px 6px;text-align:center">
-<img src="${abs(logoAsset.url)}" width="170" alt="Royal Krabi Serenity Thaimassage" style="display:inline-block;border:0;width:170px;height:auto">
+<tr><td align="center" style="padding:28px 20px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;font-family:${BODY}">
+<tr><td style="padding:0 0 6px;text-align:center">
+<img src="${abs(logoAsset.url)}" width="240" alt="Royal Krabi Serenity Thaimassage" style="display:inline-block;border:0;width:240px;max-width:100%;height:auto">
 ${divider}
 </td></tr>
-<tr><td style="padding:22px 28px 8px">
+<tr><td style="padding:22px 0 8px">
 <h1 style="margin:0 0 14px;color:${GOLD};font-family:${DISPLAY};font-size:22px;line-height:1.3;font-weight:600;text-align:center">Vielen Dank für Ihre Bewerbung.</h1>
 <p style="margin:0 0 14px;color:${CREAM};font-size:17px;line-height:1.6">${greeting} wir haben Ihre Bewerbung erhalten. Ihre Unterlagen sind bei uns eingegangen und wir melden uns schnellstmöglich bei Ihnen.</p>
 <p style="margin:0 0 22px;color:${CREAM};font-size:17px;line-height:1.6">Falls Sie etwas ergänzen oder berichtigen möchten, antworten Sie einfach auf diese E-Mail.</p>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${PANEL};border:1px solid rgba(241,198,107,.45);border-radius:10px;padding:4px 16px;margin:0 0 24px">
-<tr><td colspan="2" style="padding:12px 0 2px;color:${GOLD};font-family:${DISPLAY};font-size:11px;letter-spacing:.16em;text-transform:uppercase">Ihre Angaben</td></tr>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;margin:0 0 24px">
+<tr><td style="padding:12px 0 2px;color:${GOLD};font-family:${DISPLAY};font-size:13px;text-transform:uppercase">Ihre Angaben</td></tr>
 ${rows}
-<tr><td colspan="2" style="padding:0 0 12px">&nbsp;</td></tr>
 </table>
-<p style="margin:0 0 6px;color:${GOLD};font-family:${DISPLAY};font-size:12px;letter-spacing:.14em;text-transform:uppercase">Royal Krabi Serenity Thaimassage</p>
-<p style="margin:0 0 10px;color:${CREAM};${NUM};font-size:14px;line-height:1.7">${esc(contact.street)}, ${esc(contact.city)}<br>${esc(contact.hoursOpen)} &middot; ${esc(contact.hoursClosed)}<br>Telefon: ${esc(contact.phone)} &middot; ${esc(contact.email)}</p>
+<p style="margin:0 0 14px;color:${GOLD};font-family:${DISPLAY};font-size:16px;line-height:1.5">${esc(contact.name)}</p>
+<p style="margin:0 0 10px;color:${CREAM};${NUM};font-size:14px;line-height:1.7">Öffnungszeiten:<br>${esc(contact.hoursOpen)} &middot; ${esc(contact.hoursClosed)}<br>Telefon: <a href="${contact.phoneHref}" style="color:${CREAM};text-decoration:none">${esc(contact.phone)}</a> &middot; <a href="mailto:${contact.email}" style="color:${CREAM};text-decoration:none;white-space:nowrap">${esc(contact.email)}</a></p>
 </td></tr>
-<tr><td style="background:${PANEL};border-top:1px solid rgba(241,198,107,.4);padding:20px 28px 18px;text-align:center">
+<tr><td style="border-top:1px solid ${GOLD};padding:20px 0 0;text-align:center">
 <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin:0 auto 14px"><tr>${socials}</tr></table>
 <div style="color:${GOLD};font-family:${DISPLAY};font-size:11px;letter-spacing:.14em;text-transform:uppercase">Offenbacher Str. 32 &middot; 63075 Offenbach am Main</div>
 </td></tr>
@@ -115,7 +112,7 @@ ${rows}
     `- Unterlagen: ${hasCv ? "Lebenslauf liegt bei" : "Kein Lebenslauf beigefügt"}`,
     "",
     `${contact.name}`,
-    `${contact.street}, ${contact.city}`,
+    "Öffnungszeiten:",
     `${contact.hoursOpen} · ${contact.hoursClosed}`,
     `Telefon: ${contact.phone} · ${contact.email}`,
   ]
