@@ -1,5 +1,6 @@
 import { contact } from "./contact";
 import bgAsset from "@/assets/email/email-bg-center.jpg.asset.json";
+import dividerAsset from "@/assets/email/email-gold-divider.png.asset.json";
 import logoAsset from "@/assets/email/email-logo.png.asset.json";
 import igAsset from "@/assets/email/icon-instagram.png.asset.json";
 import ttAsset from "@/assets/email/icon-tiktok.png.asset.json";
@@ -47,7 +48,7 @@ const NUM = "font-family:'Montserrat',Arial,Helvetica,sans-serif;font-variant-nu
 const esc = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
 
-const divider = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 0"><tr><td style="border-top:1px solid ${GOLD};opacity:.75">&nbsp;</td><td width="18" align="center" style="color:${GOLD};font-size:11px;line-height:1;vertical-align:middle;padding:0 6px">&#9670;</td><td style="border-top:1px solid ${GOLD};opacity:.75">&nbsp;</td></tr></table>`;
+const divider = `<img src="${abs(dividerAsset.url)}" width="1086" height="72" alt="" role="presentation" style="display:block;border:0;width:100%;height:auto;margin:18px 0 0">`;
 
 const row = (label: string, value: string) =>
   `<tr><td style="padding:10px 0 2px;color:${GOLD};font-family:${DISPLAY};font-size:12px;line-height:1.5;text-transform:uppercase">${esc(label)}</td></tr><tr><td style="padding:0 0 8px;color:${CREAM};${NUM};font-size:15px;line-height:1.5;overflow-wrap:anywhere">${esc(value)}</td></tr>`;
