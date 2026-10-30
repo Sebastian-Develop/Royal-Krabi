@@ -1,14 +1,16 @@
 import { z } from "zod";
-import { massages, partialMassages, subscriptions, vouchers } from "./content";
+import { massages, partialMassages, subscriptions, vouchers, categoryBadgeFor, type Subscription } from "./content";
 
 export const shopPolicy = { salesEnabled: false, shippingCountry: "DE", shippingProvider: "DHL", shippingCost: 0, minimumOrderValue: 0, minimumQuantity: 1, handoverWorkingDays: 3, automaticRenewal: false, manualAcceptance: true, validityMonths: null, transferable: null } as const;
 export const validityNotice = "Gültigkeitsdauer und Nutzungsbedingungen werden vor Abschluss des Kaufs mitgeteilt.";
 export const shippingNotice = "Versand innerhalb Deutschlands mit DHL. Kostenfrei. Wir bearbeiten Ihre Bestellung und geben sie nach Prüfung des Zahlungseingangs in der Regel innerhalb von 3 Werktagen bei DHL ein. Die DHL-Laufzeit kommt hinzu. Sie erhalten auf Anfrage einen Einlieferungsbeleg als Nachweis der Übergabe an DHL.";
-export type ShopProduct = { id: string; kind: "voucher" | "five" | "ten"; name: string; description: string; price: number | null; regular: number | null; SUMUP_LINK_GUTSCHEIN: string; SUMUP_LINK_5ER_ABO: string; SUMUP_LINK_10ER_ABO: string };
+export type ShopProduct = { id: string; kind: "voucher" | "five" | "ten"; name: string; description: string; price: number | null; regular: number | null; badge: string; SUMUP_LINK_GUTSCHEIN: string; SUMUP_LINK_5ER_ABO: string; SUMUP_LINK_10ER_ABO: string };
 const emptyLinks = { SUMUP_LINK_GUTSCHEIN: "", SUMUP_LINK_5ER_ABO: "", SUMUP_LINK_10ER_ABO: "" };
+/** Abo badges carry the massage category plus the fixed duration, e.g. "KLASSISCH · 5er-Abo (60 Minuten)". */
+const aboBadge = (abo: Subscription) => `${categoryBadgeFor(abo.name) ?? "Abo"} · ${abo.count}er-Abo (${abo.duration} Minuten)`;
 export const shopProducts: ShopProduct[] = [
-  ...vouchers.map(([name, price, description], index) => ({ id: `gutschein-${index + 1}`, kind: "voucher" as const, name: name ?? "Gutschein", description: description || "Zeit, Ruhe und Wohlbefinden verschenken.", price: price?.endsWith(" €") ? Number(price.replace(" €", "")) : null, regular: null, ...emptyLinks })),
-  ...subscriptions.map((abo, index) => ({ id: `abo-${index + 1}`, kind: abo.count === 5 ? "five" as const : "ten" as const, name: `${abo.count}er-Abo · ${abo.name}`, description: `${abo.count} Massagen · je ${abo.duration} Minuten. ${[...massages, ...partialMassages].find(m => m.name === abo.name)?.desc ?? ""}`, price: abo.price, regular: abo.regular, ...emptyLinks })),
+  ...vouchers.map(([name, price, description], index) => ({ id: `gutschein-${index + 1}`, kind: "voucher" as const, name: name ?? "Gutschein", description: description || "Zeit, Ruhe und Wohlbefinden verschenken.", price: price?.endsWith(" €") ? Number(price.replace(" €", "")) : null, regular: null, badge: "Gutschein", ...emptyLinks })),
+  ...subscriptions.map((abo, index) => ({ id: `abo-${index + 1}`, kind: abo.count === 5 ? "five" as const : "ten" as const, name: `${abo.count}er-Abo · ${abo.name}`, description: `${abo.count} Massagen · je ${abo.duration} Minuten. ${[...massages, ...partialMassages].find(m => m.name === abo.name)?.desc ?? ""}`, price: abo.price, regular: abo.regular, badge: aboBadge(abo), ...emptyLinks })),
 ];
 export const getProductLink = (product: ShopProduct) => product.kind === "voucher" ? product.SUMUP_LINK_GUTSCHEIN : product.kind === "five" ? product.SUMUP_LINK_5ER_ABO : product.SUMUP_LINK_10ER_ABO;
 export function isApprovedPaymentLink(value: string) {

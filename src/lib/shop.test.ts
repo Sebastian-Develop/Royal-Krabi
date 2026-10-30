@@ -7,6 +7,14 @@ test("Handover allowance is three working days, not guaranteed arrival", () => e
 test("Cards do not renew and acceptance is manual", () => expect([shopPolicy.automaticRenewal, shopPolicy.manualAcceptance]).toEqual([false, true]));
 test("Unreleased validity and transferability remain undecided", () => expect([shopPolicy.validityMonths, shopPolicy.transferable]).toEqual([null, null]));
 test("All products are unavailable until explicit sales release", () => { expect(shopProducts.length).toBeGreaterThan(70); expect(shopProducts.every(p => !canPayForProduct(p))).toBe(true); });
+test("Abo badges carry the massage category and fixed duration; vouchers stay plain", () => {
+  expect(shopProducts.find(p => p.name === "5er-Abo · Royal Thai Massage – ohne Öl")?.badge).toBe("KLASSISCH · 5er-Abo (60 Minuten)");
+  expect(shopProducts.find(p => p.name === "5er-Abo · Hot-Stone-Massage")?.badge).toBe("PREMIUM · 5er-Abo (60 Minuten)");
+  expect(shopProducts.find(p => p.name === "5er-Abo · Royal Sound Healing – Royal Krabi Signature")?.badge).toBe("ROYAL KRABI SIGNATURE · 5er-Abo (90 Minuten)");
+  expect(shopProducts.find(p => p.name === "10er-Abo · Royal Thai Massage")?.badge).toBe("KLASSISCH · 10er-Abo (60 Minuten)");
+  expect(shopProducts.find(p => p.name === "5er-Abo · Rückenmassage mit Öl")?.badge).toBe("FOKUS · 5er-Abo (30 Minuten)");
+  expect(shopProducts.find(p => p.kind === "voucher")?.badge).toBe("Gutschein");
+});
 test("Shop retains confirmed example voucher and card prices", () => {
   expect(shopProducts.find(p => p.name === "60 Minuten Royal Thai Massage – ohne Öl")?.price).toBe(59);
   expect(shopProducts.find(p => p.name === "5er-Abo · Royal Thai Massage – ohne Öl")?.price).toBe(280);

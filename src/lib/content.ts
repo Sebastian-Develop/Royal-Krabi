@@ -31,6 +31,14 @@ export const pairUpgrades = [
 
 export const perPersonLabel = "pro Person";
 
+/** Category badge of a listed massage name; null when the name has no badge. */
+export const categoryBadgeFor = (name: string) => {
+  const massage = massages.find(m => m.name === name);
+  if (massage) return categoryBadges[massage.category];
+  if (partialMassages.some(m => m.name === name)) return partialBadge;
+  return null;
+};
+
 /** Pair-upgrade surcharges always apply per person, never for the pair together. */
 export const upgradePriceRows = (prices: [number, number][]) =>
   prices.map(([minutes, price]) => ({

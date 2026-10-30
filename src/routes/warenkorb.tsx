@@ -13,7 +13,7 @@ function Page() {
   return <><PageHero title="Warenkorb"/><main className="section container shop-page shop-cart">
     {lines.length === 0 ? <div className="shop-cart-empty"><p>Ihr Warenkorb ist leer.</p><Link className="btn btn-outline" to="/gutscheine">Zu den Gutscheinen</Link><Link className="btn btn-outline" to="/abos">Zu den Abos</Link></div> : <>
       <ul className="cart-lines">{lines.map(l => <li key={l.product.id} className="cart-line">
-        <div className="cart-line-name"><span className="signature-badge">{l.product.kind === "voucher" ? "GUTSCHEIN" : l.product.kind === "five" ? "5ER-ABO" : "10ER-ABO"}</span><strong>{l.product.name}</strong><span>Einzelpreis: {l.unitPrice} €</span></div>
+        <div className="cart-line-name"><span className="signature-badge">{l.product.badge}</span><strong>{l.product.name}</strong><span>Einzelpreis: {l.unitPrice} €</span></div>
         <div className="cart-qty" role="group" aria-label={`Menge ${l.product.name}`}>
           <Button variant="outline" size="icon" aria-label="Menge verringern" onClick={() => setQty(l.product.id, l.quantity - 1)}><Minus size={16}/></Button>
           <input type="number" min={1} max={MAX_QUANTITY} value={l.quantity} aria-label="Menge" onChange={e => setQty(l.product.id, Number(e.target.value) || 1)}/>
