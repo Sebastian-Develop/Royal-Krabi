@@ -418,3 +418,12 @@ a.address-link-block{display:inline-block}
 .form-error{padding:16px 18px;margin:18px 0;border:1px solid oklch(.58 .14 32);border-left-width:3px;border-radius:6px;background:color-mix(in oklab,oklch(.5 .15 30) 16%,var(--panel));color:var(--foreground);font-size:.9rem;line-height:1.6}
 @media(max-width:760px){.form-confirmation{padding:18px}.form-confirmation h3{font-size:1.1rem}.form-confirmation p{font-size:.88rem}.form-error{padding:15px 16px;font-size:.86rem}}
 .field-hint{font-size:.78rem;line-height:1.5;color:var(--muted-foreground);margin:-8px 0 17px}.field-hint strong{color:var(--gold-soft);font-weight:600}
+.shop-product-photo{width:calc(100% + 48px);margin:-24px -24px 18px;aspect-ratio:4/3;object-fit:cover;border-radius:6px 6px 0 0;border-bottom:1px solid var(--border)}@media(max-width:760px){.shop-product-photo{width:calc(100% + 44px);margin:-22px -22px 16px}}
+
+/* Collapsible 5er/10er Abo sections and quick jump link */
+.shop-section-title-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.shop-section-toggle{min-height:44px;white-space:nowrap;flex-shrink:0}
+.shop-jump-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:0 0 4px}
+.shop-jump-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:10px 20px;border:1px solid var(--gold);border-radius:999px;background:transparent;color:var(--gold-soft);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.shop-jump-link:hover{border-color:var(--gold-soft)}
+.shop-jump-link:focus-visible{outline:2px solid var(--gold-soft);outline-offset:2px}
