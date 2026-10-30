@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Gift, Package, CreditCard, ChevronDown, ChevronUp, ArrowDown } from "lucide-react";
+import { Gift, Package, CreditCard, ChevronDown, ChevronUp } from "lucide-react";
 import { ContactButtons, PageHero, PriceVatNotice } from "@/components/site";
 import { Button } from "@/components/ui/button";
 import { isCartable, useCart } from "@/lib/cart";
@@ -16,14 +16,8 @@ export function ShopProductsPage({ kinds, title, intro, lead }: { kinds: Kind[];
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   function addToCart(id: string, name: string) { add(id); setAdded(`„${name}“ wurde in den Warenkorb gelegt.`); }
   const toggleSection = (kind: Kind) => setOpenSections(state => ({ ...state, [kind]: !state[kind] }));
-  const openTenSection = () => {
-    setOpenSections(state => ({ ...state, ten: true }));
-    requestAnimationFrame(() => document.getElementById("shop-section-ten")?.scrollIntoView({ behavior: "smooth", block: "start" }));
-  };
-  const hasTen = kinds.includes("ten");
   return <><PageHero title={title} intro={intro}/><main className="section container shop-page">
     <div className="shop-intro"><img src={oils} width={700} height={500} alt="Orchideen und Massageöle im Royal-Krabi-Ambiente"/><div><span className="eyebrow">FREUDE SCHENKEN · RUHE GENIESSEN</span><h2>Eine Auszeit, die bleibt</h2><p>{lead}</p><p className="shop-unavailable">Online-Zahlung wird derzeit eingerichtet. Bitte kontaktieren Sie uns.</p><ContactButtons short/></div></div><PriceVatNotice/>
-    {hasTen && kinds.includes("five") && <div className="shop-jump-links"><button type="button" className="shop-jump-link" onClick={openTenSection}>Direkt zu den 10er-Abos <ArrowDown size={16}/></button></div>}
     <section className="shop-flow" aria-label="Bestellablauf"><h2>Ihr Weg zur Auszeit</h2><ol>{["Produkte in den Warenkorb legen – Gutscheine und Abos gemeinsam", "Warenkorb prüfen und Menge anpassen", "Zur Kasse gehen", "Kontaktdaten und Lieferart angeben", "Gesamtsumme über SumUp bezahlen", "Wir prüfen den Zahlungseingang", "Versand mit DHL oder Abholung"].map(step => <li key={step}>{step}</li>)}</ol><p><CreditCard size={18}/> Zahlung über SumUp</p></section>
     <div className="shop-shipping"><Package size={24}/><div><p>{shippingNotice}</p><p>Werktage: Montag bis Freitag, ausgenommen gesetzliche Feiertage am Betriebsort. Alternativ: Abholung im Studio nach Vereinbarung.</p></div></div>
     {added && <p role="status" className="shop-form-status">{added}</p>}
