@@ -439,7 +439,7 @@ a.address-link-block{display:inline-block}
 .opening h1{font-size:52px}
 .opening-brand{font-family:var(--font-display);font-size:24px;color:var(--gold-soft)}
 .opening-tagline{font-style:italic;font-family:var(--font-display);font-size:clamp(22px,2.6vw,30px);line-height:1.4;color:var(--gold);margin:8px 0 24px;text-wrap:balance}
-.opening-date{display:inline-block;margin:22px 0 6px;padding:12px 26px;border:1px solid var(--gold);border-radius:999px;font-family:var(--font-display);font-size:clamp(19px,2.4vw,27px);color:var(--gold)}
+.opening-date{display:inline-block;margin:24px 0 6px;padding:14px 30px;border:1px solid var(--gold);border-radius:999px;font-family:var(--font-display);font-size:clamp(23px,3.4vw,36px);color:var(--gold)}
 .opening-time{display:flex;gap:8px;justify-content:center;align-items:center;color:var(--gold-soft)}
 .opening-text{max-width:620px;margin:18px auto 0;font-size:15px;line-height:1.85;color:var(--foreground)}
 .opening-free{margin-top:16px;font-weight:600;color:var(--gold-soft)}
@@ -468,4 +468,4 @@ a.address-link-block{display:inline-block}
 .opening-contact-line a{color:var(--gold-soft)}
 .opening-hours{padding:34px 20px;margin-top:8px;border-block:1px solid var(--border);background:var(--launch-highlight);color:var(--foreground);line-height:1.9}
 .launch-jobs{padding:32px 0}
-@media(max-width:760px){.opening h1{font-size:36px}.opening-brand{font-size:20px}.opening-date{font-size:19px;padding:11px 18px;margin-top:18px}.opening-tagline{margin-bottom:20px}.opening-cards,.opening-photos{grid-template-columns:1fr}.opening-percent{font-size:68px}.opening-actions{flex-direction:column}.opening-actions .btn,.opening-section>.btn{width:100%;justify-content:center}.opening-offer{padding:28px 16px}}
+@media(max-width:760px){.opening h1{font-size:36px}.opening-brand{font-size:20px}.opening-date{font-size:22px;padding:13px 20px;margin-top:20px}.opening-tagline{margin-bottom:20px}.opening-cards,.opening-photos{grid-template-columns:1fr}.opening-percent{font-size:68px}.opening-actions{flex-direction:column}.opening-actions .btn,.opening-section>.btn{width:100%;justify-content:center}.opening-offer{padding:28px 16px}}
