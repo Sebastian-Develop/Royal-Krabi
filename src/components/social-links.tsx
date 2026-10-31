@@ -8,12 +8,15 @@ const paths: Record<string, string> = {
   tripadvisor: "M12 5.3c-2.6 0-5.2.7-7.4 2.1H.5l1.6 1.8A5.3 5.3 0 009.3 17l2.7 2.9 2.7-2.9A5.3 5.3 0 0021.9 9.2l1.6-1.8h-4C17.2 6 14.6 5.3 12 5.3zM6.4 9.1a3.4 3.4 0 110 6.8 3.4 3.4 0 010-6.8zm11.2 0a3.4 3.4 0 110 6.8 3.4 3.4 0 010-6.8zM12 7.2c1.6 0 3.1.3 4.5.9a5.3 5.3 0 00-4.5 5.1 5.3 5.3 0 00-4.5-5.1c1.4-.6 2.9-.9 4.5-.9zm-5.6 3.6a1.7 1.7 0 100 3.4 1.7 1.7 0 000-3.4zm11.2 0a1.7 1.7 0 100 3.4 1.7 1.7 0 000-3.4z",
 };
 
-/** Shared footer social block; only profiles with a confirmed URL are rendered. No embeds or tracking. */
+/** Shared footer social block; all five channels are shown. Profiles without a confirmed URL render muted and non-clickable until the real link is supplied. No embeds or tracking. */
 export function SocialLinks() {
-  const profiles = socialProfiles.filter((p) => p.href);
   return <section className="social-block" aria-labelledby="social-title">
     <h3 id="social-title">Bleiben Sie mit uns verbunden</h3>
     <p>Entdecken Sie Neuigkeiten, Angebote und Einblicke in unser Studio.</p>
-    <ul className="social-icons">{profiles.map((p) => <li key={p.id}><a href={p.href} target="_blank" rel="noopener noreferrer" aria-label={`Royal Krabi auf ${p.name} (öffnet in neuem Tab)`} title={p.name}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor"><path d={paths[p.id]}/></svg></a></li>)}</ul>
+    <ul className="social-icons">{socialProfiles.map((p) => <li key={p.id}>
+      {p.href
+        ? <a href={p.href} target="_blank" rel="noopener noreferrer" aria-label={`Royal Krabi auf ${p.name} (öffnet in neuem Tab)`} title={p.name}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor"><path d={paths[p.id]}/></svg></a>
+        : <span className="social-icon-soon" title={`${p.name} – Profil folgt in Kürze`} aria-label={`${p.name} – Profil folgt in Kürze`}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor"><path d={paths[p.id]}/></svg></span>}
+    </li>)}</ul>
   </section>;
 }
