@@ -468,4 +468,16 @@ a.address-link-block{display:inline-block}
 .opening-contact-line a{color:var(--gold-soft)}
 .opening-hours{padding:34px 20px;margin-top:8px;border-block:1px solid var(--border);background:var(--launch-highlight);color:var(--foreground);line-height:1.9}
 .launch-jobs{padding:32px 0}
+/* Flyer popup and public flyer page */
+.flyer-backdrop{position:fixed;inset:0;z-index:90;background:color-mix(in oklab,var(--mahogany,#2a160c) 88%,black);display:flex;align-items:center;justify-content:center;padding:20px}
+.flyer-modal{position:relative;width:min(560px,100%);max-height:94dvh;overflow:auto;background:var(--launch-highlight);border:1px solid var(--gold);border-radius:16px;padding:18px}
+.flyer-modal img{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--border)}
+.flyer-close{position:absolute;top:10px;right:10px;display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--gold);color:var(--gold);background:color-mix(in oklab,var(--mahogany,#2a160c) 80%,transparent)}
+.flyer-close:hover,.flyer-close:focus-visible{background:var(--gold);color:var(--mahogany,#3a1f14);outline:none}
+.flyer-page{max-width:760px;margin:0 auto;padding:36px 20px 48px;text-align:center}
+.flyer-page h1{font-size:34px;color:var(--gold);font-family:var(--font-display)}
+.flyer-sub{margin-top:8px;color:var(--gold-soft)}
+.flyer-page img{width:100%;height:auto;display:block;margin:24px 0;border-radius:12px;border:1px solid var(--gold)}
+.flyer-back{margin-top:22px}
+.flyer-back a{color:var(--gold-soft);display:inline-flex;gap:6px;align-items:center}
 @media(max-width:760px){.opening h1{font-size:36px}.opening-brand{font-size:20px}.opening-date{font-size:22px;padding:13px 20px;margin-top:20px}.opening-tagline{margin-bottom:20px}.opening-cards,.opening-photos{grid-template-columns:1fr}.opening-percent{font-size:68px}.opening-actions{flex-direction:column}.opening-actions .btn,.opening-section>.btn{width:100%;justify-content:center}.opening-offer{padding:28px 16px}}
