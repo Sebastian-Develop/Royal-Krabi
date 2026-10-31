@@ -1,0 +1,19 @@
+import { socialProfiles } from "@/lib/social";
+
+const paths: Record<string, string> = {
+  instagram: "M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 100 12.4 6.2 6.2 0 000-12.4zM12 16a4 4 0 110-8 4 4 0 010 8zm6.4-11.8a1.4 1.4 0 100 2.9 1.4 1.4 0 000-2.9z",
+  tiktok: "M12.5 0h4c.2 2.1 1 3.6 2.4 4.6 1.1.8 2.4 1.2 3.9 1.3v4a10 10 0 01-6.3-2v8.6a7.5 7.5 0 11-7.5-7.5c.4 0 .9 0 1.3.1v4.1a3.5 3.5 0 102.2 3.3z",
+  facebook: "M24 12a12 12 0 10-13.9 11.9v-8.4h-3V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0024 12z",
+  linkedin: "M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.4V9h3.4v1.6c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 110-4.2 2.1 2.1 0 010 4.2zm1.8 13.1H3.6V9h3.5v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z",
+  tripadvisor: "M12 5.3c-2.6 0-5.2.7-7.4 2.1H.5l1.6 1.8A5.3 5.3 0 009.3 17l2.7 2.9 2.7-2.9A5.3 5.3 0 0021.9 9.2l1.6-1.8h-4C17.2 6 14.6 5.3 12 5.3zM6.4 9.1a3.4 3.4 0 110 6.8 3.4 3.4 0 010-6.8zm11.2 0a3.4 3.4 0 110 6.8 3.4 3.4 0 010-6.8zM12 7.2c1.6 0 3.1.3 4.5.9a5.3 5.3 0 00-4.5 5.1 5.3 5.3 0 00-4.5-5.1c1.4-.6 2.9-.9 4.5-.9zm-5.6 3.6a1.7 1.7 0 100 3.4 1.7 1.7 0 000-3.4zm11.2 0a1.7 1.7 0 100 3.4 1.7 1.7 0 000-3.4z",
+};
+
+/** Shared footer social block; only profiles with a confirmed URL are rendered. No embeds or tracking. */
+export function SocialLinks() {
+  const profiles = socialProfiles.filter((p) => p.href);
+  return <section className="social-block" aria-labelledby="social-title">
+    <h3 id="social-title">Bleiben Sie mit uns verbunden</h3>
+    <p>Entdecken Sie Neuigkeiten, Angebote und Einblicke in unser Studio.</p>
+    <ul className="social-icons">{profiles.map((p) => <li key={p.id}><a href={p.href} target="_blank" rel="noopener noreferrer" aria-label={`Royal Krabi auf ${p.name} (öffnet in neuem Tab)`} title={p.name}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor"><path d={paths[p.id]}/></svg></a></li>)}</ul>
+  </section>;
+}

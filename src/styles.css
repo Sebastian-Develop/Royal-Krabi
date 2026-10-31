@@ -423,3 +423,13 @@ a.address-link-block{display:inline-block}
 /* Collapsible 5er/10er Abo sections and quick jump link */
 .shop-section-title-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
 .shop-section-toggle{min-height:44px;white-space:nowrap;flex-shrink:0}
+
+/* Shared social footer block */
+.social-block{text-align:center;padding:1.4rem 0 .4rem;border-top:1px solid color-mix(in oklab,var(--gold,#c9a45c) 25%,transparent);margin-top:1rem;width:100%;flex-basis:100%}
+.social-block h3{font-family:var(--font-display);color:var(--gold);font-size:1.15rem;margin:0 0 .3rem}
+.social-block p{font-size:.88rem;opacity:.8;margin:0 0 .9rem}
+.social-icons{display:flex;justify-content:center;flex-wrap:wrap;gap:.75rem;list-style:none;margin:0;padding:0}
+.social-icons a{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;border:1px solid color-mix(in oklab,var(--gold,#c9a45c) 60%,transparent);color:var(--gold,#c9a45c);transition:background .2s,color .2s,transform .2s}
+.social-icons a:hover,.social-icons a:focus-visible{background:var(--gold,#c9a45c);color:var(--mahogany,#3a1f14);transform:translateY(-2px);outline:none}
+@media (max-width:640px){.social-icons{gap:1rem}.social-icons a{width:50px;height:50px}}
+.launch-footer{flex-wrap:wrap}.launch-footer .social-block{border-top:0;margin-top:0;padding-top:0}

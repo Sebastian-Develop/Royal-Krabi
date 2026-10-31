@@ -12,6 +12,7 @@ function useAnsicht(): { ansicht?: "website" | "coming-soon" } {
   const ansicht = useRouterState({ select: (s) => (s.location.search as { ansicht?: string }).ansicht });
   return ansicht === "website" || ansicht === "coming-soon" ? { ansicht } : {};
 }
+import { SocialLinks } from "./social-links";
 import { contact, mailHref, mailHrefPlain, mapsRouteHint, mapsRouteUrl } from "@/lib/contact";
 import { vatNotice } from "@/lib/content";
 import { CONSENT_EVENT, loadTidio, readConsent, saveConsent } from "@/lib/consent";
@@ -92,7 +93,7 @@ export function SiteFooter() {
     <div><Link to="/" search={ansicht} className="footer-logo-link" aria-label="Royal Krabi Startseite" onClick={toTop}><img className="footer-logo" src={logo.url} alt="Royal Krabi Serenity Thaimassage"/></Link><p>Traditionelle Thai-Massage in Offenbach – Entspannung und Wohlbefinden in stilvoller Atmosphäre.</p><p className="gold-text"><MapPin size={16}/><AddressLink block>{contact.name}<br/>{contact.street}<br/>{contact.city}</AddressLink></p></div>
     <FooterLinks title="Entdecken" links={nav}/><FooterLinks title="Mehr" links={[["Treuepass", "/treuepass"], ["FAQ", "/faq"], ["Jobs", "/jobs"]]}/>
     <div className="footer-contact"><h3>Kontakt</h3><p><Phone size={15}/> <span>Telefon: <a href={contact.phoneHref}>{contact.phone}</a></span></p><p className="footer-contact-email"><Mail size={15}/> <span>E-Mail: <a href={mailHrefPlain}>{contact.email}</a></span></p><p className="hours-block"><Clock size={15}/> <span><strong>Öffnungszeiten</strong><br/>{contact.hoursOpen}<br/>Sonntag und Montag: geschlossen</span></p><p className="appointment-rule"><strong>{contact.appointmentRule}.</strong></p></div>
-  </div><div className="footer-bottom container"><p>© 2026 Royal Krabi Serenity Thaimassage. Alle Rechte vorbehalten.</p><div>{legalLinks.map(([label,to]) => <Link key={to} to={to} search={ansicht}>{label}</Link>)}</div></div><p className="footer-notice">Royal Krabi Serenity Thaimassage bietet ausschließlich professionelle traditionelle Thai-Massagen sowie Wellness- und Entspannungsmassagen an. Wir bieten keine erotischen Massagen oder sexuellen Dienstleistungen an.</p></footer>;
+  </div><div className="footer-bottom container"><p>© 2026 Royal Krabi Serenity Thaimassage. Alle Rechte vorbehalten.</p><div>{legalLinks.map(([label,to]) => <Link key={to} to={to} search={ansicht}>{label}</Link>)}</div></div><div className="container"><SocialLinks/></div><p className="footer-notice">Royal Krabi Serenity Thaimassage bietet ausschließlich professionelle traditionelle Thai-Massagen sowie Wellness- und Entspannungsmassagen an. Wir bieten keine erotischen Massagen oder sexuellen Dienstleistungen an.</p></footer>;
 }
 
 export function BrandHeading({ eyebrow = "ROYAL KRABI SERENITY THAIMASSAGE" }: { eyebrow?: string }) {

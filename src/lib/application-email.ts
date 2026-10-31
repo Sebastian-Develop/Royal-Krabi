@@ -1,4 +1,5 @@
 import { contact } from "./contact";
+import { socialHref } from "./social";
 import bgAsset from "@/assets/email/email-bg-center.jpg.asset.json";
 import dividerAsset from "@/assets/email/email-gold-divider.png.asset.json";
 import logoAsset from "@/assets/email/email-logo.png.asset.json";
@@ -14,15 +15,11 @@ const abs = (u: string) => (u.startsWith("http") ? u : SITE + u);
 
 /** Social-Media-Profile; leere Adresse = Symbol wird ohne Link gezeigt. */
 export const emailSocials = [
-  { name: "Instagram", icon: abs(igAsset.url), href: "https://www.instagram.com/royalkrabithaimassage" },
-  { name: "TikTok", icon: abs(ttAsset.url), href: "" },
-  { name: "Facebook", icon: abs(fbAsset.url), href: "https://www.facebook.com/share/1hXpHYZZo6/" },
-  { name: "LinkedIn", icon: abs(liAsset.url), href: "" },
-  {
-    name: "Tripadvisor",
-    icon: abs(taAsset.url),
-    href: "https://www.tripadvisor.de/Attraction_Review-g187344-d34753495-Reviews-Royal_Krabi_Serenity_Thaimassage-Offenbach_Hesse.html",
-  },
+  { name: "Instagram", icon: abs(igAsset.url), href: socialHref("Instagram") },
+  { name: "TikTok", icon: abs(ttAsset.url), href: socialHref("TikTok") },
+  { name: "Facebook", icon: abs(fbAsset.url), href: socialHref("Facebook") },
+  { name: "LinkedIn", icon: abs(liAsset.url), href: socialHref("LinkedIn") },
+  { name: "Tripadvisor", icon: abs(taAsset.url), href: socialHref("Tripadvisor") },
 ];
 
 /**

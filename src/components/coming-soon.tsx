@@ -4,13 +4,14 @@ import logoMark from "@/assets/royal-krabi-logo-trimmed.webp";
 import { contact } from "@/lib/contact";
 import { launch, websiteStartStatus } from "@/lib/launch";
 import { AddressLink } from "./site";
+import { SocialLinks } from "./social-links";
 
 export function LaunchHeader() {
   return <header className="launch-header"><Link to="/" search={{ ansicht: "coming-soon" }} aria-label="Royal Krabi Startseite"><img src={logoMark} alt={contact.name} width={1392} height={1197}/></Link></header>;
 }
 
 export function LaunchFooter() {
-  return <footer className="launch-footer"><span>© 2026 {contact.name}</span><nav aria-label="Rechtliche Informationen"><Link to="/impressum" search={{ ansicht: "coming-soon" }}>Impressum</Link><Link to="/datenschutz" search={{ ansicht: "coming-soon" }}>Datenschutz</Link></nav></footer>;
+  return <footer className="launch-footer"><SocialLinks/><span>© 2026 {contact.name}</span><nav aria-label="Rechtliche Informationen"><Link to="/impressum" search={{ ansicht: "coming-soon" }}>Impressum</Link><Link to="/datenschutz" search={{ ansicht: "coming-soon" }}>Datenschutz</Link></nav></footer>;
 }
 
 export function ComingSoon() {
