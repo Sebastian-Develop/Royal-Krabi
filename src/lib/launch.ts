@@ -5,8 +5,8 @@ export const launch = {
   heading: "Ein Ort der Ruhe. Bald auch online.",
   welcome: "Willkommen bei Royal Krabi Serenity Thaimassage",
   introduction: "Unsere neue Website entsteht gerade mit viel Liebe zum Detail. Schon bald findest du hier unsere Massagen, Angebote und alle Informationen für deine persönliche Auszeit.",
-  updateHeading: "Hier halten wir dich auf dem Laufenden",
-  updateText: "Sobald der Starttermin unserer Website feststeht, erfährst du es hier. Schau gerne wieder vorbei – über den QR-Code auf deinem Flyer kommst du jederzeit zurück auf diese Seite.",
+  updateHeading: "Unsere neue Website ist bald für Sie da",
+  updateText: "Schon bald finden Sie hier alle Massagen, Angebote und Informationen. Über den QR-Code auf Ihrem Flyer kommen Sie jederzeit auf diese Seite zurück.",
   pendingStatus: "Website-Start: Termin folgt",
   permanentUrl: "https://royalkrabi-thaimassage.de",
 };

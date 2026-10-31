@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, Phone, MapPin, ArrowUpRight, Briefcase } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import logoMark from "@/assets/royal-krabi-logo-trimmed.webp";
 import { contact } from "@/lib/contact";
 import { launch, websiteStartStatus } from "@/lib/launch";
-import { AddressLink } from "./site";
+import { OpeningInvitation } from "./opening-invitation";
 import { SocialLinks } from "./social-links";
 
 export function LaunchHeader() {
@@ -16,25 +16,12 @@ export function LaunchFooter() {
 
 export function ComingSoon() {
   return <main className="coming-soon">
-    <section className="launch-introduction" aria-labelledby="launch-title">
-      <div className="launch-divider" aria-hidden="true"><span/>◇<span/></div>
-      <h1 id="launch-title">{launch.heading}</h1>
-      <p className="launch-welcome">{launch.welcome}</p>
-      <p className="launch-description">{launch.introduction}</p>
-      <div className="launch-jobs"><Link to="/jobs" search={{ ansicht: "coming-soon" }} className="btn btn-gold"><Briefcase size={18}/> JOBS BEI ROYAL KRABI – JETZT BEWERBEN</Link></div>
-    </section>
+    <OpeningInvitation/>
+    <div className="launch-jobs"><Link to="/jobs" search={{ ansicht: "coming-soon" }} className="btn btn-gold"><Briefcase size={18}/> JOBS BEI ROYAL KRABI – JETZT BEWERBEN</Link></div>
     <section className="launch-update" aria-labelledby="launch-update-title">
       <span className="launch-status"><span aria-hidden="true"/>{websiteStartStatus()}</span>
       <h2 id="launch-update-title">{launch.updateHeading}</h2>
       <p>{launch.updateText}</p>
-    </section>
-    <section className="launch-contact" aria-labelledby="launch-contact-title">
-      <h2 id="launch-contact-title">Kontakt</h2>
-      <div className="launch-contact-links">
-        <a href={contact.phoneHref}><Phone size={18}/><span>{contact.phone}</span><ArrowUpRight size={15}/></a>
-        <a href={`mailto:${contact.email}`}><Mail size={18}/><span>{contact.email}</span><ArrowUpRight size={15}/></a>
-      </div>
-      <div className="launch-address"><MapPin size={18}/><AddressLink>{contact.street}, {contact.city}</AddressLink></div>
     </section>
   </main>;
 }

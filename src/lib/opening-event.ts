@@ -1,0 +1,40 @@
+import { contact } from "./contact";
+
+/** Studio opening event copy. Event time stays null until the owner confirms it; never reuse business hours. */
+export const openingEvent = {
+  tagline: "Wo thailändische Tradition auf königliche Ruhe trifft",
+  heading: "Ein Stück Thailand kommt nach Offenbach-Bürgel",
+  subheading: "Neueröffnung & Tag der offenen Tür am 07.11.2026",
+  date: "07.11.2026",
+  time: null as string | null,
+  invitation: "Feiern Sie mit uns die Eröffnung unseres neuen Thai-Massagestudios! Freuen Sie sich auf kleine thailändische Snacks, traditionellen Thai-Tanz und Einblicke in unsere neuen Räume. Lernen Sie uns persönlich kennen und reservieren Sie Ihren nächsten Wohlfühltermin direkt vor Ort.",
+  freeEntry: "Eintritt frei – bringen Sie gerne Familie und Freunde mit!",
+  location: "Offenbacher Straße 32 · 63075 Offenbach am Main – Bürgel",
+  programHeading: "Das erwartet Sie am Eröffnungstag",
+  program: [
+    { icon: "snacks", title: "Thailändische Snacks", text: "Genießen Sie kleine thailändische Snacks und Spezialitäten." },
+    { icon: "dance", title: "Traditioneller Thai-Tanz", text: "Erleben Sie ein Stück thailändischer Kultur." },
+    { icon: "studio", title: "Unser Studio entdecken", text: "Werfen Sie einen Blick in unsere neuen Räume und lernen Sie die Atmosphäre von Royal Krabi kennen." },
+    { icon: "advice", title: "Persönlich beraten lassen", text: "Entdecken Sie unser Massageangebot und reservieren Sie Ihren Wunschtermin direkt vor Ort." },
+  ] as const,
+  offer: {
+    heading: "20 % Neueröffnungsrabatt",
+    percent: 20,
+    minMinutes: 60,
+    text: "Auf alle Angebote ab 60 Minuten – auch auf entsprechende Massagegutscheine und Abos.",
+    aboNote: "Bei Abos gilt die Mindestdauer von 60 Minuten für die einzelne Massage.",
+    validFrom: "2026-11-07",
+    validUntil: "2026-11-21",
+    validity: "Gültig vom 07.11. bis einschließlich 21.11.2026.",
+    invite: "Lernen Sie uns am Eröffnungstag persönlich kennen und reservieren Sie Ihren nächsten Wohlfühltermin direkt vor Ort.",
+  },
+  hoursHeading: "Unsere regulären Öffnungszeiten ab der Eröffnung",
+  hoursOpen: contact.hoursOpen,
+  hoursClosed: "Sonntag und Montag: geschlossen",
+  appointmentNote: "Massagen nur nach vorheriger Terminvereinbarung – telefonisch oder per WhatsApp.",
+  shareText: "Lust, mitzukommen? Royal Krabi Serenity Thaimassage feiert am 07.11.2026 Neueröffnung in Offenbach-Bürgel! Mit kleinen Thai-Snacks, traditionellem Thai-Tanz und Einblicken ins neue Studio. Eintritt frei – alle sind herzlich willkommen. Offenbacher Straße 32, 63075 Offenbach am Main. Alle Infos: https://royalkrabi-thaimassage.de",
+};
+
+export const whatsappContactHref = "https://wa.me/496960511884";
+/** Opens WhatsApp's own share/contact picker; nothing is sent automatically. */
+export const whatsappShareHref = `https://wa.me/?text=${encodeURIComponent(openingEvent.shareText)}`;
