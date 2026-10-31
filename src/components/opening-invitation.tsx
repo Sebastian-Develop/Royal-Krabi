@@ -1,6 +1,8 @@
-import { UtensilsCrossed, Sparkles, Flower2, CalendarHeart, MapPin, Phone, Mail, MessageCircle, Share2, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { UtensilsCrossed, Sparkles, Flower2, CalendarHeart, MapPin, Phone, Mail, MessageCircle, Share2, Clock, X, Download } from "lucide-react";
 import receptionA from "@/assets/royal-krabi-reception-clean.jpg.asset.json";
 import receptionB from "@/assets/royal-krabi-reception-2.webp.asset.json";
+import flyerImage from "@/assets/royal-krabi-flyer.jpg";
 import { contact, mapsRouteUrl, mapsRouteHint } from "@/lib/contact";
 import { openingEvent as ev, whatsappContactHref, whatsappShareHref } from "@/lib/opening-event";
 
@@ -9,6 +11,7 @@ const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
 
 /** Reusable opening invitation; can later be placed on the full home page unchanged. */
 export function OpeningInvitation() {
+  const [flyerOpen, setFlyerOpen] = useState(false);
   return <div className="opening">
     <section className="opening-hero" aria-labelledby="opening-title">
       <p className="opening-brand">{contact.name}</p>
@@ -22,6 +25,7 @@ export function OpeningInvitation() {
       <p className="opening-location"><MapPin size={17}/> {ev.location}</p>
       <div className="opening-actions">
         <a href="#programm" className="btn btn-gold">Das erwartet Sie</a>
+        <button type="button" className="btn btn-outline" onClick={() => setFlyerOpen(true)}>Flyer ansehen</button>
         <a href={mapsRouteUrl} {...ext} aria-label={mapsRouteHint} className="btn btn-outline">Anfahrt planen</a>
       </div>
     </section>
@@ -70,7 +74,29 @@ export function OpeningInvitation() {
     </section>
 
     <section className="opening-section" aria-label="Einladung teilen">
-      <a href={whatsappShareHref} {...ext} className="btn btn-gold"><Share2 size={17}/> Familie & Freunde per WhatsApp einladen</a>
+      <div className="opening-share-actions">
+        <a href={whatsappShareHref} {...ext} className="btn btn-gold"><Share2 size={17}/><span>Familie & Freunde per WhatsApp einladen</span></a>
+        <button type="button" className="btn btn-outline" onClick={() => setFlyerOpen(true)}>Flyer ansehen</button>
+      </div>
     </section>
+    {flyerOpen && <FlyerModal onClose={() => setFlyerOpen(false)}/>}
+  </div>;
+}
+
+function FlyerModal({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return <div className="flyer-backdrop" role="dialog" aria-modal="true" aria-label="Flyer zur Neueröffnung" onClick={onClose}>
+    <div className="flyer-modal" onClick={(e) => e.stopPropagation()}>
+      <button type="button" className="flyer-close" onClick={onClose} aria-label="Flyer schließen" autoFocus><X size={18}/></button>
+      <img src={flyerImage} alt="Flyer: Neueröffnung und Tag der offenen Tür von Royal Krabi Serenity Thaimassage am 07.11.2026 mit 20 % Eröffnungsrabatt"/>
+      <div className="opening-actions">
+        <a href={whatsappShareHref} {...ext} className="btn btn-gold"><Share2 size={17}/> Per WhatsApp einladen</a>
+        <a href="/api/public/flyer-image" download="Royal-Krabi-Flyer-Neueroeffnung.jpg" className="btn btn-outline"><Download size={17}/> Flyer herunterladen</a>
+      </div>
+    </div>
   </div>;
 }

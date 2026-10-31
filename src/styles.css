@@ -446,6 +446,11 @@ a.address-link-block{display:inline-block}
 .opening-location{display:flex;gap:8px;justify-content:center;align-items:center;margin-top:10px;font-size:14px;color:var(--foreground)}
 .opening-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:24px}
 .opening-actions .btn,.opening-section>.btn{min-height:48px}
+.opening-share-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:stretch;max-width:760px;margin:0 auto}
+.opening-share-actions .btn{min-width:0;min-height:56px;margin:0;padding:16px 22px;font-size:13px;line-height:1.5;letter-spacing:0;text-align:center;box-shadow:none}
+.opening-share-actions .btn svg{flex-shrink:0}
+.opening-share-actions .btn span{min-width:0;text-wrap:balance}
+@media(max-width:760px){.opening-share-actions{grid-template-columns:minmax(0,1fr);gap:12px;max-width:480px}.opening-share-actions .btn{width:100%}}
 .opening-hero{padding-bottom:40px}
 .opening-section{padding:40px 0;border-top:1px solid var(--border)}
 .opening-section h2,.opening-offer h2,.opening-hours h2{margin-bottom:22px}
