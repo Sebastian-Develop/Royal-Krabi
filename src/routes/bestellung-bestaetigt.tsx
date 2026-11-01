@@ -20,7 +20,7 @@ const berlinDateTime = (iso: string) =>
 const STATUS_TEXT: Record<ShopOrderStatusResult["status"], { heading: string; body: string }> = {
   paid: {
     heading: "Ihre Bestellung und Zahlung sind bestätigt.",
-    body: "Vielen Dank! Ihre Zahlung wurde von unserem Zahlungsdienstleister bestätigt. Sie erhalten eine E-Mail mit Ihrer Bestellzusammenfassung und allen Unterlagen als PDF-Anhang. Ihre Bestellung wird nun von uns persönlich geprüft und angenommen. Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab. Die Gültigkeit beginnt mit dem Zahlungseingang: 5er-Karten 12 Monate, 10er-Karten und Gutscheine jeweils 24 Monate.",
+    body: "Vielen Dank! Ihre Zahlung wurde von unserem Zahlungsdienstleister bestätigt. Sie erhalten eine E-Mail mit Ihrer Bestellzusammenfassung und allen Unterlagen als PDF-Anhang. Ihre Bestellung wird nun von uns persönlich geprüft und angenommen. Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab. Gültigkeit und Nutzungsbedingungen richten sich nach unseren AGB.",
   },
   pending: {
     heading: "Ihre Bestellung ist eingegangen – Zahlung ausstehend.",
