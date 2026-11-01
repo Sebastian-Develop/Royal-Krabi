@@ -22,6 +22,7 @@
 - Keep pending value-voucher requirements in an internal review module, separate from public validity text and disabled redemption, because SumUp gift-card access and legal validity are not yet proven.
 - Exclude Bun test files from the browser application TypeScript program because Bun's global fetch augmentation conflicts with generated Cloud fetch adapters; run the tests separately with Bun.
 - Centralize interim launch copy and the public/full-site switch in the launch module; enforce the public exact-path allowlist at the server entry and root navigation boundary so draft pages cannot be opened directly while previews retain all existing routes.
+- Keep the launch switch default-on and let only an explicit build flag turn it off, so a static site copy can show the full site without exposing draft pages on the live domain.
 - Select launch presentation from the request hostname using an isomorphic helper, never forwarded headers or a public query bypass; preview-only view selection preserves internal full-site editing without creating customer accounts.
 - Protect applicant-email text with Gmail-only screen/difference wrappers and Outlook text-fill fallbacks, excluding images; use Outlook-only VML background, explicit image dimensions and fixed social cells while preserving fluid layout in other clients.
 

@@ -16,3 +16,4 @@
 - [x] Gesamte Bewerbungsbestätigung mit Gmail-/Outlook-Farbschutz, Outlook-Hintergrund und stabilen Bildgrößen angepasst; Browservorschau geprüft, echte Gmail-/Outlook-Postfächer ungetestet; nicht veröffentlicht.
 - [x] Bewerbungsbestätigung: Schriftfarbe auf Creme-Gold der Coming-soon-Überschrift umgestellt; Live-Version neu veröffentlichen (29.10.2026)
 - [x] Komplette Website 1:1 ins GitHub-Repository synchronisiert (01.11.2026, main 7551e851): 184 Quellcodedateien identisch geprüft, keine Veröffentlichung; statische Pages-Kopie unverändert.
+- [x] Statische GitHub-Pages-Kopie 1:1 mit dem Website-Stand neu gebaut (01.11.2026, main deef6137): alle 20 Seiten als eigene Dateien, Bilder ergänzt, auf github.io mit Desktop und Handy geprüft; royalkrabi-thaimassage.de bleibt Coming-soon.
