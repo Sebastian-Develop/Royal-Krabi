@@ -3,8 +3,10 @@ export const categoryBadges = { classic: "KLASSISCH", premium: "PREMIUM", signat
 export const partialBadge = "FOKUS";
 export const pairBadge = "KLASSISCH · PREMIUM-OPTION";
 export const upgradeBadge = "PREMIUM-OPTION";
-/** Price note shown beneath every displayed price list. */
-export const vatNotice = "Alle Preise inklusive Mehrwertsteuer.";
+/** Price note shown beneath price lists for massages, Royalpässe and massage vouchers (confirmed 19 % VAT rate). */
+export const vatNotice = "Alle Preise verstehen sich inklusive 19 % MwSt.";
+/** Cautious wording for the shared footer and for carts containing value vouchers: their tax treatment (Einzweck-/Mehrzweckgutschein) is not yet bindingly determined. */
+export const vatNoticeCautious = "Alle Preise sind Endpreise. Bei umsatzsteuerpflichtigen Leistungen ist die gesetzliche Umsatzsteuer enthalten.";
 export const massages: Massage[] = [
   { name: "Royal Thai Massage – ohne Öl", desc: "Traditionelle Thai-Massage mit gezielten Drucktechniken und Dehnbewegungen.", category: "classic", prices: [[60,59],[90,85],[120,109]] },
   { name: "Royal Thai Massage", desc: "Traditionelle Massagetechniken, durchgeführt mit Öl – das Öl ist im Preis enthalten.", category: "classic", prices: [[60,65],[90,92],[120,119]] },
