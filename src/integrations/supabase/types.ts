@@ -24,6 +24,7 @@ export type Database = {
           quantity: number
           subtotal_cents: number
           unit_price_cents: number
+          validity_months: number | null
         }
         Insert: {
           id?: string
@@ -34,6 +35,7 @@ export type Database = {
           quantity: number
           subtotal_cents: number
           unit_price_cents: number
+          validity_months?: number | null
         }
         Update: {
           id?: string
@@ -44,6 +46,7 @@ export type Database = {
           quantity?: number
           subtotal_cents?: number
           unit_price_cents?: number
+          validity_months?: number | null
         }
         Relationships: [
           {
@@ -63,16 +66,23 @@ export type Database = {
           created_at: string
           currency: string
           delivery: string
+          discount_cents: number
+          discount_code: string
           email: string
           full_name: string
           gift_text: string
           id: string
           notes: string
+          operator_notified_at: string | null
+          order_email_sent_at: string | null
+          paid_at: string | null
+          paid_email_sent_at: string | null
           phone: string
           postal_code: string
           recipient: string
           status: string
           street: string
+          submission_key: string | null
           total_cents: number
         }
         Insert: {
@@ -82,16 +92,23 @@ export type Database = {
           created_at?: string
           currency?: string
           delivery: string
+          discount_cents?: number
+          discount_code?: string
           email: string
           full_name: string
           gift_text?: string
           id?: string
           notes?: string
+          operator_notified_at?: string | null
+          order_email_sent_at?: string | null
+          paid_at?: string | null
+          paid_email_sent_at?: string | null
           phone: string
           postal_code?: string
           recipient?: string
           status?: string
           street?: string
+          submission_key?: string | null
           total_cents: number
         }
         Update: {
@@ -101,16 +118,23 @@ export type Database = {
           created_at?: string
           currency?: string
           delivery?: string
+          discount_cents?: number
+          discount_code?: string
           email?: string
           full_name?: string
           gift_text?: string
           id?: string
           notes?: string
+          operator_notified_at?: string | null
+          order_email_sent_at?: string | null
+          paid_at?: string | null
+          paid_email_sent_at?: string | null
           phone?: string
           postal_code?: string
           recipient?: string
           status?: string
           street?: string
+          submission_key?: string | null
           total_cents?: number
         }
         Relationships: []

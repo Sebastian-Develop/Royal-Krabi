@@ -1,6 +1,6 @@
 /// <reference types="bun" />
 import { describe, expect, test } from "bun:test";
-import { buildOrderLines, centsToAmount, checkoutRequestSchema, orderTotalCents } from "./shop-checkout";
+import { buildOrderLines, centsToAmount, checkoutRequestSchema, orderTotalCents, validityMonthsFor } from "./shop-checkout";
 import { shopProducts } from "./shop";
 import { MAX_QUANTITY } from "./cart";
 
@@ -21,6 +21,8 @@ const customer = {
   notes: "",
   acceptTerms: true,
   acknowledgePrivacy: true,
+  discountCode: "",
+  submissionKey: "0f3b3d7a-1c2e-4b5a-9c8d-7e6f5a4b3c2d",
 };
 
 describe("server-side order pricing", () => {
@@ -74,5 +76,14 @@ describe("checkout request validation", () => {
     const base = { ...customer, delivery: "post", items: [{ productId: priced.id, quantity: 1 }] };
     expect(checkoutRequestSchema.safeParse(base).success).toBe(false);
     expect(checkoutRequestSchema.safeParse({ ...base, street: "Offenbacher Str. 32", postalCode: "63075", city: "Offenbach am Main" }).success).toBe(true);
+  });
+  test("a missing submission key is rejected (duplicate protection)", () => {
+    const { submissionKey, ...withoutKey } = customer;
+    expect(checkoutRequestSchema.safeParse({ ...withoutKey, items: [{ productId: priced.id, quantity: 1 }] }).success).toBe(false);
+  });
+  test("validity periods follow the confirmed rules: 5er 12 months, 10er and vouchers 24", () => {
+    expect(validityMonthsFor("five")).toBe(12);
+    expect(validityMonthsFor("ten")).toBe(24);
+    expect(validityMonthsFor("voucher")).toBe(24);
   });
 });

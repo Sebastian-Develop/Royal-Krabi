@@ -30,7 +30,7 @@ export type CreatedCheckout = { id: string; hostedUrl: string; status: string };
 /** Erstellt einen SumUp Hosted Checkout und liefert die Zahlungsseiten-URL. */
 export async function sumupCreateCheckout(
   apiKey: string,
-  opts: { amount: number; reference: string; description: string; merchantCode: string; redirectUrl: string },
+  opts: { amount: number; reference: string; description: string; merchantCode: string; redirectUrl: string; webhookUrl: string },
 ): Promise<CreatedCheckout> {
   const body = await sumupRequest(apiKey, "/v0.1/checkouts", {
     method: "POST",
@@ -42,6 +42,7 @@ export async function sumupCreateCheckout(
       merchant_code: opts.merchantCode,
       hosted_checkout: { enabled: true },
       redirect_url: opts.redirectUrl,
+      return_url: opts.webhookUrl,
     }),
   });
   const id = body["id"];
@@ -58,4 +59,23 @@ export async function sumupGetCheckoutStatus(apiKey: string, checkoutId: string)
   const body = await sumupRequest(apiKey, `/v0.1/checkouts/${encodeURIComponent(checkoutId)}`);
   const status = body["status"];
   return typeof status === "string" ? status : "PENDING";
+}
+
+/**
+ * Sucht eine bestehende Checkout-Session anhand unserer Bestellnummer.
+ * Wichtig nach einem Timeout: erst suchen, bevor eine neue Session entsteht.
+ */
+export async function sumupFindCheckoutByReference(apiKey: string, reference: string): Promise<CreatedCheckout | null> {
+  const res = await fetch(`${SUMUP_API}/v0.1/checkouts?checkout_reference=${encodeURIComponent(reference)}`, {
+    headers: { Authorization: `Bearer ${apiKey}` },
+  });
+  if (!res.ok) throw new Error(`SumUp-Suche fehlgeschlagen (HTTP ${res.status}).`);
+  const list = (await res.json()) as unknown;
+  if (!Array.isArray(list) || !list.length) return null;
+  const latest = list[list.length - 1] as Record<string, unknown>;
+  const id = latest["id"];
+  const hostedUrl = latest["hosted_checkout_url"];
+  const status = latest["status"];
+  if (typeof id !== "string" || !id) return null;
+  return { id, hostedUrl: typeof hostedUrl === "string" ? hostedUrl : "", status: typeof status === "string" ? status : "PENDING" };
 }

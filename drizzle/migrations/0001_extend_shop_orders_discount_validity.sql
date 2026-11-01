@@ -1,0 +1,10 @@
+ALTER TABLE public.shop_orders ADD COLUMN discount_code text NOT NULL DEFAULT '';
+ALTER TABLE public.shop_orders ADD COLUMN discount_cents integer NOT NULL DEFAULT 0;
+ALTER TABLE public.shop_orders ADD COLUMN submission_key uuid;
+CREATE UNIQUE INDEX shop_orders_submission_key_unique ON public.shop_orders(submission_key) WHERE submission_key IS NOT NULL;
+ALTER TABLE public.shop_orders ADD COLUMN paid_at timestamptz;
+ALTER TABLE public.shop_orders ADD COLUMN order_email_sent_at timestamptz;
+ALTER TABLE public.shop_orders ADD COLUMN paid_email_sent_at timestamptz;
+ALTER TABLE public.shop_orders ADD COLUMN operator_notified_at timestamptz;
+ALTER TABLE public.shop_order_items ADD COLUMN validity_months integer;
+CREATE UNIQUE INDEX shop_payment_attempts_one_pending ON public.shop_payment_attempts(order_id) WHERE status = 'PENDING';

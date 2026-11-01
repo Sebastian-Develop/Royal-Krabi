@@ -17,7 +17,7 @@ export const Route = createFileRoute("/bestellung-bestaetigt")({
 const STATUS_TEXT: Record<ShopOrderStatus, { heading: string; body: string }> = {
   paid: {
     heading: "Ihre Zahlung ist bestätigt.",
-    body: "Vielen Dank! Ihre Zahlung wurde von unserem Zahlungsdienstleister bestätigt. Ihre Bestellung wird nun von uns persönlich geprüft und angenommen. Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab.",
+    body: "Vielen Dank! Ihre Zahlung wurde von unserem Zahlungsdienstleister bestätigt. Ihre Bestellung wird nun von uns persönlich geprüft und angenommen. Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab. Die Gültigkeit beginnt mit dem Zahlungseingang: 5er-Karten 12 Monate, 10er-Karten und Gutscheine jeweils 24 Monate.",
   },
   pending: {
     heading: "Ihre Zahlung wird noch geprüft.",

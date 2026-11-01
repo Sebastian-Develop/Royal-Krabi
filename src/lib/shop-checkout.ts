@@ -14,8 +14,15 @@ export const checkoutItemSchema = z.object({
  */
 export const checkoutRequestSchema = orderSchemaBase.omit({ productId: true }).extend({
   items: z.array(checkoutItemSchema).min(1, "Ihr Warenkorb ist leer.").max(50),
+  /** Freiwilliger Rabattcode; wird serverseitig gegen Code, Frist und Berechtigung geprüft. */
+  discountCode: z.string().trim().max(40).optional().default(""),
+  /** Wiederholungsschlüssel des Formulars: dieselbe Übermittlung erzeugt keine zweite Bestellung. */
+  submissionKey: z.string().uuid(),
 }).superRefine(orderAddressRefinement);
 export type CheckoutRequest = z.infer<typeof checkoutRequestSchema>;
+
+/** Bestätigte Laufzeiten ab verifiziertem Zahlungseingang (rechtliche Prüfung bleibt offen). */
+export const validityMonthsFor = (kind: string): number => kind === "five" ? 12 : 24;
 
 export type OrderLine = {
   productId: string;

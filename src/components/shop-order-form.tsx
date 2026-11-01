@@ -1,21 +1,39 @@
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { contact, mailHref } from "@/lib/contact";
-import { cartLines, cartTotal, type CartItem } from "@/lib/cart";
+import { cartLines, type CartItem } from "@/lib/cart";
 import { shippingNotice, validityNotice } from "@/lib/shop";
-import { checkoutRequestSchema } from "@/lib/shop-checkout";
+import { checkoutRequestSchema, orderTotalCents, type OrderLine } from "@/lib/shop-checkout";
+import { discountForLines, openingDiscount } from "@/lib/discount";
 import { createShopCheckout } from "@/lib/shop-checkout.functions";
 import { Loader2 } from "lucide-react";
 import { PriceVatNotice } from "@/components/site";
+
+const eur = (cents: number) => `${(cents / 100).toFixed(2).replace(".", ",")} €`;
 
 export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
   const [delivery, setDelivery] = useState("pickup");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [discountCode, setDiscountCode] = useState("");
+  // Wiederholungsschlüssel: bleibt über Wiederholungsversuche gleich, damit der
+  // Server dieselbe Übermittlung erkennt und keine zweite Bestellung anlegt.
+  const [submissionKey] = useState(() => crypto.randomUUID());
   const lines = cartLines(cart);
   const createCheckout = useServerFn(createShopCheckout);
+
+  // Live-Vorschau des Rabatts mit derselben serverseitigen Regel; verbindlich ist die Serverprüfung.
+  const preview = useMemo(() => {
+    const orderLines: OrderLine[] = lines.map(l => ({ productId: l.product.id, name: l.product.name, kind: l.product.kind, quantity: l.quantity, unitPriceCents: l.unitPrice * 100, subtotalCents: l.subtotal * 100 }));
+    const subtotalCents = orderTotalCents(orderLines);
+    if (!discountCode.trim()) return { subtotalCents, discountCents: 0, totalCents: subtotalCents, message: "" };
+    const result = discountForLines(orderLines, discountCode, new Date());
+    return result.ok
+      ? { subtotalCents, discountCents: result.discountCents, totalCents: subtotalCents - result.discountCents, message: "" }
+      : { subtotalCents, discountCents: 0, totalCents: subtotalCents, message: result.error };
+  }, [lines, discountCode]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,6 +43,8 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
     const parsed = checkoutRequestSchema.safeParse({
       ...Object.fromEntries(form),
       items: lines.map(l => ({ productId: l.product.id, quantity: l.quantity })),
+      discountCode,
+      submissionKey,
       acceptTerms: form.get("acceptTerms") === "on",
       acknowledgePrivacy: form.get("acknowledgePrivacy") === "on",
     });
@@ -48,8 +68,14 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
     {delivery === "post" ? <><div className="form-grid"><label className="field"><span>Straße und Hausnummer *</span><input name="street" autoComplete="address-line1" required maxLength={150}/></label><label className="field"><span>Postleitzahl *</span><input name="postalCode" autoComplete="postal-code" inputMode="numeric" pattern="[0-9]{5}" required maxLength={5}/></label><label className="field"><span>Ort *</span><input name="city" autoComplete="address-level2" required maxLength={100}/></label></div><p className="shop-delivery-note">{shippingNotice}</p></> : <><input type="hidden" name="street" value=""/><input type="hidden" name="postalCode" value=""/><input type="hidden" name="city" value=""/><p className="shop-delivery-note">Wir melden uns nach Prüfung des Zahlungseingangs, um einen Abholtermin abzustimmen.</p></>}
     <div className="form-grid"><label className="field"><span>Empfängername (optional)</span><input name="recipient" maxLength={100}/></label><label className="field"><span>Geschenktext (optional)</span><textarea name="giftText" rows={3} maxLength={500}/></label></div>
     <label className="field"><span>Anmerkungen (optional)</span><textarea name="notes" rows={3} maxLength={1000}/></label>
+    <label className="field"><span>Rabattcode (optional)</span><input name="discountCode" value={discountCode} onChange={e => setDiscountCode(e.target.value)} maxLength={40} autoComplete="off" placeholder={openingDiscount.code}/></label>
+    {preview.message && <p className="form-error" role="alert">{preview.message}</p>}
     <div className="shop-order-summary" aria-label="Bestellübersicht"><strong>Bestellübersicht</strong>
-      {lines.length ? <table className="order-table"><thead><tr><th>Produkt</th><th>Menge</th><th>Einzelpreis</th><th>Zwischensumme</th></tr></thead><tbody>{lines.map(l => <tr key={l.product.id}><td>{l.product.kind === "voucher" ? "Gutschein" : l.product.kind === "five" ? "5er-Abo" : "10er-Abo"}: {l.product.name}</td><td>{l.quantity}</td><td>{l.unitPrice} €</td><td>{l.subtotal} €</td></tr>)}</tbody><tfoot><tr><td colSpan={3}>Gesamtsumme</td><td><strong>{cartTotal(cart)} €</strong></td></tr></tfoot></table> : <p>Ihr Warenkorb ist leer. <Link to="/gutscheine">Zu den Gutscheinen</Link> · <Link to="/abos">Zu den Abos</Link></p>}
+      {lines.length ? <table className="order-table"><thead><tr><th>Produkt</th><th>Menge</th><th>Einzelpreis</th><th>Zwischensumme</th></tr></thead><tbody>{lines.map(l => <tr key={l.product.id}><td>{l.product.kind === "voucher" ? "Gutschein" : l.product.kind === "five" ? "5er-Abo" : "10er-Abo"}: {l.product.name}</td><td>{l.quantity}</td><td>{l.unitPrice} €</td><td>{l.subtotal} €</td></tr>)}</tbody><tfoot>
+        <tr><td colSpan={3}>Zwischensumme</td><td>{eur(preview.subtotalCents)}</td></tr>
+        {preview.discountCents > 0 && <tr><td colSpan={3}>Rabatt ({openingDiscount.code}, {openingDiscount.percent} %)</td><td>−{eur(preview.discountCents)}</td></tr>}
+        <tr><td colSpan={3}>Gesamtsumme</td><td><strong>{eur(preview.totalCents)}</strong></td></tr>
+      </tfoot></table> : <p>Ihr Warenkorb ist leer. <Link to="/gutscheine">Zu den Gutscheinen</Link> · <Link to="/abos">Zu den Abos</Link></p>}
       <PriceVatNotice/><p>Versand innerhalb Deutschlands mit DHL, kostenfrei.</p><p>{validityNotice}</p><p><Link to="/warenkorb">Warenkorb bearbeiten</Link></p></div>
     <div className="shop-legal-links"><Link to="/agb">AGB</Link><Link to="/datenschutz">Datenschutzerklärung</Link><Link to="/widerruf">Widerrufsbelehrung & Widerrufsformular</Link></div>
     <label className="check"><input type="checkbox" name="acceptTerms" required/><span>Ich habe die <Link to="/agb">AGB</Link> gelesen und akzeptiere sie.</span></label><label className="check"><input type="checkbox" name="acknowledgePrivacy" required/><span>Ich habe die <Link to="/datenschutz">Datenschutzerklärung</Link> zur Kenntnis genommen.</span></label>
