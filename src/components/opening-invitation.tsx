@@ -38,7 +38,6 @@ export function OpeningInvitation() {
     </section>
 
     <section className="opening-offer" aria-labelledby="offer-title">
-      <p className="opening-percent" aria-hidden="true">20 %</p>
       <h2 id="offer-title">{ev.offer.heading}</h2>
       <p className="opening-offer-text">{ev.offer.text}</p>
       <p className="opening-validity">{ev.offer.validity}</p>
