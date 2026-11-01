@@ -9,6 +9,7 @@ import { contact } from "./contact";
 import { legalTextsFor } from "./legal-texts";
 import type { EmailLine, EmailOrder } from "./order-email";
 import logoAsset from "@/assets/email/email-logo.png.asset.json";
+import { formatCents as eur } from './money';
 
 const PAGE_W = 595.28; // A4
 const PAGE_H = 841.89;
@@ -21,7 +22,6 @@ const CREAM_BG = rgb(0xfd / 255, 0xf8 / 255, 0xef / 255);
 const TEXT = rgb(0x3a / 255, 0x2a / 255, 0x1a / 255);
 const MUTED = rgb(0x6b / 255, 0x55 / 255, 0x40 / 255);
 
-const eur = (cents: number) => `${(cents / 100).toFixed(2).replace(".", ",")} €`;
 const berlinDateTime = (iso: string) =>
   new Date(iso).toLocaleString("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) + " Uhr";
 
@@ -131,23 +131,24 @@ function footer(ctx: Ctx, note: string): void {
 }
 
 function positionsTable(ctx: Ctx, lines: EmailLine[]): void {
-  const cols = [0, 250, 300, 380]; // Produkt | Menge | Einzelpreis | Summe
+  const cols = [0, 255, 353, CONTENT_W]; // stable right edges for numeric columns
   const heads = ["Produkt", "Menge", "Einzelpreis", "Zwischensumme"];
   const rowH = 16;
   ensureSpace(ctx, rowH * 2);
-  heads.forEach((h, i) => ctx.page.drawText(h, { x: MARGIN + cols[i]!, y: ctx.y - 10, size: 9, font: ctx.bold, color: MAHOGANY }));
+  const drawCell = (text: string, index: number, y: number, bold = false) => { const font = bold ? ctx.bold : ctx.font; const edge = cols[index] ?? 0; ctx.page.drawText(text, { x: MARGIN + edge - (index ? font.widthOfTextAtSize(text, 9) : 0), y, size: 9, font, color: bold ? MAHOGANY : TEXT }); };
+  heads.forEach((h, i) => drawCell(h, i, ctx.y - 10, true));
   ctx.y -= rowH;
   ctx.page.drawLine({ start: { x: MARGIN, y: ctx.y }, end: { x: MARGIN + CONTENT_W, y: ctx.y }, thickness: 0.5, color: GOLD });
   ctx.y -= 4;
   for (const l of lines) {
     const label = `${kindLabel(l.kind)}: ${l.name}`;
-    const wrapped = wrapText(label, ctx.font, 9, cols[1]!! - 8);
+    const wrapped = wrapText(label, ctx.font, 9, 214);
     const h = Math.max(rowH, wrapped.length * 12 + 6);
     ensureSpace(ctx, h);
-    wrapped.forEach((line, i) => ctx.page.drawText(line, { x: MARGIN + cols[0]!, y: ctx.y - 10 - i * 12, size: 9, font: ctx.font, color: TEXT }));
-    ctx.page.drawText(String(l.quantity), { x: MARGIN + cols[1]!, y: ctx.y - 10, size: 9, font: ctx.font, color: TEXT });
-    ctx.page.drawText(eur(l.unitPriceCents), { x: MARGIN + cols[2]!, y: ctx.y - 10, size: 9, font: ctx.font, color: TEXT });
-    ctx.page.drawText(eur(l.subtotalCents), { x: MARGIN + cols[3]!, y: ctx.y - 10, size: 9, font: ctx.font, color: TEXT });
+    wrapped.forEach((line, i) => drawCell(line, 0, ctx.y - 10 - i * 12));
+    drawCell(String(l.quantity), 1, ctx.y - 10);
+    drawCell(eur(l.unitPriceCents), 2, ctx.y - 10);
+    drawCell(eur(l.subtotalCents), 3, ctx.y - 10);
     ctx.y -= h;
   }
   ctx.page.drawLine({ start: { x: MARGIN, y: ctx.y }, end: { x: MARGIN + CONTENT_W, y: ctx.y }, thickness: 0.5, color: GOLD });
@@ -156,9 +157,10 @@ function positionsTable(ctx: Ctx, lines: EmailLine[]): void {
 
 function totals(ctx: Ctx, order: EmailOrder, lines: EmailLine[]): void {
   const subtotal = lines.reduce((s, l) => s + l.subtotalCents, 0);
-  paragraph(ctx, `Zwischensumme: ${eur(subtotal)}`, { gapAfter: 2 });
-  if (order.discountCents > 0) paragraph(ctx, `Rabatt (${order.discountCode}): −${eur(order.discountCents)}`, { gapAfter: 2 });
-  paragraph(ctx, `Gesamtbetrag: ${eur(order.totalCents)}`, { font: ctx.bold, gapAfter: 2 });
+  const row = (label: string, amount: string, bold = false) => { ensureSpace(ctx, 20); const font = bold ? ctx.bold : ctx.font; ctx.page.drawText(label, { x: MARGIN, y: ctx.y - 10, size: 10, font, color: TEXT }); ctx.page.drawText(pdfSafe(amount), { x: PAGE_W - MARGIN - font.widthOfTextAtSize(pdfSafe(amount), 10), y: ctx.y - 10, size: 10, font, color: TEXT }); ctx.y -= 20; };
+  row('Zwischensumme', eur(subtotal));
+  if (order.discountCents > 0) row(`Rabatt (${order.discountCode})`, `−${eur(order.discountCents)}`);
+  row('Gesamtbetrag', eur(order.totalCents), true);
   paragraph(ctx, "Alle Preise inklusive Mehrwertsteuer.", { size: 8.5, color: MUTED });
 }
 
@@ -171,6 +173,8 @@ export interface OrderMeta {
   createdAt: string;
   paidAt: string;
   legalVersion: string;
+  /** Only offline sample generation can opt into draft documents. */
+  preview?: boolean;
 }
 
 export interface OrderPdf {
@@ -191,7 +195,8 @@ async function newCtx(): Promise<Ctx> {
 async function pdfOrderReceived(order: EmailOrder, lines: EmailLine[], meta: OrderMeta): Promise<OrderPdf> {
   const ctx = await newCtx();
   await drawHeader(ctx, "Bestelleingangsbestätigung");
-  paragraph(ctx, `${contact.owner}, tätig unter ${contact.name}, ${contact.street}, ${contact.city}, Deutschland`, { size: 9, color: MUTED, gapAfter: 2 });
+  if (meta.preview) paragraph(ctx, 'TESTDATEN – VORSCHAU, KEINE FREIGABE', { font: ctx.bold });
+  paragraph(ctx, `${contact.name}, ${contact.street}, ${contact.city}, Deutschland`, { size: 9, color: MUTED, gapAfter: 2 });
   paragraph(ctx, `Telefon: ${contact.phone} · E-Mail: ${contact.email} · ${contact.website}`, { size: 9, color: MUTED });
   heading(ctx, "Bestelldaten");
   paragraph(ctx, `Bestellnummer: ${order.id}`, { font: ctx.bold, gapAfter: 2 });
@@ -216,6 +221,7 @@ async function pdfOrderReceived(order: EmailOrder, lines: EmailLine[], meta: Ord
 async function pdfPaymentConfirmed(order: EmailOrder, lines: EmailLine[], meta: OrderMeta): Promise<OrderPdf> {
   const ctx = await newCtx();
   await drawHeader(ctx, "Zahlungsbestätigung");
+  if (meta.preview) paragraph(ctx, 'TESTDATEN – VORSCHAU, KEINE FREIGABE', { font: ctx.bold });
   heading(ctx, "Zahlung");
   paragraph(ctx, `Bestellnummer: ${order.id}`, { font: ctx.bold, gapAfter: 2 });
   paragraph(ctx, `Zahlung bestätigt am (Verifizierungszeitpunkt): ${berlinDateTime(meta.paidAt)}`, { gapAfter: 2 });
@@ -238,6 +244,7 @@ async function pdfAgb(meta: OrderMeta): Promise<OrderPdf> {
   const legal = legalTextsFor(meta.legalVersion);
   const ctx = await newCtx();
   await drawHeader(ctx, "Allgemeine Geschäftsbedingungen");
+  if (meta.preview) paragraph(ctx, 'TESTDATEN – VORSCHAU, KEINE FREIGABE', { font: ctx.bold });
   paragraph(ctx, `Fassung vom ${legal.version}`, { size: 9, color: MUTED });
   for (const section of legal.agb) {
     heading(ctx, section.title, 11);
@@ -252,6 +259,7 @@ async function pdfWiderruf(meta: OrderMeta): Promise<OrderPdf> {
   const legal = legalTextsFor(meta.legalVersion);
   const ctx = await newCtx();
   await drawHeader(ctx, "Widerrufsbelehrung & Muster-Widerrufsformular");
+  if (meta.preview) paragraph(ctx, 'TESTDATEN – VORSCHAU, KEINE FREIGABE', { font: ctx.bold });
   paragraph(ctx, `Fassung vom ${legal.version}`, { size: 9, color: MUTED });
   for (const section of legal.widerruf) {
     heading(ctx, section.title, 11);
@@ -263,12 +271,26 @@ async function pdfWiderruf(meta: OrderMeta): Promise<OrderPdf> {
   return { filename: "Widerrufsbelehrung-und-Musterformular.pdf", bytes: await ctx.doc.save() };
 }
 
-/** Erstellt alle vier Bestell-PDFs. Keine API-Schlüssel oder Zugangstoken im Inhalt. */
+async function pdfPrivacy(meta: OrderMeta): Promise<OrderPdf> {
+  const legal = legalTextsFor(meta.legalVersion);
+  const ctx = await newCtx();
+  await drawHeader(ctx, 'Datenschutzinformationen');
+  if (meta.preview) paragraph(ctx, 'TESTDATEN – VORSCHAU, KEINE FREIGABE', { font: ctx.bold });
+  paragraph(ctx, `Fassung ${legal.version} – Information, keine Einwilligung.`, { size: 9 });
+  for (const section of legal.datenschutz ?? []) { heading(ctx, section.title, 11); for (const text of section.paragraphs) paragraph(ctx, text, { size: 9.5 }); }
+  footer(ctx, `Datenschutzinformationen, Fassung ${legal.version}`);
+  return { filename: 'Datenschutzinformationen.pdf', bytes: await ctx.doc.save() };
+}
+
+/** Builds only the exact saved version; historical four-document releases stay unchanged. */
 export async function buildOrderPdfs(order: EmailOrder, lines: EmailLine[], meta: OrderMeta): Promise<OrderPdf[]> {
+  const legal = legalTextsFor(meta.legalVersion);
+  if (!meta.preview && !legal.released) throw new Error('Rechtstextentwurf nicht zum Versand freigegeben.');
   return [
     await pdfOrderReceived(order, lines, meta),
     await pdfPaymentConfirmed(order, lines, meta),
     await pdfAgb(meta),
     await pdfWiderruf(meta),
+    ...(legal.datenschutz ? [await pdfPrivacy(meta)] : []),
   ];
 }

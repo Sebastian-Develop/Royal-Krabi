@@ -34,12 +34,16 @@ export const createShopCheckout = createServerFn({ method: "POST" })
     }
     const totalCents = subtotalCents - discountCents;
 
+    // No new orders, stored customer data or payment sessions before legal release.
+    const { CURRENT_ORDER_LEGAL_VERSION, orderLegalReleaseError } = await import('./legal-texts');
+    const releaseError = orderLegalReleaseError();
+    if (releaseError || !CURRENT_ORDER_LEGAL_VERSION) return { ok: false, error: releaseError ?? GENERIC_ERROR };
+
     const apiKey = process.env["SUMUP_API_KEY"];
     if (!apiKey) return { ok: false, error: "Die Online-Zahlung ist derzeit nicht erreichbar. Bitte kontaktieren Sie uns telefonisch oder per E-Mail." };
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { sumupCreateCheckout, sumupFindCheckoutByReference, sumupMerchantCode } = await import("./shop-checkout.server");
-    const { CURRENT_LEGAL_VERSION } = await import("./legal-texts");
 
     // Wiederholungsschlüssel: dieselbe Übermittlung liefert die vorhandene Bestellung.
     const { data: existing } = await supabaseAdmin
@@ -81,7 +85,7 @@ export const createShopCheckout = createServerFn({ method: "POST" })
         discount_code: discountCode,
         discount_cents: discountCents,
         submission_key: data.submissionKey,
-        legal_version: CURRENT_LEGAL_VERSION,
+        legal_version: CURRENT_ORDER_LEGAL_VERSION,
       })
       .select("id, access_token")
       .single();

@@ -12,6 +12,7 @@ import head from '@/assets/massage-preview-11.webp.asset.json';
 import foot from '@/assets/massage-preview-12.webp.asset.json';
 import pair from '@/assets/massage-preview-13.webp.asset.json';
 import logo from '@/assets/royal-krabi-logo.png.asset.json';
+import valueVoucher from '@/assets/royal-krabi-wertgutschein.png.asset.json';
 
 export type MassagePhoto = { url: string; alt: string; fit?: 'contain' | 'cover' };
 export const brandFallbackPhoto: MassagePhoto = { url: logo.url, alt: 'Royal Krabi Serenity Thaimassage – goldenes Markenlogo', fit: 'contain' };
@@ -32,6 +33,7 @@ export const massagePhotos: Record<string, MassagePhoto> = {
 };
 /** Photo for a shop product name (vouchers and abos), resolved from the massage name it contains. */
 export function shopProductPhoto(productName: string): MassagePhoto | undefined {
+  if (productName === 'Individueller Wunschbetrag') return { url: valueVoucher.url, alt: 'Royal Krabi Serenity Thaimassage – Wertgutschein mit Wunschbetrag', fit: 'contain' };
   if (productName.includes('Teilkörpermassage')) return massagePhotos['Rückenmassage mit Öl'];
   const names = Object.keys(massagePhotos).sort((a, b) => b.length - a.length);
   const tail = (productName.split(' · ').pop() ?? '').replace(/^\d+ Minuten /, '');

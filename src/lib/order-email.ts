@@ -1,3 +1,5 @@
+import { formatCents as eur } from "./money";
+import { legalTextsFor } from "./legal-texts";
 import { contact } from "./contact";
 import { brandEmailHtml, emailBlocks } from "./application-email";
 
@@ -30,8 +32,8 @@ export async function sendOrderEmail(opts: { to: string; subject: string; html: 
   return true;
 }
 
-const esc = (s: string) => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
-const eur = (cents: number) => `${(cents / 100).toFixed(2).replace(".", ",")} €`;
+const esc = (s: string) => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
+
 const berlinDateTime = (iso: string) =>
   new Date(iso).toLocaleString("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) + " Uhr";
 
@@ -49,19 +51,15 @@ const deliveryLabel = (order: EmailOrder) => order.delivery === "post"
   : "Abholung im Studio (wird persönlich mit Ihnen abgestimmt)";
 
 function linesTable(lines: EmailLine[]): string {
-  const cell = `style="border-bottom:1px solid #B98A2F;padding:8px 6px;vertical-align:top"`;
-  const rows = lines.map(l =>
-    `<tr><td ${cell}>${kindLabel(l.kind)}: ${esc(l.name)}${l.validityMonths ? `<br><small>Gültigkeit: ${l.validityMonths} Monate ab Zahlungseingang</small>` : ""}</td><td ${cell}>${l.quantity}</td><td ${cell}>${eur(l.unitPriceCents)}</td><td ${cell}>${eur(l.subtotalCents)}</td></tr>`,
-  ).join("");
-  const head = ["Produkt", "Menge", "Einzelpreis", "Zwischensumme"].map(h => `<th align="left" style="border-bottom:2px solid #B98A2F;padding:6px;text-transform:uppercase;font-size:11px">${h}</th>`).join("");
-  return `<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 18px;font-size:14px"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>`;
+  const cell = (numeric: boolean, width: string) => `width="${width}" align="${numeric ? 'right' : 'left'}" valign="top" style="width:${width};border-bottom:1px solid #B98A2F;padding:8px 6px;vertical-align:top;${emailBlocks.whiteText};${numeric ? emailBlocks.num + ';white-space:nowrap' : 'overflow-wrap:anywhere'}"`;
+  const rows = lines.map(l => `<tr><td ${cell(false,'40%')}>${emailBlocks.protectText(`${kindLabel(l.kind)}: ${esc(l.name)}${l.validityMonths ? `<br><small>Gültigkeit: ${l.validityMonths} Monate ab Zahlungseingang</small>` : ''}`)}</td><td ${cell(true,'10%')}>${emailBlocks.protectText(String(l.quantity))}</td><td ${cell(true,'25%')}>${emailBlocks.protectText(eur(l.unitPriceCents))}</td><td ${cell(true,'25%')}>${emailBlocks.protectText(eur(l.subtotalCents))}</td></tr>`).join('');
+  const heads = ['Produkt','Menge','Einzelpreis','Summe'].map((h,i) => `<th ${cell(i>0,['40%','10%','25%','25%'][i] ?? '25%')}>${h}</th>`).join('');
+  return `<table class="email-order-table" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;border-collapse:collapse;margin:0 0 18px;font-family:Arial,sans-serif;font-size:14px"><thead><tr>${heads}</tr></thead><tbody>${rows}</tbody></table>`;
 }
-
 function totalsBlock(order: EmailOrder, lines: EmailLine[]): string {
-  const subtotal = lines.reduce((s, l) => s + l.subtotalCents, 0);
-  const discount = order.discountCents > 0
-    ? `<p style="margin:0 0 6px"><b>Rabatt (${esc(order.discountCode)}):</b> −${eur(order.discountCents)}</p>` : "";
-  return `<p style="margin:0 0 6px"><b>Zwischensumme:</b> ${eur(subtotal)}</p>${discount}<p style="margin:0 0 6px"><b>Bezahlter Gesamtbetrag:</b> ${eur(order.totalCents)}</p><p style="margin:0 0 14px"><small>Alle Preise inklusive Mehrwertsteuer.</small></p>`;
+  const subtotal = lines.reduce((s,l) => s+l.subtotalCents,0);
+  const row = (label: string, value: string) => `<tr><td align="left" valign="top" style="padding:4px 6px;${emailBlocks.whiteText}">${emailBlocks.protectText(esc(label))}</td><td width="25%" align="right" valign="top" style="padding:4px 6px;width:25%;white-space:nowrap;${emailBlocks.whiteText};${emailBlocks.num}">${emailBlocks.protectText(value)}</td></tr>`;
+  return `<table width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;font-family:Arial,sans-serif;font-size:14px">${row('Zwischensumme',eur(subtotal))}${order.discountCents > 0 ? row(`Rabatt (${order.discountCode})`,`−${eur(order.discountCents)}`) : ''}${row('Bezahlter Gesamtbetrag',eur(order.totalCents))}</table><p><small>Alle Preise inklusive Mehrwertsteuer.</small></p>`;
 }
 
 export const orderConfirmationSubject = "Ihre Bestellung und Zahlung sind bestätigt – Royal Krabi";
@@ -72,6 +70,8 @@ export const orderConfirmationSubject = "Ihre Bestellung und Zahlung sind bestä
  * Wird ausschließlich aus der bezahlt-Verarbeitung aufgerufen.
  */
 export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { subject: string; html: string; text: string } {
+  const hasPrivacy = Boolean(legalTextsFor(order.legalVersion).datenschutz);
+  const attachments = 'Bestelleingangsbestätigung.pdf, Zahlungsbestätigung.pdf, AGB.pdf, Widerrufsbelehrung-und-Musterformular.pdf' + (hasPrivacy ? ', Datenschutzinformationen.pdf' : '');
   const greeting = order.fullName.trim() ? `Guten Tag ${esc(order.fullName.trim())},` : "Guten Tag,";
   const meta = emailBlocks.table(
     emailBlocks.label("Ihre Bestellung")
@@ -90,7 +90,8 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
     totalsBlock(order, lines),
     emailBlocks.p(`<b>Lieferart:</b> ${deliveryLabel(order)}`),
     emailBlocks.p("Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab."),
-    emailBlocks.p("An dieser E-Mail finden Sie vier PDF-Dokumente – jeweils in der für Ihre Bestellung maßgeblichen Fassung: Bestelleingangsbestätigung.pdf, Zahlungsbestätigung.pdf, AGB.pdf und Widerrufsbelehrung-und-Musterformular.pdf."),
+    emailBlocks.p(`An dieser E-Mail finden Sie ${hasPrivacy ? "fünf" : "vier"} PDF-Dokumente – jeweils in der für Ihre Bestellung maßgeblichen Fassung: ${attachments}.`),
+    ...(hasPrivacy ? [emailBlocks.p("Die Datenschutzinformationen sind zur Information beigefügt; damit wird keine Einwilligung verlangt oder erklärt.")] : []),
     emailBlocks.p(`Bei Fragen erreichen Sie uns unter ${esc(contact.phone)} oder ${esc(contact.email)}.`),
   ].join("");
 
@@ -111,7 +112,7 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
     `Lieferart: ${order.delivery === "post" ? `DHL-Versand (kostenfrei) an: ${order.street}, ${order.postalCode} ${order.city}` : "Abholung im Studio (wird persönlich abgestimmt)"}`,
     "Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab.",
     "",
-    "Anhänge: Bestelleingangsbestätigung.pdf, Zahlungsbestätigung.pdf, AGB.pdf, Widerrufsbelehrung-und-Musterformular.pdf",
+    `Anhänge: ${attachments}`,
     "",
     `${contact.name} · ${contact.street}, ${contact.city}`,
     `Telefon: ${contact.phone} · ${contact.email}`,

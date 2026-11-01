@@ -18,8 +18,9 @@ test('Mixed vouchers and 5/10 cards resolve exact catalog images after stored ID
   expect(lines[1]?.product.massageCount).toBe(5);
   expect(lines[2]?.product.massageCount).toBe(10);
 });
-test('Unknown or unmapped photo uses original brand motif, not an invented voucher picture', () => {
+test('Wunschbetrag alone uses the uploaded voucher motif', () => {
   const variable = shopProducts.find(p => p.name === 'Individueller Wunschbetrag');
-  expect(variable?.photo).toEqual(brandFallbackPhoto);
+  expect(variable?.photo.url).not.toBe(brandFallbackPhoto.url);
+  expect(shopProducts.filter(p => p.photo.url === variable?.photo.url).map(p => p.id)).toEqual(variable ? [variable.id] : []);
   expect(variable?.photo.fit).toBe('contain');
 });

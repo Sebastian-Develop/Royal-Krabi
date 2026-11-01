@@ -35,6 +35,7 @@ import { Route as WarenkorbRouteImport } from './routes/warenkorb'
 import { Route as WiderrufRouteImport } from './routes/widerruf'
 import { Route as ApiPublicBewerbungRouteImport } from './routes/api/public/bewerbung'
 import { Route as ApiPublicFlyerImageRouteImport } from './routes/api/public/flyer-image'
+import { Route as ApiPublicSumupWebhookRouteImport } from './routes/api/public/sumup-webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -166,6 +167,11 @@ const ApiPublicFlyerImageRoute = ApiPublicFlyerImageRouteImport.update({
   path: '/api/public/flyer-image',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicSumupWebhookRoute = ApiPublicSumupWebhookRouteImport.update({
+  id: '/api/public/sumup-webhook',
+  path: '/api/public/sumup-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -194,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/widerruf': typeof WiderrufRoute
   '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
   '/api/public/flyer-image': typeof ApiPublicFlyerImageRoute
+  '/api/public/sumup-webhook': typeof ApiPublicSumupWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -222,6 +229,7 @@ export interface FileRoutesByTo {
   '/widerruf': typeof WiderrufRoute
   '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
   '/api/public/flyer-image': typeof ApiPublicFlyerImageRoute
+  '/api/public/sumup-webhook': typeof ApiPublicSumupWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -251,6 +259,7 @@ export interface FileRoutesById {
   '/widerruf': typeof WiderrufRoute
   '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
   '/api/public/flyer-image': typeof ApiPublicFlyerImageRoute
+  '/api/public/sumup-webhook': typeof ApiPublicSumupWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -281,6 +290,7 @@ export interface FileRouteTypes {
     | '/widerruf'
     | '/api/public/bewerbung'
     | '/api/public/flyer-image'
+    | '/api/public/sumup-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -309,6 +319,7 @@ export interface FileRouteTypes {
     | '/widerruf'
     | '/api/public/bewerbung'
     | '/api/public/flyer-image'
+    | '/api/public/sumup-webhook'
   id:
     | '__root__'
     | '/'
@@ -337,6 +348,7 @@ export interface FileRouteTypes {
     | '/widerruf'
     | '/api/public/bewerbung'
     | '/api/public/flyer-image'
+    | '/api/public/sumup-webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -366,6 +378,7 @@ export interface RootRouteChildren {
   WiderrufRoute: typeof WiderrufRoute
   ApiPublicBewerbungRoute: typeof ApiPublicBewerbungRoute
   ApiPublicFlyerImageRoute: typeof ApiPublicFlyerImageRoute
+  ApiPublicSumupWebhookRoute: typeof ApiPublicSumupWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -552,6 +565,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicFlyerImageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/sumup-webhook': {
+      id: '/api/public/sumup-webhook'
+      path: '/api/public/sumup-webhook'
+      fullPath: '/api/public/sumup-webhook'
+      preLoaderRoute: typeof ApiPublicSumupWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -582,6 +602,7 @@ const rootRouteChildren: RootRouteChildren = {
   WiderrufRoute: WiderrufRoute,
   ApiPublicBewerbungRoute: ApiPublicBewerbungRoute,
   ApiPublicFlyerImageRoute: ApiPublicFlyerImageRoute,
+  ApiPublicSumupWebhookRoute: ApiPublicSumupWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

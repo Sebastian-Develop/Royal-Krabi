@@ -44,7 +44,7 @@ function toBase64(bytes: Uint8Array): string {
   return btoa(binary);
 }
 
-/** Erstellt die vier Bestell-PDFs; ein Fehler hier entwertet die Zahlung nicht. */
+/** Build the exact stored release; never send incomplete or draft attachments. */
 async function buildAttachments(order: EmailOrder, lines: EmailLine[]): Promise<EmailAttachment[]> {
   const { buildOrderPdfs } = await import("./order-pdf.server");
   const pdfs = await buildOrderPdfs(order, lines, {
@@ -63,7 +63,7 @@ async function buildAttachments(order: EmailOrder, lines: EmailLine[]): Promise<
  */
 export async function sendPaidOrderEmails(admin: Admin, orderId: string): Promise<void> {
   const loaded = await loadOrderForEmail(admin, orderId);
-  if (!loaded) return;
+  if (!loaded || loaded.order.paidAt === null) return;
   const { order, lines } = loaded;
   const now = new Date().toISOString();
 
@@ -72,6 +72,7 @@ export async function sendPaidOrderEmails(admin: Admin, orderId: string): Promis
     attachments = await buildAttachments(order, lines);
   } catch (error) {
     await logEmailEvent(admin, orderId, "pdf_build", false, error instanceof Error ? error.message : "unbekannt");
+    return;
   }
 
   const customerMail = paymentConfirmedEmail(order, lines);

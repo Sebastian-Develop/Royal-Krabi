@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { orderConfirmationSubject, paymentConfirmedEmail, operatorEmail, type EmailLine, type EmailOrder } from "./order-email";
 import { socialProfiles } from "./social";
-import { CURRENT_LEGAL_VERSION, legalTextsFor } from "./legal-texts";
+import { CURRENT_LEGAL_VERSION, legalTextsFor, WEBSITE_LEGAL_VERSION, orderLegalReleaseError } from "./legal-texts";
 
 const order: EmailOrder = {
   id: "11111111-2222-3333-4444-555555555555",
@@ -74,15 +74,29 @@ describe("Rechtstext-Versionierung", () => {
     expect(legal.widerrufForm.join(" ")).toContain("Hiermit widerrufe");
   });
 
-  test("unbekannte Fassung fällt auf die erste Fassung zurück", () => {
-    expect(legalTextsFor("unbekannt").version).toBe("2026-10-21");
+  test("unbekannte gespeicherte Fassung wird niemals ersetzt", () => {
+    expect(() => legalTextsFor("unbekannt")).toThrow();
+  });
+  test("neue Bestellfassung muss vollständig freigegeben sein", () => {
+    expect(orderLegalReleaseError()).not.toBeNull();
+    expect(legalTextsFor(WEBSITE_LEGAL_VERSION).released).toBe(false);
+  });
+  test("neue und alte Fassungen bleiben getrennt und unverändert", () => {
+    const original = legalTextsFor('2026-10-21');
+    const changed = legalTextsFor(WEBSITE_LEGAL_VERSION);
+    changed.agb[0]?.paragraphs.push('Changed locally');
+    expect(legalTextsFor('2026-10-21')).toEqual(original);
+    expect(original.datenschutz).toBeUndefined();
+    expect(legalTextsFor(WEBSITE_LEGAL_VERSION).datenschutz).toHaveLength(10);
+    expect(legalTextsFor(WEBSITE_LEGAL_VERSION).agb[0]?.paragraphs).not.toContain('Changed locally');
   });
 });
 
 describe("PDF-Anhänge", () => {
   test("vier getrennte, lesbare PDFs mit korrekten Dateinamen", async () => {
     const { buildOrderPdfs } = await import("./order-pdf.server");
-    const pdfs = await buildOrderPdfs(order, lines, { createdAt: order.createdAt, paidAt: order.paidAt!, legalVersion: order.legalVersion });
+    if (!order.paidAt) throw new Error('missing test payment time');
+    const pdfs = await buildOrderPdfs(order, lines, { createdAt: order.createdAt, paidAt: order.paidAt, legalVersion: order.legalVersion });
     expect(pdfs.map(p => p.filename)).toEqual([
       "Bestelleingangsbestätigung.pdf",
       "Zahlungsbestätigung.pdf",
@@ -93,5 +107,12 @@ describe("PDF-Anhänge", () => {
       expect(pdf.bytes.length).toBeGreaterThan(1000);
       expect(new TextDecoder("latin1").decode(pdf.bytes.subarray(0, 5))).toBe("%PDF-");
     }
+  });
+  test('fünf neue Anhänge nur im ausdrücklich gekennzeichneten Testmodus', async () => {
+    const { buildOrderPdfs } = await import('./order-pdf.server');
+    const meta = { createdAt: order.createdAt, paidAt: '2026-11-08T10:19:00Z', legalVersion: WEBSITE_LEGAL_VERSION };
+    await expect(buildOrderPdfs(order, lines, meta)).rejects.toThrow('nicht zum Versand freigegeben');
+    const pdfs = await buildOrderPdfs({ ...order, legalVersion: WEBSITE_LEGAL_VERSION }, lines, { ...meta, preview: true });
+    expect(pdfs.map(p => p.filename)).toEqual(['Bestelleingangsbestätigung.pdf', 'Zahlungsbestätigung.pdf', 'AGB.pdf', 'Widerrufsbelehrung-und-Musterformular.pdf', 'Datenschutzinformationen.pdf']);
   });
 });

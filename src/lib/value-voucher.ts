@@ -1,4 +1,7 @@
-/** Internal review requirements only; neither sales nor code redemption are enabled. */
+/** Product purchase is separate from unverified online code redemption. */
+export const isValueVoucher = (product: { name: string; price: number | null }) => product.price === null && product.name === 'Individueller Wunschbetrag';
+export const valueVoucherLabel = 'Wertgutschein · Wunschbetrag';
+export const valueVoucherValidity = '24 Monate gültig ab verifiziertem Zahlungseingang.';
 export const valueVoucherDraft = {
   validityMonths: 24,
   validityStartsAt: 'verified_payment_receipt',

@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { shopProducts, type ShopProduct } from "./shop";
+import { isValueVoucher } from './value-voucher';
+import { validCents } from './money';
 
-export type CartItem = { productId: string; quantity: number };
-export type CartLine = { product: ShopProduct; quantity: number; unitPrice: number; subtotal: number };
+export type CartItem = { productId: string; quantity: number; amountCents?: number | undefined };
+export type CartLine = { key: string; product: ShopProduct; quantity: number; amountCents?: number | undefined; unitPriceCents: number; subtotalCents: number; unitPrice: number; subtotal: number };
 export const MAX_QUANTITY = 20;
 const KEY = "royal-krabi-cart";
 
-/** Only fixed-price products can go into the cart; variable vouchers stay "nach Absprache". */
-export const isCartable = (p: ShopProduct) => p.price !== null;
+export const isCartable = (p: ShopProduct) => p.price !== null || isValueVoucher(p);
+export const cartItemKey = (item: CartItem) => item.amountCents === undefined ? item.productId : `${item.productId}:${item.amountCents}`;
 
 export function normalizeCart(items: unknown): CartItem[] {
   if (!Array.isArray(items)) return [];
@@ -16,20 +18,23 @@ export function normalizeCart(items: unknown): CartItem[] {
     const id = (raw as CartItem)?.productId;
     const q = Math.floor(Number((raw as CartItem)?.quantity));
     const p = shopProducts.find(x => x.id === id);
-    if (!p || !isCartable(p) || !(q >= 1) || out.some(i => i.productId === id)) continue;
-    out.push({ productId: id, quantity: Math.min(q, MAX_QUANTITY) });
+    if (!p || !isCartable(p) || !Number.isFinite(q) || !(q >= 1)) continue;
+    const amountCents = isValueVoucher(p) ? (raw as CartItem).amountCents : undefined;
+    if (isValueVoucher(p) && !validCents(amountCents)) continue;
+    const item: CartItem = { productId: id, quantity: Math.min(q, MAX_QUANTITY), ...(amountCents === undefined ? {} : { amountCents }) };
+    const existing = out.find(i => cartItemKey(i) === cartItemKey(item));
+    if (existing) existing.quantity = Math.min(MAX_QUANTITY, existing.quantity + item.quantity);
+    else out.push(item);
   }
   return out;
 }
-export const addItem = (cart: CartItem[], id: string) => cart.some(i => i.productId === id)
-  ? normalizeCart(cart.map(i => i.productId === id ? { ...i, quantity: i.quantity + 1 } : i))
-  : normalizeCart([...cart, { productId: id, quantity: 1 }]);
-export const setQuantity = (cart: CartItem[], id: string, quantity: number) => normalizeCart(cart.map(i => i.productId === id ? { ...i, quantity } : i));
-export const removeItem = (cart: CartItem[], id: string) => cart.filter(i => i.productId !== id);
+export const addItem = (cart: CartItem[], id: string, amountCents?: number) => normalizeCart([...cart, { productId: id, quantity: 1, ...(amountCents === undefined ? {} : { amountCents }) }]);
+export const setQuantity = (cart: CartItem[], key: string, quantity: number) => normalizeCart(cart.map(i => cartItemKey(i) === key ? { ...i, quantity } : i));
+export const removeItem = (cart: CartItem[], key: string) => cart.filter(i => cartItemKey(i) !== key);
 export function cartLines(cart: CartItem[]): CartLine[] {
-  return normalizeCart(cart).flatMap(i => { const product = shopProducts.find(p => p.id === i.productId); if (!product || product.price === null) return []; const unitPrice = product.price; return [{ product, quantity: i.quantity, unitPrice, subtotal: unitPrice * i.quantity }]; });
+  return normalizeCart(cart).flatMap(i => { const product = shopProducts.find(p => p.id === i.productId); if (!product) return []; const unitPriceCents = isValueVoucher(product) ? i.amountCents : product.price === null ? undefined : Math.round(product.price * 100); if (!validCents(unitPriceCents)) return []; const subtotalCents = unitPriceCents * i.quantity; return [{ key: cartItemKey(i), product, quantity: i.quantity, amountCents: i.amountCents, unitPriceCents, subtotalCents, unitPrice: unitPriceCents / 100, subtotal: subtotalCents / 100 }]; });
 }
-export const cartTotal = (cart: CartItem[]) => cartLines(cart).reduce((s, l) => s + l.subtotal, 0);
+export const cartTotal = (cart: CartItem[]) => cartLines(cart).reduce((s, l) => s + l.subtotalCents, 0) / 100;
 export const cartCount = (cart: CartItem[]) => normalizeCart(cart).reduce((s, i) => s + i.quantity, 0);
 
 const listeners = new Set<(c: CartItem[]) => void>();
@@ -42,7 +47,7 @@ export function useCart() {
   useEffect(() => { setCart(read()); listeners.add(setCart); return () => { listeners.delete(setCart); }; }, []);
   return {
     cart,
-    add: (id: string) => write(addItem(read(), id)),
+    add: (id: string, cents?: number) => write(addItem(read(), id, cents)),
     setQty: (id: string, q: number) => write(setQuantity(read(), id, q)),
     remove: (id: string) => write(removeItem(read(), id)),
   };

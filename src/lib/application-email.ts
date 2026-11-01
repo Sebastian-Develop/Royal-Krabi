@@ -87,15 +87,16 @@ table { border-spacing:0; mso-table-lspace:0pt; mso-table-rspace:0pt; }
 img { -ms-interpolation-mode:bicubic; }
 u + .body .gmail-blend-screen { background:#000; mix-blend-mode:screen; }
 u + .body .gmail-blend-difference { background:#000; mix-blend-mode:difference; }
-body, table, td, h1, p, div, span, a { ${WHITE_TEXT}; }
+body, table, td, th, h1, p, div, span, a { ${WHITE_TEXT}; }
 a[x-apple-data-detectors], #MessageViewBody a { ${WHITE_TEXT}; text-decoration:none; }
 @media (prefers-color-scheme: dark) {
-  body, table, td, h1, p, div, span, a { ${WHITE_TEXT}; }
+  body, table, td, th, h1, p, div, span, a { ${WHITE_TEXT}; }
   .email-background { background-color:${MAHOGANY} !important; }
 }
 [data-ogsc] body, [data-ogsc] table, [data-ogsc] td, [data-ogsc] h1, [data-ogsc] p, [data-ogsc] div, [data-ogsc] span, [data-ogsc] a,
 [data-ogsb] body, [data-ogsb] table, [data-ogsb] td, [data-ogsb] h1, [data-ogsb] p, [data-ogsb] div, [data-ogsb] span, [data-ogsb] a { ${WHITE_TEXT}; }
 [data-ogsc] .email-background, [data-ogsb] .email-background { background-color:${MAHOGANY} !important; }
+@media(max-width:480px){.email-order-table{font-size:12px!important}.email-order-table th{font-size:9px!important}.email-order-table td{padding:8px 3px!important}.email-order-table th:first-child,.email-order-table td:first-child{width:34%!important}.email-order-table td:nth-child(2){width:10%!important}.email-order-table td:nth-child(3),.email-order-table td:nth-child(4){width:28%!important}}
 </style></head>
 <body class="body" bgcolor="${MAHOGANY}" style="margin:0;padding:0;${WHITE_TEXT};font-variant-numeric:lining-nums;color-scheme:only light;background-color:${MAHOGANY};background-image:linear-gradient(${MAHOGANY},${MAHOGANY})">
 <!--[if mso]><v:background fill="true"><v:fill type="tile" src="${bg}" color="${MAHOGANY}"/></v:background><![endif]-->

@@ -9,9 +9,12 @@ import { checkoutRequestSchema, orderTotalCents, type OrderLine } from "@/lib/sh
 import { discountForLines, openingDiscount } from "@/lib/discount";
 import { createShopCheckout } from "@/lib/shop-checkout.functions";
 import { Loader2 } from "lucide-react";
+import { ShopProductImage } from "./shop-product-image";
+import { isValueVoucher, valueVoucherLabel } from "@/lib/value-voucher";
+import { formatCents as eur, formatEuro } from "@/lib/money";
 import { PriceVatNotice } from "@/components/site";
 
-const eur = (cents: number) => `${(cents / 100).toFixed(2).replace(".", ",")} €`;
+
 
 export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
   const [delivery, setDelivery] = useState("pickup");
@@ -26,7 +29,7 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
 
   // Live-Vorschau des Rabatts mit derselben serverseitigen Regel; verbindlich ist die Serverprüfung.
   const preview = useMemo(() => {
-    const orderLines: OrderLine[] = lines.map(l => ({ productId: l.product.id, name: l.product.name, kind: l.product.kind, quantity: l.quantity, unitPriceCents: l.unitPrice * 100, subtotalCents: l.subtotal * 100 }));
+    const orderLines: OrderLine[] = lines.map(l => ({ productId: l.product.id, name: l.product.name, kind: l.product.kind, quantity: l.quantity, unitPriceCents: l.unitPriceCents, subtotalCents: l.subtotalCents }));
     const subtotalCents = orderTotalCents(orderLines);
     if (!discountCode.trim()) return { subtotalCents, discountCents: 0, totalCents: subtotalCents, message: "" };
     const result = discountForLines(orderLines, discountCode, new Date());
@@ -42,7 +45,7 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
     const form = new FormData(event.currentTarget);
     const parsed = checkoutRequestSchema.safeParse({
       ...Object.fromEntries(form),
-      items: lines.map(l => ({ productId: l.product.id, quantity: l.quantity })),
+      items: lines.map(l => ({ productId: l.product.id, quantity: l.quantity, ...(l.amountCents === undefined ? {} : { amountCents: l.amountCents }) })),
       discountCode,
       submissionKey,
       acceptTerms: form.get("acceptTerms") === "on",
@@ -71,7 +74,7 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
     <label className="field"><span>Rabattcode (optional)</span><input name="discountCode" value={discountCode} onChange={e => setDiscountCode(e.target.value)} maxLength={40} autoComplete="off" placeholder={openingDiscount.code}/></label>
     {preview.message && <p className="form-error" role="alert">{preview.message}</p>}
     <div className="shop-order-summary" aria-label="Bestellübersicht"><strong>Bestellübersicht</strong>
-      {lines.length ? <table className="order-table"><thead><tr><th>Produkt</th><th>Menge</th><th>Einzelpreis</th><th>Zwischensumme</th></tr></thead><tbody>{lines.map(l => <tr key={l.product.id}><td>{l.product.kind === "voucher" ? "Gutschein" : l.product.kind === "five" ? "5er-Abo" : "10er-Abo"}: {l.product.name}</td><td>{l.quantity}</td><td>{l.unitPrice} €</td><td>{l.subtotal} €</td></tr>)}</tbody><tfoot>
+      {lines.length ? <table className="order-table"><thead><tr><th>Produkt</th><th>Menge</th><th>Einzelpreis</th><th>Zwischensumme</th></tr></thead><tbody>{lines.map(l => <tr key={l.key}><td><div className="checkout-product"><ShopProductImage product={l.product} thumbnail/><div>{isValueVoucher(l.product) ? valueVoucherLabel : l.product.name}{isValueVoucher(l.product) && <span>Gutscheinwert: {formatEuro(l.unitPrice)}</span>}</div></div></td><td data-label="Menge">{l.quantity}</td><td data-label="Einzelpreis">{formatEuro(l.unitPrice)}</td><td data-label="Zwischensumme">{formatEuro(l.subtotal)}</td></tr>)}</tbody><tfoot>
         <tr><td colSpan={3}>Zwischensumme</td><td>{eur(preview.subtotalCents)}</td></tr>
         {preview.discountCents > 0 && <tr><td colSpan={3}>Rabatt ({openingDiscount.code}, {openingDiscount.percent} %)</td><td>−{eur(preview.discountCents)}</td></tr>}
         <tr><td colSpan={3}>Gesamtsumme</td><td><strong>{eur(preview.totalCents)}</strong></td></tr>
