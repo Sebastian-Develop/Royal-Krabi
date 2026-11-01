@@ -62,16 +62,12 @@ const divider = `<!--[if mso]><img src="${abs(dividerAsset.url)}" width="560" he
 const row = (label: string, value: string) =>
   `<tr><td style="padding:10px 0 2px;${WHITE_TEXT};font-family:${DISPLAY};font-size:12px;line-height:1.5;text-transform:uppercase">${protectText(esc(label))}</td></tr><tr><td style="padding:0 0 8px;${WHITE_TEXT};${NUM};font-size:15px;line-height:1.5;overflow-wrap:anywhere">${protectText(esc(value))}</td></tr>`;
 
-/** Betreff und HTML-Text der Eingangsbestätigung; der Name erscheint nur, wenn er angegeben wurde. */
-export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: ApplicationEmailData) => {
-  const greeting = name.trim() ? `Guten Tag ${esc(name.trim())},` : "Guten Tag,";
-  const rows = [
-    area?.trim() ? row("Gewünschte Stelle", area.trim()) : "",
-    type?.trim() ? row("Beschäftigungsart", type.trim()) : "",
-    row("Telefon", tel.trim() || "-"),
-    row("Unterlagen", hasCv ? "Lebenslauf liegt bei" : "Kein Lebenslauf beigefügt"),
-  ].join("");
-
+/**
+ * Gemeinsame Marken-Hülle aller Royal-Krabi-E-Mails: Hintergrund, Logo,
+ * Zierlinie, Kontaktblock und Social-Media-Fußzeile. `main` ist der
+ * individuelle Inhalt zwischen Zierlinie und Kontaktblock.
+ */
+export const brandEmailHtml = ({ title, main }: { title: string; main: string }) => {
   const socials = emailSocials
     .map((x) => {
       // A new URL also refreshes cached failed Gmail image-proxy responses.
@@ -82,7 +78,7 @@ export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: A
     .join("");
   const bg = abs(bgAsset.url);
 
-  const html = `<!doctype html><html lang="de" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" style="color-scheme:only light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"><title>${esc(applicationConfirmationSubject)}</title>
+  return `<!doctype html><html lang="de" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" style="color-scheme:only light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"><title>${esc(title)}</title>
 <!--[if mso]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><style>table {border-collapse:collapse;} td,p,h1 {mso-line-height-rule:at-least;} .gmail-blend-screen,.gmail-blend-difference {background:transparent !important;}</style><![endif]-->
 <style>
 :root { color-scheme: only light; supported-color-schemes: light; }
@@ -111,13 +107,7 @@ a[x-apple-data-detectors], #MessageViewBody a { ${WHITE_TEXT}; text-decoration:n
 ${divider}
 </td></tr>
 <tr><td style="padding:22px 0 8px">
-<h1 style="margin:0 0 14px;${WHITE_TEXT};font-family:${DISPLAY};font-size:22px;line-height:1.3;font-weight:600;text-align:center">${protectText("Vielen Dank für Ihre Bewerbung.")}</h1>
-<p style="margin:0 0 14px;${WHITE_TEXT};font-size:17px;line-height:1.6">${protectText(`${greeting} wir haben Ihre Bewerbung erhalten. Ihre Unterlagen sind bei uns eingegangen und wir melden uns schnellstmöglich bei Ihnen.`)}</p>
-<p style="margin:0 0 22px;${WHITE_TEXT};font-size:17px;line-height:1.6">${protectText("Falls Sie etwas ergänzen oder berichtigen möchten, antworten Sie einfach auf diese E-Mail.")}</p>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;margin:0 0 24px">
-<tr><td style="padding:12px 0 2px;${WHITE_TEXT};font-family:${DISPLAY};font-size:13px;text-transform:uppercase">${protectText("Ihre Angaben")}</td></tr>
-${rows}
-</table>
+${main}
 <p style="margin:0 0 14px;${WHITE_TEXT};font-family:${DISPLAY};font-size:16px;line-height:1.5">${protectText(esc(contact.name))}</p>
 <p style="margin:0 0 10px;${WHITE_TEXT};${NUM};font-size:14px;line-height:1.7">${protectText(`Öffnungszeiten:<br>${esc(contact.hoursOpen)} &middot; ${esc(contact.hoursClosed)}<br>Telefon: <a href="${contact.phoneHref}" style="${WHITE_TEXT};text-decoration:none">${esc(contact.phone)}</a> &middot; <a href="mailto:${contact.email}" style="${WHITE_TEXT};text-decoration:none;white-space:nowrap">${esc(contact.email)}</a>`)}</p>
 </td></tr>
@@ -130,6 +120,38 @@ ${rows}
 </td></tr>
 </table>
 </body></html>`;
+};
+
+/** Bausteine für Inhalte innerhalb der Marken-Hülle (auch für Bestell-E-Mails). */
+export const emailBlocks = {
+  h1: (text: string) => `<h1 style="margin:0 0 14px;${WHITE_TEXT};font-family:${DISPLAY};font-size:22px;line-height:1.3;font-weight:600;text-align:center">${protectText(text)}</h1>`,
+  p: (html: string) => `<p style="margin:0 0 14px;${WHITE_TEXT};font-size:17px;line-height:1.6">${protectText(html)}</p>`,
+  label: (text: string) => `<tr><td style="padding:12px 0 2px;${WHITE_TEXT};font-family:${DISPLAY};font-size:13px;text-transform:uppercase">${protectText(text)}</td></tr>`,
+  row,
+  table: (rows: string) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;table-layout:fixed;margin:0 0 24px">${rows}</table>`,
+  esc,
+  protectText,
+  whiteText: WHITE_TEXT,
+  num: NUM,
+  display: DISPLAY,
+};
+
+/** Betreff und HTML-Text der Eingangsbestätigung; der Name erscheint nur, wenn er angegeben wurde. */
+export const applicationConfirmationEmail = ({ name, tel, area, type, hasCv }: ApplicationEmailData) => {
+  const greeting = name.trim() ? `Guten Tag ${esc(name.trim())},` : "Guten Tag,";
+  const rows = [
+    area?.trim() ? row("Gewünschte Stelle", area.trim()) : "",
+    type?.trim() ? row("Beschäftigungsart", type.trim()) : "",
+    row("Telefon", tel.trim() || "-"),
+    row("Unterlagen", hasCv ? "Lebenslauf liegt bei" : "Kein Lebenslauf beigefügt"),
+  ].join("");
+
+  const main = [
+    emailBlocks.h1("Vielen Dank für Ihre Bewerbung."),
+    emailBlocks.p(`${greeting} wir haben Ihre Bewerbung erhalten. Ihre Unterlagen sind bei uns eingegangen und wir melden uns schnellstmöglich bei Ihnen.`),
+    emailBlocks.p("Falls Sie etwas ergänzen oder berichtigen möchten, antworten Sie einfach auf diese E-Mail."),
+    emailBlocks.table(emailBlocks.label("Ihre Angaben") + rows),
+  ].join("");
 
   const text = [
     "Vielen Dank für Ihre Bewerbung.",
@@ -150,5 +172,5 @@ ${rows}
     .filter((line) => line !== "")
     .join("\n");
 
-  return { subject: applicationConfirmationSubject, html, text };
+  return { subject: applicationConfirmationSubject, html: brandEmailHtml({ title: applicationConfirmationSubject, main }), text };
 };

@@ -1,5 +1,27 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793563930011,
+      "tag": "0000_create_shop_orders",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793564945937,
+      "tag": "0001_extend_shop_orders_discount_validity",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793567458978,
+      "tag": "0002_shop_legal_version_und_email_protokoll",
+      "breakpoints": true
+    }
+  ]
 }

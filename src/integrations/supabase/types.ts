@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      shop_email_events: {
+        Row: {
+          created_at: string
+          error: string | null
+          id: string
+          kind: string
+          order_id: string
+          success: boolean
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind: string
+          order_id: string
+          success: boolean
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind?: string
+          order_id?: string
+          success?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_email_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "shop_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shop_order_items: {
         Row: {
           id: string
@@ -72,6 +107,7 @@ export type Database = {
           full_name: string
           gift_text: string
           id: string
+          legal_version: string
           notes: string
           operator_notified_at: string | null
           order_email_sent_at: string | null
@@ -98,6 +134,7 @@ export type Database = {
           full_name: string
           gift_text?: string
           id?: string
+          legal_version?: string
           notes?: string
           operator_notified_at?: string | null
           order_email_sent_at?: string | null
@@ -124,6 +161,7 @@ export type Database = {
           full_name?: string
           gift_text?: string
           id?: string
+          legal_version?: string
           notes?: string
           operator_notified_at?: string | null
           order_email_sent_at?: string | null

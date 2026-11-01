@@ -3,7 +3,6 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { buildOrderLines, centsToAmount, checkoutRequestSchema, orderTotalCents, validityMonthsFor } from "./shop-checkout";
 import { discountForLines, openingDiscount } from "./discount";
-import { contact } from "./contact";
 
 const GENERIC_ERROR = "Die Bestellung konnte nicht übermittelt werden. Bitte versuchen Sie es erneut oder kontaktieren Sie uns telefonisch oder per E-Mail.";
 
@@ -40,8 +39,7 @@ export const createShopCheckout = createServerFn({ method: "POST" })
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { sumupCreateCheckout, sumupFindCheckoutByReference, sumupMerchantCode } = await import("./shop-checkout.server");
-    const { loadOrderForEmail } = await import("./shop-payment.server");
-    const { orderReceivedEmail, operatorEmail, sendOrderEmail } = await import("./order-email");
+    const { CURRENT_LEGAL_VERSION } = await import("./legal-texts");
 
     // Wiederholungsschlüssel: dieselbe Übermittlung liefert die vorhandene Bestellung.
     const { data: existing } = await supabaseAdmin
@@ -83,6 +81,7 @@ export const createShopCheckout = createServerFn({ method: "POST" })
         discount_code: discountCode,
         discount_cents: discountCents,
         submission_key: data.submissionKey,
+        legal_version: CURRENT_LEGAL_VERSION,
       })
       .select("id, access_token")
       .single();
@@ -150,22 +149,20 @@ export const createShopCheckout = createServerFn({ method: "POST" })
       .update({ sumup_checkout_id: checkout.id, hosted_checkout_url: checkout.hostedUrl, status: checkout.status })
       .eq("id", attempt.id);
 
-    // Eingangsbestätigung an Kunde und Hinweis an den Betreiber. Ein Versandfehler
-    // entwertet die Bestellung nicht; er wird nur protokolliert.
-    const loaded = await loadOrderForEmail(supabaseAdmin, order.id);
-    if (loaded) {
-      const customerMail = orderReceivedEmail(loaded.order, loaded.lines);
-      if (await sendOrderEmail({ to: loaded.order.email, subject: customerMail.subject, html: customerMail.html })) {
-        await supabaseAdmin.from("shop_orders").update({ order_email_sent_at: new Date().toISOString() }).eq("id", order.id);
-      }
-      const opsMail = operatorEmail("order", loaded.order, loaded.lines);
-      await sendOrderEmail({ to: contact.email, subject: opsMail.subject, html: opsMail.html, replyTo: loaded.order.email });
-    }
-
+    // Keine E-Mail vor der Zahlung: Der Bestelleingang wird auf der Website
+    // bestätigt (Statusseite „Zahlung ausstehend"); Kunden- und Betreiber-E-Mail
+    // gehen erst nach unabhängig verifizierter Zahlung raus.
     return { ok: true, orderId: order.id, token: order.access_token, hostedUrl: checkout.hostedUrl };
   });
 
 export type ShopOrderStatus = "paid" | "pending" | "failed" | "not_found";
+export interface ShopOrderStatusResult {
+  status: ShopOrderStatus;
+  /** Tatsächlicher Bestelleingang (ISO), soweit die Bestellung gefunden wurde. */
+  orderedAt?: string;
+  /** Tatsächlicher Zahlungsbestätigungszeitpunkt (ISO), nur bei bezahlten Bestellungen. */
+  paidAt?: string | undefined;
+}
 
 /**
  * Prüft den Zahlungsstatus einer Bestellung unabhängig bei SumUp.
@@ -174,7 +171,7 @@ export type ShopOrderStatus = "paid" | "pending" | "failed" | "not_found";
  */
 export const getShopOrderStatus = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => z.object({ orderId: z.string().uuid(), token: z.string().uuid() }).parse(input))
-  .handler(async ({ data }): Promise<{ status: ShopOrderStatus }> => {
+  .handler(async ({ data }): Promise<ShopOrderStatusResult> => {
     const apiKey = process.env["SUMUP_API_KEY"];
     if (!apiKey) return { status: "pending" };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -183,11 +180,11 @@ export const getShopOrderStatus = createServerFn({ method: "POST" })
 
     const { data: order } = await supabaseAdmin
       .from("shop_orders")
-      .select("id, status, access_token")
+      .select("id, status, access_token, created_at, paid_at")
       .eq("id", data.orderId)
       .maybeSingle();
     if (!order || order.access_token !== data.token) return { status: "not_found" };
-    if (order.status === "paid") return { status: "paid" };
+    if (order.status === "paid") return { status: "paid", orderedAt: order.created_at, paidAt: order.paid_at ?? undefined };
 
     const { data: attempt } = await supabaseAdmin
       .from("shop_payment_attempts")
@@ -196,23 +193,24 @@ export const getShopOrderStatus = createServerFn({ method: "POST" })
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
-    if (!attempt?.sumup_checkout_id) return { status: "pending" };
+    if (!attempt?.sumup_checkout_id) return { status: "pending", orderedAt: order.created_at };
 
     try {
       const status = await sumupGetCheckoutStatus(apiKey, attempt.sumup_checkout_id);
       if (status === "PAID") {
         await supabaseAdmin.from("shop_payment_attempts").update({ status: "PAID", verified_at: new Date().toISOString() }).eq("id", attempt.id);
         await finalizePaidOrder(supabaseAdmin, order.id);
-        return { status: "paid" };
+        const { data: fresh } = await supabaseAdmin.from("shop_orders").select("paid_at").eq("id", order.id).maybeSingle();
+        return { status: "paid", orderedAt: order.created_at, paidAt: fresh?.paid_at ?? undefined };
       }
       if (status === "FAILED" || status === "EXPIRED") {
         await supabaseAdmin.from("shop_payment_attempts").update({ status }).eq("id", attempt.id);
         await supabaseAdmin.from("shop_orders").update({ status: "payment_failed" }).eq("id", order.id).eq("status", "awaiting_payment");
-        return { status: "failed" };
+        return { status: "failed", orderedAt: order.created_at };
       }
-      return { status: "pending" };
+      return { status: "pending", orderedAt: order.created_at };
     } catch (error) {
       console.error("[shop-checkout] Statusabfrage fehlgeschlagen:", error instanceof Error ? error.message : "unbekannt");
-      return { status: "pending" };
+      return { status: "pending", orderedAt: order.created_at };
     }
   });

@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { PageHero, ContactButtons } from "@/components/site";
 import { pageHead } from "@/lib/meta";
-import { getShopOrderStatus, type ShopOrderStatus } from "@/lib/shop-checkout.functions";
+import { getShopOrderStatus, type ShopOrderStatusResult } from "@/lib/shop-checkout.functions";
 
 export const Route = createFileRoute("/bestellung-bestaetigt")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -14,14 +14,17 @@ export const Route = createFileRoute("/bestellung-bestaetigt")({
   component: Page,
 });
 
-const STATUS_TEXT: Record<ShopOrderStatus, { heading: string; body: string }> = {
+const berlinDateTime = (iso: string) =>
+  new Date(iso).toLocaleString("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) + " Uhr";
+
+const STATUS_TEXT: Record<ShopOrderStatusResult["status"], { heading: string; body: string }> = {
   paid: {
-    heading: "Ihre Zahlung ist bestätigt.",
-    body: "Vielen Dank! Ihre Zahlung wurde von unserem Zahlungsdienstleister bestätigt. Ihre Bestellung wird nun von uns persönlich geprüft und angenommen. Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab. Die Gültigkeit beginnt mit dem Zahlungseingang: 5er-Karten 12 Monate, 10er-Karten und Gutscheine jeweils 24 Monate.",
+    heading: "Ihre Bestellung und Zahlung sind bestätigt.",
+    body: "Vielen Dank! Ihre Zahlung wurde von unserem Zahlungsdienstleister bestätigt. Sie erhalten eine E-Mail mit Ihrer Bestellzusammenfassung und allen Unterlagen als PDF-Anhang. Ihre Bestellung wird nun von uns persönlich geprüft und angenommen. Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab. Die Gültigkeit beginnt mit dem Zahlungseingang: 5er-Karten 12 Monate, 10er-Karten und Gutscheine jeweils 24 Monate.",
   },
   pending: {
-    heading: "Ihre Zahlung wird noch geprüft.",
-    body: "Die Zahlung ist bei unserem Zahlungsdienstleister noch nicht als abgeschlossen gemeldet. Bitte laden Sie diese Seite in einigen Minuten erneut. Sollte der Betrag abgebucht worden sein, prüfen wir den Vorgang und melden uns bei Ihnen.",
+    heading: "Ihre Bestellung ist eingegangen – Zahlung ausstehend.",
+    body: "Wir haben Ihre Bestellung gespeichert. Die Zahlung ist bei unserem Zahlungsdienstleister noch nicht als abgeschlossen gemeldet. Bitte laden Sie diese Seite in einigen Minuten erneut. Sollte der Betrag abgebucht worden sein, prüfen wir den Vorgang und melden uns bei Ihnen.",
   },
   failed: {
     heading: "Die Zahlung ist leider fehlgeschlagen.",
@@ -36,16 +39,20 @@ const STATUS_TEXT: Record<ShopOrderStatus, { heading: string; body: string }> = 
 function Page() {
   const { bestellung, schluessel } = Route.useSearch();
   const checkStatus = useServerFn(getShopOrderStatus);
-  const [status, setStatus] = useState<ShopOrderStatus | "loading" | "none">(bestellung && schluessel ? "loading" : "none");
+  const [result, setResult] = useState<ShopOrderStatusResult | "loading" | "none">(bestellung && schluessel ? "loading" : "none");
 
   useEffect(() => {
     if (!bestellung || !schluessel) return;
     let cancelled = false;
     checkStatus({ data: { orderId: bestellung, token: schluessel } })
-      .then(result => { if (!cancelled) setStatus(result.status); })
-      .catch(() => { if (!cancelled) setStatus("pending"); });
+      .then(r => { if (!cancelled) setResult(r); })
+      .catch(() => { if (!cancelled) setResult({ status: "pending" }); });
     return () => { cancelled = true; };
   }, [bestellung, schluessel, checkStatus]);
+
+  const status = typeof result === "string" ? result : result.status;
+  const orderedAt = typeof result === "object" ? result.orderedAt : undefined;
+  const paidAt = typeof result === "object" ? result.paidAt : undefined;
 
   return <><PageHero title="Ihre Bestellung"/><main className="section narrow shop-thanks">
     {status === "none" && <>
@@ -57,6 +64,7 @@ function Page() {
     {status !== "none" && status !== "loading" && <>
       <h2>{STATUS_TEXT[status].heading}</h2>
       <p>{STATUS_TEXT[status].body}</p>
+      {orderedAt && <p><small>Bestellung eingegangen am {berlinDateTime(orderedAt)}{paidAt ? ` · Zahlung bestätigt am ${berlinDateTime(paidAt)}` : ""}</small></p>}
     </>}
     <ContactButtons/>
     <p><Link to="/gutscheine">Zu den Gutscheinen</Link> · <Link to="/abos">Zu den Abos</Link></p>
