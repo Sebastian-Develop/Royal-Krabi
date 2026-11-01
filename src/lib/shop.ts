@@ -6,6 +6,8 @@ import { valueVoucherDescription } from './value-voucher';
 export const shopPolicy = { salesEnabled: false, shippingCountry: "DE", shippingProvider: "DHL", shippingCost: 0, minimumOrderValue: 0, minimumQuantity: 1, handoverWorkingDays: 3, automaticRenewal: false, manualAcceptance: true, validityMonths: null, transferable: null } as const;
 export const validityNotice = "Gültigkeitsdauer und Nutzungsbedingungen gemäß unseren AGB.";
 export const shippingNotice = "Versand innerhalb Deutschlands mit DHL. Kostenfrei. Wir bearbeiten Ihre Bestellung und geben sie nach Prüfung des Zahlungseingangs in der Regel innerhalb von 3 Werktagen bei DHL ein. Die DHL-Laufzeit kommt hinzu. Sie erhalten auf Anfrage einen Einlieferungsbeleg als Nachweis der Übergabe an DHL.";
+/** Short confirmed shipping rule shown at purchasable offers, cart and checkout. */
+export const shippingNoticeShort = "Kostenfreier Versand innerhalb Deutschlands. Abholung nach Vereinbarung.";
 export type ShopProduct = { id: string; kind: "voucher" | "five" | "ten"; name: string; description: string; price: number | null; regular: number | null; badge: string; photo: MassagePhoto; duration: number | null; massageName: string | null; massageCount: number | null; SUMUP_LINK_GUTSCHEIN: string; SUMUP_LINK_5ER_ABO: string; SUMUP_LINK_10ER_ABO: string };
 const emptyLinks = { SUMUP_LINK_GUTSCHEIN: "", SUMUP_LINK_5ER_ABO: "", SUMUP_LINK_10ER_ABO: "" };
 /** Abo badges carry the massage category plus the fixed duration, e.g. "KLASSISCH · 5er-Abo (60 Minuten)". */
