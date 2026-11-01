@@ -1,9 +1,10 @@
 /// <reference types="bun" />
 import { describe, expect, test } from "bun:test";
-import { massages, partialMassages, pairPrices, pairUpgrades, vouchers, subscriptions, subscriptionRules, categoryBadges, upgradeBadge, upgradePriceRows, vatNotice } from "./content";
+import { massages, partialMassages, pairPrices, pairUpgrades, vouchers, subscriptions, subscriptionRules, categoryBadges, upgradeBadge, upgradePriceRows, vatNotice, vatNoticeCautious } from "./content";
 
 describe("Uploaded Royal Krabi price list", () => {
-  test("price note states VAT inclusion verbatim", () => expect(vatNotice).toBe("Alle Preise inklusive Mehrwertsteuer."));
+  test("price note states VAT inclusion verbatim", () => expect(vatNotice).toBe("Alle Preise verstehen sich inklusive 19 % MwSt."));
+  test("cautious price note for unclassified value vouchers stays verbatim", () => expect(vatNoticeCautious).toBe("Alle Preise sind Endpreise. Bei umsatzsteuerpflichtigen Leistungen ist die gesetzliche Umsatzsteuer enthalten."));
   const expected: [string, [number, number][]][] = [
     ["Royal Thai Massage – ohne Öl", [[60,59],[90,85],[120,109]]],
     ["Royal Thai Massage", [[60,65],[90,92],[120,119]]],
