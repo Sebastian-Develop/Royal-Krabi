@@ -115,10 +115,10 @@ const v20261021: LegalTextVersion = {
   ],
 };
 
-/** Imported existing website text. Pending explicit release for online order documents. */
+/** Released by owner on 02.11.2026 for the controlled SumUp test order. */
 const v20261101: LegalTextVersion = {
   version: '2026-11-01-review',
-  released: false,
+  released: true,
   agb: [
   {
     "title": "1. Anbieter und Geltungsbereich",
@@ -289,8 +289,8 @@ const v20261101: LegalTextVersion = {
 const LEGAL_VERSIONS: Record<string, LegalTextVersion> = { [v20261021.version]: v20261021, [v20261101.version]: v20261101 };
 export const CURRENT_LEGAL_VERSION = v20261021.version;
 export const WEBSITE_LEGAL_VERSION = v20261101.version;
-/** No complete released online-sale version exists yet. Set only after explicit content release. */
-export const CURRENT_ORDER_LEGAL_VERSION: string | null = null;
+/** Released online-order version (owner approval 02.11.2026). */
+export const CURRENT_ORDER_LEGAL_VERSION: string | null = v20261101.version;
 export function legalTextsFor(version: string | null | undefined): LegalTextVersion {
   const entry = version ? LEGAL_VERSIONS[version] : undefined;
   if (!entry) throw new Error('Die gespeicherte Rechtstextfassung ist nicht verfügbar. Kein Versand mit Ersatztexten.');
