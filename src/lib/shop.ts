@@ -20,7 +20,7 @@ export function isApprovedPaymentLink(value: string) {
 }
 export const canPayForProduct = (product: ShopProduct) => shopPolicy.salesEnabled && product.price !== null && isApprovedPaymentLink(getProductLink(product));
 const text = (max: number) => z.string().trim().max(max);
-export const orderSchema = z.object({
+export const orderSchemaBase = z.object({
   productId: text(80).refine(id => shopProducts.some(p => p.id === id), "Bitte wählen Sie ein vorhandenes Produkt."),
   fullName: text(100).min(2, "Bitte geben Sie Ihren Vor- und Nachnamen an.").refine(name => name.split(/\s+/).length >= 2, "Bitte geben Sie Vor- und Nachnamen an."),
   email: text(255).email("Bitte geben Sie eine gültige E-Mail-Adresse an."),
@@ -28,9 +28,12 @@ export const orderSchema = z.object({
   delivery: z.enum(["pickup", "post"], { message: "Bitte wählen Sie eine Lieferart." }), street: text(150), postalCode: text(5), city: text(100), country: z.literal("DE"),
   recipient: text(100), giftText: text(500), notes: text(1000),
   acceptTerms: z.boolean().refine(v => v === true, "Bitte akzeptieren Sie unsere AGB."), acknowledgePrivacy: z.boolean().refine(v => v === true, "Bitte nehmen Sie die Datenschutzerklärung zur Kenntnis."),
-}).superRefine((data, ctx) => {
+});
+/** Postversand braucht eine vollständige deutsche Adresse; wird auch beim Server-Checkout geprüft. */
+export const orderAddressRefinement = (data: { delivery: string; street: string; postalCode: string; city: string }, ctx: z.RefinementCtx) => {
   if (data.delivery !== "post") return;
   if (data.street.length < 3) ctx.addIssue({ code: "custom", path: ["street"], message: "Bitte geben Sie Straße und Hausnummer an." });
   if (!/^\d{5}$/.test(data.postalCode)) ctx.addIssue({ code: "custom", path: ["postalCode"], message: "Bitte geben Sie eine fünfstellige deutsche Postleitzahl an." });
   if (data.city.length < 2) ctx.addIssue({ code: "custom", path: ["city"], message: "Bitte geben Sie den Ort an." });
-});
+};
+export const orderSchema = orderSchemaBase.superRefine(orderAddressRefinement);

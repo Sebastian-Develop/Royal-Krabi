@@ -14,7 +14,145 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      shop_order_items: {
+        Row: {
+          id: string
+          order_id: string
+          product_id: string
+          product_kind: string
+          product_name: string
+          quantity: number
+          subtotal_cents: number
+          unit_price_cents: number
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          product_id: string
+          product_kind: string
+          product_name: string
+          quantity: number
+          subtotal_cents: number
+          unit_price_cents: number
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          product_id?: string
+          product_kind?: string
+          product_name?: string
+          quantity?: number
+          subtotal_cents?: number
+          unit_price_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "shop_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shop_orders: {
+        Row: {
+          access_token: string
+          city: string
+          country: string
+          created_at: string
+          currency: string
+          delivery: string
+          email: string
+          full_name: string
+          gift_text: string
+          id: string
+          notes: string
+          phone: string
+          postal_code: string
+          recipient: string
+          status: string
+          street: string
+          total_cents: number
+        }
+        Insert: {
+          access_token?: string
+          city?: string
+          country?: string
+          created_at?: string
+          currency?: string
+          delivery: string
+          email: string
+          full_name: string
+          gift_text?: string
+          id?: string
+          notes?: string
+          phone: string
+          postal_code?: string
+          recipient?: string
+          status?: string
+          street?: string
+          total_cents: number
+        }
+        Update: {
+          access_token?: string
+          city?: string
+          country?: string
+          created_at?: string
+          currency?: string
+          delivery?: string
+          email?: string
+          full_name?: string
+          gift_text?: string
+          id?: string
+          notes?: string
+          phone?: string
+          postal_code?: string
+          recipient?: string
+          status?: string
+          street?: string
+          total_cents?: number
+        }
+        Relationships: []
+      }
+      shop_payment_attempts: {
+        Row: {
+          created_at: string
+          hosted_checkout_url: string | null
+          id: string
+          order_id: string
+          status: string
+          sumup_checkout_id: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          hosted_checkout_url?: string | null
+          id?: string
+          order_id: string
+          status?: string
+          sumup_checkout_id?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          hosted_checkout_url?: string | null
+          id?: string
+          order_id?: string
+          status?: string
+          sumup_checkout_id?: string | null
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_payment_attempts_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "shop_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

@@ -25,6 +25,7 @@
 - Keep the launch switch default-on and let only an explicit build flag turn it off, so a static site copy can show the full site without exposing draft pages on the live domain.
 - Select launch presentation from the request hostname using an isomorphic helper, never forwarded headers or a public query bypass; preview-only view selection preserves internal full-site editing without creating customer accounts.
 - Protect applicant-email text with Gmail-only screen/difference wrappers and Outlook text-fill fallbacks, excluding images; use Outlook-only VML background, explicit image dimensions and fixed social cells while preserving fluid layout in other clients.
+- Run the shop checkout through src/lib/shop-checkout*.ts: pure pricing/validation in shop-checkout.ts, SumUp HTTP only in shop-checkout.server.ts, RPC in shop-checkout.functions.ts; orders/items/payment attempts live in service-role-only tables, prices are recomputed server-side, and "paid" may only be set after an independent SumUp status check — never from the redirect alone.
 
 ## GitHub sync
 - Push site changes to github.com/Sebastian-Develop/Royal-Krabi (branch main) after each meaningful change via https://connector-gateway.lovable.dev/github with headers `Authorization: Bearer $LOVABLE_API_KEY` and `X-Connection-Api-Key: $GITHUB_API_KEY`; use Git Data API with `base_tree` and only changed files, since full-tree posts (155 entries) fail with 422.

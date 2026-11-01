@@ -1,6 +1,6 @@
 /// <reference types="bun" />
 import { describe, expect, test } from "bun:test";
-import { APPLICATION_AGES, applicationConfirmation, missingApplicationFields, missingFieldsMessage, orderCheckConfirmation } from "./forms";
+import { APPLICATION_AGES, applicationConfirmation, missingApplicationFields, missingFieldsMessage } from "./forms";
 
 const complete = { name: "Sitichai Ayamuang", tel: "069 60511884", email: "sitichai@example.de", age: "25–34 Jahre", msg: "Ich interessiere mich für die Stelle." };
 
@@ -24,9 +24,4 @@ describe("Form submission confirmations", () => {
   });
   test("missing field message lists the fields", () =>
     expect(missingFieldsMessage(["Name", "E-Mail-Adresse"])).toBe("Bitte füllen Sie noch diese Pflichtfelder aus: Name, E-Mail-Adresse."));
-  test("order confirmation never claims the order arrived", () => {
-    expect(orderCheckConfirmation.body).toContain("wurde noch nicht übermittelt");
-    expect(orderCheckConfirmation.body).not.toContain("haben Ihre Bestellung erhalten");
-    expect(orderCheckConfirmation.body).not.toContain("Zahlung erfolgreich");
-  });
 });

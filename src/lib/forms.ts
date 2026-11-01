@@ -11,13 +11,10 @@ export const applicationConfirmation = {
 };
 
 /**
- * Bestätigung nach der Prüfung des Bestellformulars.
- * Sie darf nicht behaupten, die Bestellung sei eingegangen – gezahlt wird noch nicht online.
+ * Die frühere Bestellformular-Meldung („noch nicht übermittelt") ist entfallen:
+ * Das Formular reicht die Bestellung jetzt serverseitig ein und leitet zur
+ * SumUp-Zahlungsseite weiter (siehe src/lib/shop-checkout.functions.ts).
  */
-export const orderCheckConfirmation = {
-  heading: "Vielen Dank für Ihre Angaben.",
-  body: "Ihre Bestellung wurde noch nicht übermittelt, da die Online-Zahlung derzeit eingerichtet wird. Bitte kontaktieren Sie uns telefonisch oder per E-Mail – wir helfen Ihnen gerne weiter.",
-};
 
 export const APPLICATION_FIELD_LABELS = { name: "Name", tel: "Telefonnummer", email: "E-Mail-Adresse", age: "Altersangabe", msg: "Nachricht" } as const;
 export type ApplicationValues = { name: string; tel: string; email: string; age: string; msg: string };
