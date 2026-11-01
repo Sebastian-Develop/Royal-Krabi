@@ -27,7 +27,7 @@ export const addItem = (cart: CartItem[], id: string) => cart.some(i => i.produc
 export const setQuantity = (cart: CartItem[], id: string, quantity: number) => normalizeCart(cart.map(i => i.productId === id ? { ...i, quantity } : i));
 export const removeItem = (cart: CartItem[], id: string) => cart.filter(i => i.productId !== id);
 export function cartLines(cart: CartItem[]): CartLine[] {
-  return normalizeCart(cart).map(i => { const product = shopProducts.find(p => p.id === i.productId)!; const unitPrice = product.price!; return { product, quantity: i.quantity, unitPrice, subtotal: unitPrice * i.quantity }; });
+  return normalizeCart(cart).flatMap(i => { const product = shopProducts.find(p => p.id === i.productId); if (!product || product.price === null) return []; const unitPrice = product.price; return [{ product, quantity: i.quantity, unitPrice, subtotal: unitPrice * i.quantity }]; });
 }
 export const cartTotal = (cart: CartItem[]) => cartLines(cart).reduce((s, l) => s + l.subtotal, 0);
 export const cartCount = (cart: CartItem[]) => normalizeCart(cart).reduce((s, i) => s + i.quantity, 0);

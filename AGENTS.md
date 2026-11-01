@@ -18,6 +18,8 @@
 - Keep price-page photo mappings separate from price data and render permanent images through shared massage-card components, so presentation changes cannot alter massage prices or other pages.
 - Keep native semantic gold cursor assets and the single decorative canvas in the root-mounted cursor system; native cursor fallbacks preserve precise input and reduced-motion accessibility.
 - Derive the shop catalog from shared voucher and subscription data; keep per-product payment-link fields and a fail-closed sales gate separate from pricing to prevent unintended payment activation.
+- Resolve product-card and cart images from the catalog product ID through one shared image component; store catalog photo and massage metadata once to keep reloaded cart previews consistent without separate image lists.
+- Keep pending value-voucher requirements in an internal review module, separate from public validity text and disabled redemption, because SumUp gift-card access and legal validity are not yet proven.
 - Exclude Bun test files from the browser application TypeScript program because Bun's global fetch augmentation conflicts with generated Cloud fetch adapters; run the tests separately with Bun.
 - Centralize interim launch copy and the public/full-site switch in the launch module; enforce the public exact-path allowlist at the server entry and root navigation boundary so draft pages cannot be opened directly while previews retain all existing routes.
 - Select launch presentation from the request hostname using an isomorphic helper, never forwarded headers or a public query bypass; preview-only view selection preserves internal full-site editing without creating customer accounts.

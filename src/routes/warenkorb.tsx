@@ -3,6 +3,7 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { PageHero, PriceVatNotice } from "@/components/site";
 import { Button } from "@/components/ui/button";
 import { cartLines, cartTotal, MAX_QUANTITY, useCart } from "@/lib/cart";
+import { ShopProductImage } from "@/components/shop-product-image";
 import { pageHead } from "@/lib/meta";
 
 export const Route = createFileRoute("/warenkorb")({ head: () => { const h = pageHead("Warenkorb | Royal Krabi Gutscheine & Massage-Abos", "Ihr Warenkorb mit Gutscheinen und vorausbezahlten 5er- und 10er-Massagekarten von Royal Krabi.", "https://royalkrabi-thaimassage.de/warenkorb"); return { ...h, meta: [...h.meta, { name: "robots", content: "noindex" }] }; }, component: Page });
@@ -13,7 +14,7 @@ function Page() {
   return <><PageHero title="Warenkorb"/><main className="section container shop-page shop-cart">
     {lines.length === 0 ? <div className="shop-cart-empty"><p>Ihr Warenkorb ist leer.</p><Link className="btn btn-outline" to="/gutscheine">Zu den Gutscheinen</Link><Link className="btn btn-outline" to="/abos">Zu den Abos</Link></div> : <>
       <ul className="cart-lines">{lines.map(l => <li key={l.product.id} className="cart-line">
-        <div className="cart-line-name"><span className="signature-badge">{l.product.badge}</span><strong>{l.product.name}</strong><span>Einzelpreis: {l.unitPrice} €</span></div>
+        <div className="cart-product-info"><ShopProductImage product={l.product} thumbnail/><div className="cart-line-name"><span className="signature-badge">{l.product.badge}</span><strong>{l.product.name}</strong><span>{l.product.massageName}</span>{l.product.duration && <span>{l.product.massageCount ? `${l.product.massageCount} Massagen · je ` : ""}{l.product.duration} Minuten</span>}<span>Einzelpreis: {l.unitPrice} €</span></div></div>
         <div className="cart-qty" role="group" aria-label={`Menge ${l.product.name}`}>
           <Button variant="outline" size="icon" aria-label="Menge verringern" onClick={() => setQty(l.product.id, l.quantity - 1)}><Minus size={16}/></Button>
           <input type="number" min={1} max={MAX_QUANTITY} value={l.quantity} aria-label="Menge" onChange={e => setQty(l.product.id, Number(e.target.value) || 1)}/>

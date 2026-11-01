@@ -11,8 +11,10 @@ import neck from '@/assets/massage-preview-10.webp.asset.json';
 import head from '@/assets/massage-preview-11.webp.asset.json';
 import foot from '@/assets/massage-preview-12.webp.asset.json';
 import pair from '@/assets/massage-preview-13.webp.asset.json';
+import logo from '@/assets/royal-krabi-logo.png.asset.json';
 
-export type MassagePhoto = { url: string; alt: string };
+export type MassagePhoto = { url: string; alt: string; fit?: 'contain' | 'cover' };
+export const brandFallbackPhoto: MassagePhoto = { url: logo.url, alt: 'Royal Krabi Serenity Thaimassage – goldenes Markenlogo', fit: 'contain' };
 export const massagePhotos: Record<string, MassagePhoto> = {
   'Royal Thai Massage – ohne Öl': { url: thai.url, alt: 'Traditionelle Thai-Massage mit Drucktechniken am bekleideten Rücken.' },
   'Royal Thai Massage': { url: thaiOil.url, alt: 'Thai-Öl-Massage mit Massagegriffen am Rücken.' },
@@ -28,3 +30,10 @@ export const massagePhotos: Record<string, MassagePhoto> = {
   'Thai-Fußreflexzonenmassage': { url: foot.url, alt: 'Thai-Fußreflexzonenmassage mit sanften Drucktechniken am Fuß.' },
   'Royal Paarmassage': { url: pair.url, alt: 'Zwei Personen genießen gemeinsam eine Massage in einem Raum.' },
 };
+/** Photo for a shop product name (vouchers and abos), resolved from the massage name it contains. */
+export function shopProductPhoto(productName: string): MassagePhoto | undefined {
+  if (productName.includes('Teilkörpermassage')) return massagePhotos['Rückenmassage mit Öl'];
+  const names = Object.keys(massagePhotos).sort((a, b) => b.length - a.length);
+  const tail = (productName.split(' · ').pop() ?? '').replace(/^\d+ Minuten /, '');
+  return massagePhotos[tail] ?? massagePhotos[names.find(n => productName.endsWith(n)) ?? ''];
+}
