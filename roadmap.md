@@ -1,7 +1,7 @@
 # Roadmap
 - [x] Produktbilder zentral zuordnen und Mini-/Vollwarenkorb mit Vorschau prüfen; Preise und Zahlung unverändert.
 - [x] Wunschbetrag-Klarstellungen intern aufgenommen und SumUp-Einlösung anhand offizieller Quellen geprüft, offene Kontovoraussetzungen im technischen Plan dokumentiert.
-- [ ] Gemeinsame SumUp-Gutscheineinlösung: wartet auf Bestätigung des Gutscheinprodukts, Kassensystems und dokumentierter Schnittstelle mit Kontoberechtigungen.
+- [ ] Gemeinsame SumUp-Gutscheineinlösung: Starter-Kit und gleiche Angebote online/im Studio bestätigt; wartet auf aktiviertes Gutscheinmodul und dokumentierte Schnittstelle mit Kontoberechtigungen.
 - [x] Tests und Vorschau bei 1280/680/390/320 px geprüft; nicht veröffentlicht.
 - [x] Aktuellen Quellcode nach GitHub synchronisiert; keine Veröffentlichung.
 - [x] Quellcode in GitHub-Repository Sebastian-Develop/Royal-Krabi hochgeladen (27.10.2026)
