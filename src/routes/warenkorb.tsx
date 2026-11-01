@@ -6,6 +6,7 @@ import { cartLines, cartTotal, MAX_QUANTITY, useCart } from "@/lib/cart";
 import { ShopProductImage } from "@/components/shop-product-image";
 import { formatEuro } from "@/lib/money";
 import { isValueVoucher, valueVoucherLabel } from "@/lib/value-voucher";
+import { shippingNoticeShort } from "@/lib/shop";
 import { pageHead } from "@/lib/meta";
 
 export const Route = createFileRoute("/warenkorb")({ head: () => { const h = pageHead("Warenkorb | Royal Krabi Gutscheine & Massage-Abos", "Ihr Warenkorb mit Gutscheinen und vorausbezahlten 5er- und 10er-Massagekarten von Royal Krabi.", "https://royalkrabi-thaimassage.de/warenkorb"); return { ...h, meta: [...h.meta, { name: "robots", content: "noindex" }] }; }, component: Page });
@@ -25,7 +26,7 @@ function Page() {
         <span className="cart-subtotal">Zwischensumme: <strong>{formatEuro(l.subtotal)}</strong></span>
         <Button variant="ghost" className="cart-remove" onClick={() => remove(l.key)}><Trash2 size={16}/> Entfernen</Button>
       </li>)}</ul>
-      <div className="cart-total"><p>Versand innerhalb Deutschlands mit DHL, kostenfrei.</p><p className="cart-total-sum">Gesamtsumme: <strong>{formatEuro(cartTotal(cart))}</strong></p></div><PriceVatNotice/>
+      <div className="cart-total"><p>{shippingNoticeShort}</p><p className="cart-total-sum">Gesamtsumme: <strong>{formatEuro(cartTotal(cart))}</strong></p></div><PriceVatNotice cautious={lines.some(l => isValueVoucher(l.product))}/>
       <div className="cart-actions"><Link className="btn btn-outline" to="/gutscheine">Weitere Gutscheine</Link><Link className="btn btn-outline" to="/abos">Weitere Abos</Link><Link className="btn btn-gold" to="/checkout">Zur Kasse</Link></div>
     </>}
   </main></>;
