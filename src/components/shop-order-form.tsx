@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { contact, mailHref } from "@/lib/contact";
 import { cartLines, type CartItem } from "@/lib/cart";
-import { shippingNotice, validityNotice } from "@/lib/shop";
+import { shippingNotice, shippingNoticeShort, validityNotice } from "@/lib/shop";
 import { checkoutRequestSchema, orderTotalCents, type OrderLine } from "@/lib/shop-checkout";
 import { discountForLines, openingDiscount } from "@/lib/discount";
 import { createShopCheckout } from "@/lib/shop-checkout.functions";
@@ -79,7 +79,7 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
         {preview.discountCents > 0 && <tr><td colSpan={3}>Rabatt ({openingDiscount.code}, {openingDiscount.percent} %)</td><td>−{eur(preview.discountCents)}</td></tr>}
         <tr><td colSpan={3}>Gesamtsumme</td><td><strong>{eur(preview.totalCents)}</strong></td></tr>
       </tfoot></table> : <p>Ihr Warenkorb ist leer. <Link to="/gutscheine">Zu den Gutscheinen</Link> · <Link to="/abos">Zu den Abos</Link></p>}
-      <PriceVatNotice/><p>Versand innerhalb Deutschlands mit DHL, kostenfrei.</p><p>{validityNotice}</p><p><Link to="/warenkorb">Warenkorb bearbeiten</Link></p></div>
+      <PriceVatNotice cautious={lines.some(l => isValueVoucher(l.product))}/><p>{shippingNoticeShort}</p><p>{validityNotice}</p><p><Link to="/warenkorb">Warenkorb bearbeiten</Link></p></div>
     <div className="shop-legal-links"><Link to="/agb">AGB</Link><Link to="/datenschutz">Datenschutzerklärung</Link><Link to="/widerruf">Widerrufsbelehrung & Widerrufsformular</Link></div>
     <label className="check"><input type="checkbox" name="acceptTerms" required/><span>Ich habe die <Link to="/agb">AGB</Link> gelesen und akzeptiere sie.</span></label><label className="check"><input type="checkbox" name="acknowledgePrivacy" required/><span>Ich habe die <Link to="/datenschutz">Datenschutzerklärung</Link> zur Kenntnis genommen.</span></label>
     <p>Nach dem Absenden werden Sie zur sicheren Zahlungsseite unseres Zahlungsdienstleisters SumUp weitergeleitet.</p>
