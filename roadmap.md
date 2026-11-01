@@ -15,3 +15,4 @@
 - [x] Bewerbungsbestätigung: Gmail-Farbschutz und feste Social-Symbolanzeige ergänzt; Browseransicht und nachgestellte Farbumkehr geprüft, echtes Gmail-Postfach noch ungetestet; nicht veröffentlicht.
 - [x] Gesamte Bewerbungsbestätigung mit Gmail-/Outlook-Farbschutz, Outlook-Hintergrund und stabilen Bildgrößen angepasst; Browservorschau geprüft, echte Gmail-/Outlook-Postfächer ungetestet; nicht veröffentlicht.
 - [x] Bewerbungsbestätigung: Schriftfarbe auf Creme-Gold der Coming-soon-Überschrift umgestellt; Live-Version neu veröffentlichen (29.10.2026)
+- [x] Komplette Website 1:1 ins GitHub-Repository synchronisiert (01.11.2026, main 7551e851): 184 Quellcodedateien identisch geprüft, keine Veröffentlichung; statische Pages-Kopie unverändert.
