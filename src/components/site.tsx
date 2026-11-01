@@ -14,7 +14,7 @@ function useAnsicht(): { ansicht?: "website" | "coming-soon" } {
 }
 import { SocialLinks } from "./social-links";
 import { contact, mailHref, mailHrefPlain, mapsRouteHint, mapsRouteUrl } from "@/lib/contact";
-import { vatNotice } from "@/lib/content";
+import { vatNotice, vatNoticeCautious } from "@/lib/content";
 import { CONSENT_EVENT, loadTidio, readConsent, saveConsent } from "@/lib/consent";
 
 export const address = `${contact.street}, ${contact.city}`;
@@ -28,7 +28,7 @@ export function AddressLink({ children, block = false }: { children: ReactNode; 
 export function RouteButton({ className = "btn btn-outline" }: { className?: string }) {
   return <a className={className} href={mapsRouteUrl} target="_blank" rel="noreferrer">ROUTE PLANEN</a>;
 }
-export const nav = [["Home", "/"], ["Massagen & Preise", "/massagen-preise"], ["Gutscheine", "/gutscheine"], ["Abos", "/abos"], ["Galerie", "/galerie"], ["Über uns", "/ueber-uns"], ["Termine", "/termine"], ["Kontakt & Route", "/kontakt"]] as const;
+export const nav = [["Home", "/"], ["Massagen & Preise", "/massagen-preise"], ["Gutscheine", "/gutscheine"], ["Royalpässe", "/abos"], ["Galerie", "/galerie"], ["Über uns", "/ueber-uns"], ["Termine", "/termine"], ["Kontakt & Route", "/kontakt"]] as const;
 const legalLinks = [["Impressum", "/impressum"], ["Datenschutz", "/datenschutz"], ["Datenschutzeinstellungen", "/cookies"], ["AGB", "/agb"], ["Widerrufsbelehrung & Widerrufsformular", "/widerruf"]] as const;
 
 export function ButtonLink({ to, children, outline = false, className = "" }: { to: string; children: ReactNode; outline?: boolean; className?: string }) {
@@ -93,7 +93,7 @@ export function SiteFooter() {
     <div><Link to="/" search={ansicht} className="footer-logo-link" aria-label="Royal Krabi Startseite" onClick={toTop}><img className="footer-logo" src={logo.url} alt="Royal Krabi Serenity Thaimassage"/></Link><p>Traditionelle Thai-Massage in Offenbach – Entspannung und Wohlbefinden in stilvoller Atmosphäre.</p><p className="gold-text"><MapPin size={16}/><AddressLink block>{contact.name}<br/>{contact.street}<br/>{contact.city}</AddressLink></p></div>
     <FooterLinks title="Entdecken" links={nav}/><FooterLinks title="Mehr" links={[["Treuepass", "/treuepass"], ["FAQ", "/faq"], ["Jobs", "/jobs"]]}/>
     <div className="footer-contact"><h3>Kontakt</h3><p><Phone size={15}/> <span>Telefon: <a href={contact.phoneHref}>{contact.phone}</a></span></p><p className="footer-contact-email"><Mail size={15}/> <span>E-Mail: <a href={mailHrefPlain}>{contact.email}</a></span></p><p className="hours-block"><Clock size={15}/> <span><strong>Öffnungszeiten</strong><br/>{contact.hoursOpen}<br/>Sonntag und Montag: geschlossen</span></p><p className="appointment-rule"><strong>{contact.appointmentRule}.</strong></p></div>
-  </div><div className="footer-bottom container"><p>© 2026 Royal Krabi Serenity Thaimassage. Alle Rechte vorbehalten.</p><div>{legalLinks.map(([label,to]) => <Link key={to} to={to} search={ansicht}>{label}</Link>)}</div></div><div className="container"><SocialLinks/></div><p className="footer-notice">Royal Krabi Serenity Thaimassage bietet ausschließlich professionelle traditionelle Thai-Massagen sowie Wellness- und Entspannungsmassagen an. Wir bieten keine erotischen Massagen oder sexuellen Dienstleistungen an.</p></footer>;
+  </div><div className="footer-bottom container"><p>© 2026 Royal Krabi Serenity Thaimassage. Alle Rechte vorbehalten.</p><p className="footer-vat">{vatNoticeCautious}</p><div>{legalLinks.map(([label,to]) => <Link key={to} to={to} search={ansicht}>{label}</Link>)}</div></div><div className="container"><SocialLinks/></div><p className="footer-notice">Royal Krabi Serenity Thaimassage bietet ausschließlich professionelle traditionelle Thai-Massagen sowie Wellness- und Entspannungsmassagen an. Wir bieten keine erotischen Massagen oder sexuellen Dienstleistungen an.</p></footer>;
 }
 
 export function BrandHeading({ eyebrow = "ROYAL KRABI SERENITY THAIMASSAGE" }: { eyebrow?: string }) {
@@ -112,9 +112,9 @@ export function Field({ label, type = "text", children, required = true }: { lab
 
 export function Notice({ children }: { children: ReactNode }) { return <div className="notice">{children}</div>; }
 
-/** Subtle VAT note placed directly beneath every displayed price list. */
-export function PriceVatNotice({ align = "start" }: { align?: "start" | "center" }) {
-  return <p className={`price-vat-notice${align === "center" ? " price-vat-center" : ""}`}>{vatNotice}</p>;
+/** Subtle VAT note placed directly beneath every displayed price list. `cautious` uses the wording for not-yet-classified value vouchers. */
+export function PriceVatNotice({ align = "start", cautious = false }: { align?: "start" | "center"; cautious?: boolean }) {
+  return <p className={`price-vat-notice${align === "center" ? " price-vat-center" : ""}`}>{cautious ? vatNoticeCautious : vatNotice}</p>;
 }
 
 export function openCookieSettings() { window.dispatchEvent(new Event("rk-open-cookies")); }
