@@ -18,6 +18,7 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as DatenschutzRouteImport } from './routes/datenschutz'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as FlyerRouteImport } from './routes/flyer'
 import { Route as GalerieRouteImport } from './routes/galerie'
 import { Route as GutscheineRouteImport } from './routes/gutscheine'
 import { Route as GutscheineAbosRouteImport } from './routes/gutscheine-abos'
@@ -33,6 +34,7 @@ import { Route as UeberUnsRouteImport } from './routes/ueber-uns'
 import { Route as WarenkorbRouteImport } from './routes/warenkorb'
 import { Route as WiderrufRouteImport } from './routes/widerruf'
 import { Route as ApiPublicBewerbungRouteImport } from './routes/api/public/bewerbung'
+import { Route as ApiPublicFlyerImageRouteImport } from './routes/api/public/flyer-image'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -77,6 +79,11 @@ const DatenschutzRoute = DatenschutzRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlyerRoute = FlyerRouteImport.update({
+  id: '/flyer',
+  path: '/flyer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalerieRoute = GalerieRouteImport.update({
@@ -154,6 +161,11 @@ const ApiPublicBewerbungRoute = ApiPublicBewerbungRouteImport.update({
   path: '/api/public/bewerbung',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicFlyerImageRoute = ApiPublicFlyerImageRouteImport.update({
+  id: '/api/public/flyer-image',
+  path: '/api/public/flyer-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -165,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/cookies': typeof CookiesRoute
   '/datenschutz': typeof DatenschutzRoute
   '/faq': typeof FaqRoute
+  '/flyer': typeof FlyerRoute
   '/galerie': typeof GalerieRoute
   '/gutscheine': typeof GutscheineRoute
   '/gutscheine-abos': typeof GutscheineAbosRoute
@@ -180,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/warenkorb': typeof WarenkorbRoute
   '/widerruf': typeof WiderrufRoute
   '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
+  '/api/public/flyer-image': typeof ApiPublicFlyerImageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -191,6 +205,7 @@ export interface FileRoutesByTo {
   '/cookies': typeof CookiesRoute
   '/datenschutz': typeof DatenschutzRoute
   '/faq': typeof FaqRoute
+  '/flyer': typeof FlyerRoute
   '/galerie': typeof GalerieRoute
   '/gutscheine': typeof GutscheineRoute
   '/gutscheine-abos': typeof GutscheineAbosRoute
@@ -206,6 +221,7 @@ export interface FileRoutesByTo {
   '/warenkorb': typeof WarenkorbRoute
   '/widerruf': typeof WiderrufRoute
   '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
+  '/api/public/flyer-image': typeof ApiPublicFlyerImageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -218,6 +234,7 @@ export interface FileRoutesById {
   '/cookies': typeof CookiesRoute
   '/datenschutz': typeof DatenschutzRoute
   '/faq': typeof FaqRoute
+  '/flyer': typeof FlyerRoute
   '/galerie': typeof GalerieRoute
   '/gutscheine': typeof GutscheineRoute
   '/gutscheine-abos': typeof GutscheineAbosRoute
@@ -233,6 +250,7 @@ export interface FileRoutesById {
   '/warenkorb': typeof WarenkorbRoute
   '/widerruf': typeof WiderrufRoute
   '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
+  '/api/public/flyer-image': typeof ApiPublicFlyerImageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -246,6 +264,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/datenschutz'
     | '/faq'
+    | '/flyer'
     | '/galerie'
     | '/gutscheine'
     | '/gutscheine-abos'
@@ -261,6 +280,7 @@ export interface FileRouteTypes {
     | '/warenkorb'
     | '/widerruf'
     | '/api/public/bewerbung'
+    | '/api/public/flyer-image'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -272,6 +292,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/datenschutz'
     | '/faq'
+    | '/flyer'
     | '/galerie'
     | '/gutscheine'
     | '/gutscheine-abos'
@@ -287,6 +308,7 @@ export interface FileRouteTypes {
     | '/warenkorb'
     | '/widerruf'
     | '/api/public/bewerbung'
+    | '/api/public/flyer-image'
   id:
     | '__root__'
     | '/'
@@ -298,6 +320,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/datenschutz'
     | '/faq'
+    | '/flyer'
     | '/galerie'
     | '/gutscheine'
     | '/gutscheine-abos'
@@ -313,6 +336,7 @@ export interface FileRouteTypes {
     | '/warenkorb'
     | '/widerruf'
     | '/api/public/bewerbung'
+    | '/api/public/flyer-image'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -325,6 +349,7 @@ export interface RootRouteChildren {
   CookiesRoute: typeof CookiesRoute
   DatenschutzRoute: typeof DatenschutzRoute
   FaqRoute: typeof FaqRoute
+  FlyerRoute: typeof FlyerRoute
   GalerieRoute: typeof GalerieRoute
   GutscheineRoute: typeof GutscheineRoute
   GutscheineAbosRoute: typeof GutscheineAbosRoute
@@ -340,6 +365,7 @@ export interface RootRouteChildren {
   WarenkorbRoute: typeof WarenkorbRoute
   WiderrufRoute: typeof WiderrufRoute
   ApiPublicBewerbungRoute: typeof ApiPublicBewerbungRoute
+  ApiPublicFlyerImageRoute: typeof ApiPublicFlyerImageRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -405,6 +431,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flyer': {
+      id: '/flyer'
+      path: '/flyer'
+      fullPath: '/flyer'
+      preLoaderRoute: typeof FlyerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/galerie': {
@@ -512,6 +545,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicBewerbungRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/flyer-image': {
+      id: '/api/public/flyer-image'
+      path: '/api/public/flyer-image'
+      fullPath: '/api/public/flyer-image'
+      preLoaderRoute: typeof ApiPublicFlyerImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -525,6 +565,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookiesRoute: CookiesRoute,
   DatenschutzRoute: DatenschutzRoute,
   FaqRoute: FaqRoute,
+  FlyerRoute: FlyerRoute,
   GalerieRoute: GalerieRoute,
   GutscheineRoute: GutscheineRoute,
   GutscheineAbosRoute: GutscheineAbosRoute,
@@ -540,6 +581,7 @@ const rootRouteChildren: RootRouteChildren = {
   WarenkorbRoute: WarenkorbRoute,
   WiderrufRoute: WiderrufRoute,
   ApiPublicBewerbungRoute: ApiPublicBewerbungRoute,
+  ApiPublicFlyerImageRoute: ApiPublicFlyerImageRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -32,7 +32,7 @@ export const openingEvent = {
   hoursOpen: contact.hoursOpen,
   hoursClosed: "Sonntag und Montag: geschlossen",
   appointmentNote: "Massagen nur nach vorheriger Terminvereinbarung – telefonisch oder per WhatsApp.",
-  shareText: "Lust, mitzukommen? Royal Krabi Serenity Thaimassage feiert am 07.11.2026 Neueröffnung in Offenbach-Bürgel! Mit kleinen Thai-Snacks, traditionellem Thai-Tanz und Einblicken ins neue Studio. Eintritt frei – alle sind herzlich willkommen. Offenbacher Straße 32, 63075 Offenbach am Main. Alle Infos: https://royalkrabi-thaimassage.de",
+  shareText: "Lust, mitzukommen? Royal Krabi Serenity Thaimassage feiert am 07.11.2026 Neueröffnung in Offenbach-Bürgel! Mit kleinen Thai-Snacks, traditionellem Thai-Tanz und Einblicken ins neue Studio. Eintritt frei – alle sind herzlich willkommen. Offenbacher Straße 32, 63075 Offenbach am Main. Flyer ansehen: https://royalkrabi-thaimassage.de/flyer — Alle Infos: https://royalkrabi-thaimassage.de",
 };
 
 export const whatsappContactHref = "https://wa.me/496960511884";

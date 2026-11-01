@@ -31,7 +31,7 @@ export function isPublicComingSoon(hostname: string) {
 }
 
 export function isLaunchPage(path: string) {
-  return ["/", "/impressum", "/datenschutz", "/jobs"].includes(path);
+  return ["/", "/impressum", "/datenschutz", "/jobs", "/flyer"].includes(path);
 }
 
 /** Exact page allowlist; no query string can bypass the public launch gate. */
@@ -40,6 +40,7 @@ export function shouldRedirectDuringLaunch(url: URL) {
   // Hosting serves bundled/static resources separately; keep their fallback requests usable.
   if (/^\/(?:assets|__l5e\/assets-v1)\//.test(url.pathname)) return false;
   if (url.pathname === "/api/public/bewerbung") return false;
+  if (url.pathname === "/api/public/flyer-image") return false;
   if (["/favicon.png", "/favicon.ico", "/robots.txt"].includes(url.pathname)) return false;
   return true;
 }

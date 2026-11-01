@@ -16,4 +16,5 @@ test("No '14 Tage' wording anywhere in the opening copy", () => {
 test("WhatsApp share contains the prepared invitation without a recipient", () => {
   expect(whatsappShareHref.startsWith("https://wa.me/?text=")).toBe(true);
   expect(decodeURIComponent(whatsappShareHref)).toContain("07.11.2026");
+  expect(decodeURIComponent(whatsappShareHref)).toContain("https://royalkrabi-thaimassage.de/flyer");
 });

@@ -8,8 +8,8 @@ test("No launch date or countdown is assumed without confirmation", () => {
 test("Flyer destination stays the permanent primary address", () => {
   expect(launch.permanentUrl).toBe("https://royalkrabi-thaimassage.de");
 });
-test("Only home and the two legal pages remain public during launch", () => {
-  for (const path of ["/", "/impressum", "/datenschutz", "/jobs"]) {
+test("Only home, the flyer and the two legal pages remain public during launch", () => {
+  for (const path of ["/", "/impressum", "/datenschutz", "/jobs", "/flyer"]) {
     expect(shouldRedirectDuringLaunch(new URL(`https://royalkrabi-thaimassage.de${path}`))).toBe(false);
   }
   for (const path of ["/massagen-preise", "/gutscheine", "/abos", "/warenkorb", "/checkout", "/termine", "/cookies", "/api/public/test", "/impressum/extra", "/?ansicht=website"]) {
@@ -17,6 +17,7 @@ test("Only home and the two legal pages remain public during launch", () => {
     expect(isPublicComingSoon(url.hostname)).toBe(true);
     expect(shouldRedirectDuringLaunch(url)).toBe(url.pathname !== "/");
   }
+  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/api/public/flyer-image"))).toBe(false);
 });
 test("Full website remains available on main, draft, commit and local previews", () => {
   for (const host of ["localhost", "id-preview--example.lovable.app", "id-preview-6--example.lovable.app", "id-preview-abc123--example.lovable.app", "preview-3--example.workspace.lovable.app", "project--example-dev.lovable.app", "example.lovableproject.com"]) {
