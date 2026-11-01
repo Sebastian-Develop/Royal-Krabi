@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { isInternalPreview, isPublicComingSoon, launch, shouldRedirectDuringLaunch, websiteStartStatus } from "./launch";
+import { isInternalPreview, isPublicComingSoon, launch, resolvePublicComingSoon, shouldRedirectDuringLaunch, websiteStartStatus } from "./launch";
 
 test("No launch date or countdown is assumed without confirmation", () => {
   expect(launch.websiteStart).toBeNull();
@@ -30,4 +30,11 @@ test("Public hosts and spoofed preview prefixes cannot bypass launch restriction
     expect(isInternalPreview(host)).toBe(false);
     expect(shouldRedirectDuringLaunch(new URL(`https://${host}/gutscheine?ansicht=website`))).toBe(true);
   }
+});
+test("Launch gate stays on unless a build explicitly switches it off", () => {
+  expect(resolvePublicComingSoon(undefined)).toBe(true);
+  expect(resolvePublicComingSoon("true")).toBe(true);
+  expect(resolvePublicComingSoon("anything")).toBe(true);
+  expect(resolvePublicComingSoon("false")).toBe(false);
+  expect(resolvePublicComingSoon(false)).toBe(false);
 });

@@ -1,6 +1,11 @@
+/** The static GitHub-Pages copy is built with an explicit "false"; anything else keeps the gate on. */
+export function resolvePublicComingSoon(flag: string | boolean | undefined): boolean {
+  return !(flag === false || flag === "false");
+}
+
 /** Central launch switch and all interim customer copy. No confirmed date yet. */
 export const launch = {
-  publicComingSoon: true,
+  publicComingSoon: resolvePublicComingSoon(import.meta.env.VITE_PUBLIC_COMING_SOON),
   websiteStart: null as string | null,
   heading: "Ein Ort der Ruhe. Bald auch online.",
   welcome: "Willkommen bei Royal Krabi Serenity Thaimassage",
