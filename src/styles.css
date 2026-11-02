@@ -325,12 +325,26 @@ html.gold-cursor,html.gold-cursor body,html.gold-cursor body *{cursor:var(--acti
 .withdrawal-page .legal-content{max-width:900px}
 .withdrawal-page .legal-content h3{font-size:1.5rem;color:var(--gold-soft);margin-top:24px}
 .withdrawal-print-actions{margin:20px 0}
-.withdrawal-form{border-top:1px solid var(--border);padding-top:16px}
+.withdrawal-form,.withdrawal-online{border:1px solid var(--gold);padding:22px 24px;margin-top:8px}
+.withdrawal-page .legal-content h2{font-family:var(--font-display);text-transform:uppercase;letter-spacing:.06em;color:var(--gold-soft)}
+.withdrawal-page .legal-content h2::after{content:"";display:block;width:70px;height:1px;margin-top:10px;background:var(--gold)}
+.withdrawal-online-form label{font-family:var(--font-sans)}
+.withdrawal-receipt{border:1px solid var(--gold);padding:20px 22px}
+.withdrawal-receipt-title{font-family:var(--font-display);text-transform:uppercase;letter-spacing:.06em;color:var(--gold-soft)}
+.withdrawal-receipt dl{margin:12px 0 0}.withdrawal-receipt dl>div{padding:8px 0;border-top:1px solid color-mix(in oklab,var(--gold) 30%,transparent)}
+.withdrawal-receipt dt{font-family:var(--font-display);font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--gold-soft)}
+.withdrawal-receipt dd{margin:2px 0 0;font-family:var(--font-sans);font-variant-numeric:lining-nums tabular-nums;overflow-wrap:anywhere}
+.withdrawal-brand-footer{max-width:900px;text-align:center;padding:8px 0 56px;font-family:var(--font-sans);font-size:.95rem;line-height:1.7}
+.withdrawal-brand-footer img{display:block;width:min(560px,100%);height:auto;margin:0 auto 18px}
+.withdrawal-brand-footer a{color:inherit;text-decoration:none}.withdrawal-brand-footer a:hover{color:var(--gold)}
+.withdrawal-brand-name{font-family:var(--font-display);font-size:1.15rem;color:var(--gold-soft);margin-bottom:6px}
+.withdrawal-brand-address{border-top:1px solid var(--gold);padding-top:16px;margin-top:16px;font-family:var(--font-display);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase}
+@media(max-width:760px){.withdrawal-form,.withdrawal-online,.withdrawal-receipt{padding:16px}}
 .withdrawal-lines{display:grid;gap:24px;margin:24px 0 30px}
 .withdrawal-lines span{display:block;height:1px;border-bottom:1px solid var(--gold-soft)}
 @media(max-width:760px){.withdrawal-page .page-hero h1{font-size:2.25rem}}
 @media print{
-  body:has(.withdrawal-page){--foreground:#191919;--muted-foreground:#191919;--gold-soft:#191919;--gold:#191919;--border:#999;--background:#fff;background:#fff!important;color:var(--foreground);font-size:11pt;line-height:1.5}
+  body:has(.withdrawal-page){--foreground:#3A2A1A;--muted-foreground:#3A2A1A;--gold-soft:#4A210F;--gold:#B98A2F;--border:#B98A2F;--background:#fff;background:#fff!important;color:var(--foreground);font-size:11pt;line-height:1.5}
   html:has(.withdrawal-page){background:#fff!important}
   body:has(.withdrawal-page)::before,body:has(.withdrawal-page) :is(.site-header,.site-footer,.cookie-banner,.chat-placeholder,.gold-dust,.page-watermark,.brand-heading,.withdrawal-print-actions){display:none!important}
   .withdrawal-page .page-hero{padding:0 0 20px;box-shadow:none;break-after:avoid}
@@ -339,7 +353,7 @@ html.gold-cursor,html.gold-cursor body,html.gold-cursor body *{cursor:var(--acti
   .withdrawal-page .legal-content{padding:0}
   .withdrawal-page .legal-content section{margin:0;padding:16px 0;border:0}
   .withdrawal-page h2,.withdrawal-page h3{break-after:avoid}
-  .withdrawal-page .legal-content section:last-child{break-before:page}
+  .withdrawal-page .legal-content section:has(.withdrawal-form){break-before:page}
   .withdrawal-page .withdrawal-form{break-inside:avoid}
   .withdrawal-page a{color:var(--foreground)}
 }
@@ -535,8 +549,9 @@ body{font-variant-numeric:lining-nums tabular-nums}
 
 .withdrawal-online-form { display: grid; gap: 0.9rem; max-width: 36rem; }
 .withdrawal-online-form label { display: grid; gap: 0.35rem; font-size: 0.95rem; }
-.withdrawal-online-form input:not([type=checkbox]), .withdrawal-online-form textarea { background: var(--background); color: var(--foreground); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.6rem 0.75rem; }
+.withdrawal-online-form input:not([type=checkbox]), .withdrawal-online-form textarea { background: var(--background); color: var(--foreground); border: 1px solid color-mix(in oklab,var(--gold) 55%,transparent); border-radius: 4px; padding: 0.7rem 0.8rem; min-height: 46px; font-family: var(--font-sans); }
+.withdrawal-online-form input:focus-visible, .withdrawal-online-form textarea:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.withdrawal-online-form input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--gold); flex-shrink: 0; }
 .withdrawal-online-form .withdrawal-declaration { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; }
 .withdrawal-error { color: var(--destructive); }
-.withdrawal-receipt { border: 1px solid var(--primary); border-radius: 0.75rem; padding: 1rem 1.25rem; }
 @media print { .withdrawal-online { display: none; } }

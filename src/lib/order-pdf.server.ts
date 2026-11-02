@@ -7,9 +7,11 @@
 import { PDFDocument, StandardFonts, rgb, type PDFPage, type PDFFont } from "pdf-lib";
 import { contractAcceptanceNotice } from "./purchase-rules";
 import { contact } from "./contact";
+import { brandColors } from "./application-email";
 import { legalTextsFor } from "./legal-texts";
 import type { EmailLine, EmailOrder } from "./order-email";
 import logoAsset from "@/assets/email/email-logo.png.asset.json";
+import dividerAsset from "@/assets/email/email-gold-divider.png.asset.json";
 import { formatCents as eur } from './money';
 
 const PAGE_W = 595.28; // A4
@@ -40,16 +42,21 @@ interface Ctx {
   font: PDFFont;
   bold: PDFFont;
   y: number;
+  /** Lowest usable y; branded documents reserve room for their contact footer. */
+  bottom?: number;
+  /** Called after a page break (branded continuation header). */
+  onNewPage?: (ctx: Ctx) => void;
 }
 
 function newPage(ctx: Ctx): void {
   ctx.page = ctx.doc.addPage([PAGE_W, PAGE_H]);
   ctx.page.drawRectangle({ x: 0, y: 0, width: PAGE_W, height: PAGE_H, color: CREAM_BG });
   ctx.y = PAGE_H - MARGIN;
+  ctx.onNewPage?.(ctx);
 }
 
 function ensureSpace(ctx: Ctx, needed: number): void {
-  if (ctx.y - needed < MARGIN) newPage(ctx);
+  if (ctx.y - needed < (ctx.bottom ?? MARGIN)) newPage(ctx);
 }
 
 /** WinAnsi kann einige Unicode-Zeichen nicht kodieren – auf nahe Entsprechungen abbilden. */
@@ -257,9 +264,13 @@ async function pdfAgb(meta: OrderMeta): Promise<OrderPdf> {
   return { filename: "AGB.pdf", bytes: await ctx.doc.save() };
 }
 
+/** Versions whose withdrawal PDF keeps its original presentation unchanged. */
+const HISTORICAL_WITHDRAWAL_LAYOUT = new Set(["2026-10-21", "2026-11-01-review", "2026-11-02-review"]);
+
 /** D – Widerrufsbelehrung und Muster-Widerrufsformular in der Bestellfassung. */
 async function pdfWiderruf(meta: OrderMeta): Promise<OrderPdf> {
   const legal = legalTextsFor(meta.legalVersion);
+  if (!HISTORICAL_WITHDRAWAL_LAYOUT.has(legal.version)) return pdfWiderrufBranded(meta);
   const ctx = await newCtx();
   await drawHeader(ctx, "Widerrufsbelehrung & Muster-Widerrufsformular");
   if (meta.preview) paragraph(ctx, 'TESTDATEN – VORSCHAU, KEINE FREIGABE', { font: ctx.bold });
@@ -272,6 +283,111 @@ async function pdfWiderruf(meta: OrderMeta): Promise<OrderPdf> {
   for (const p of legal.widerrufForm) paragraph(ctx, p, { size: 9.5 });
   footer(ctx, `Widerrufsbelehrung, Fassung ${legal.version}`);
   return { filename: "Widerrufsbelehrung-und-Musterformular.pdf", bytes: await ctx.doc.save() };
+}
+
+const hex = (h: string) => rgb(parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255);
+const BRAND_CREAM = hex(brandColors.cream);
+const BRAND_GOLD = hex(brandColors.printGold);
+const BAND_H = 178;
+const FOOTER_H = 92;
+
+async function fetchPng(doc: PDFDocument, url: string) {
+  try { const res = await fetch(`https://royalkrabi-thaimassage.de${url}`); return res.ok ? await doc.embedPng(await res.arrayBuffer()) : null; } catch { return null; }
+}
+
+/**
+ * Current withdrawal PDF in the design of the confirmation email: mahogany
+ * header band with logo and gold divider, serif uppercase headings, gold
+ * framed form box with fillable fields and the email's contact footer.
+ * Body text stays dark on cream so the document prints legibly on A4.
+ */
+export async function pdfWiderrufBranded(meta: OrderMeta): Promise<OrderPdf> {
+  const legal = legalTextsFor(meta.legalVersion);
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const bold = await doc.embedFont(StandardFonts.HelveticaBold);
+  const serif = await doc.embedFont(StandardFonts.TimesRomanBold);
+  const logo = await fetchPng(doc, logoAsset.url);
+  const divider = await fetchPng(doc, dividerAsset.url);
+  const title = "Widerrufsbelehrung & Muster-Widerrufsformular";
+  const centered = (page: PDFPage, text: string, y: number, size: number, f: PDFFont, color = BRAND_CREAM) =>
+    page.drawText(pdfSafe(text), { x: (PAGE_W - f.widthOfTextAtSize(pdfSafe(text), size)) / 2, y, size, font: f, color });
+  const continuation = (c: Ctx) => {
+    c.page.drawRectangle({ x: 0, y: PAGE_H - 40, width: PAGE_W, height: 40, color: MAHOGANY });
+    c.page.drawLine({ start: { x: 0, y: PAGE_H - 40 }, end: { x: PAGE_W, y: PAGE_H - 40 }, thickness: 1.5, color: BRAND_GOLD });
+    centered(c.page, contact.name.toUpperCase(), PAGE_H - 25, 9, serif);
+    c.y = PAGE_H - 40 - 28;
+  };
+  const ctx: Ctx = { doc, page: undefined as unknown as PDFPage, font, bold, y: 0, bottom: FOOTER_H + 16 };
+  newPage(ctx);
+  ctx.onNewPage = continuation;
+  // Page 1 header band like the email head: logo, gold divider, title.
+  ctx.page.drawRectangle({ x: 0, y: PAGE_H - BAND_H, width: PAGE_W, height: BAND_H, color: MAHOGANY });
+  ctx.page.drawLine({ start: { x: 0, y: PAGE_H - BAND_H }, end: { x: PAGE_W, y: PAGE_H - BAND_H }, thickness: 1.5, color: BRAND_GOLD });
+  let y = PAGE_H - 18;
+  if (logo) { const w = 104, h = (logo.height / logo.width) * w; ctx.page.drawImage(logo, { x: (PAGE_W - w) / 2, y: y - h, width: w, height: h }); y -= h + 4; }
+  else { centered(ctx.page, contact.name, y - 16, 15, serif); y -= 26; }
+  if (divider) { const w = 300, h = (divider.height / divider.width) * w; ctx.page.drawImage(divider, { x: (PAGE_W - w) / 2, y: y - h, width: w, height: h }); y -= h + 6; }
+  centered(ctx.page, title.toUpperCase(), Math.max(y - 14, PAGE_H - BAND_H + 12), 12.5, serif);
+  ctx.y = PAGE_H - BAND_H - 28;
+
+  const head = (text: string) => {
+    ensureSpace(ctx, 48);
+    ctx.y -= 6;
+    for (const line of wrapText(text.toUpperCase(), serif, 12, CONTENT_W)) { ctx.page.drawText(line, { x: MARGIN, y: ctx.y - 12, size: 12, font: serif, color: MAHOGANY }); ctx.y -= 17; }
+    ctx.page.drawLine({ start: { x: MARGIN, y: ctx.y }, end: { x: MARGIN + 70, y: ctx.y }, thickness: 1.2, color: BRAND_GOLD });
+    ctx.y -= 12;
+  };
+  if (meta.preview) paragraph(ctx, 'TESTDATEN – VORSCHAU, KEINE FREIGABE', { font: bold });
+  paragraph(ctx, `Fassung vom ${legal.version}`, { size: 9.5, color: MUTED });
+  for (const section of legal.widerruf) {
+    head(section.title);
+    for (const p of section.paragraphs) paragraph(ctx, p, { size: 10.5, gapAfter: 7 });
+  }
+
+  // Muster-Widerrufsformular: always starts on a fresh page in a gold frame.
+  newPage(ctx);
+  head("Muster-Widerrufsformular");
+  const form = doc.getForm();
+  const FIELD = /_{6,}\s*$/;
+  let n = 0;
+  const pad = 14, innerW = CONTENT_W - pad * 2;
+  let boxTop = ctx.y + 4;
+  const frame = (from: number, to: number) => ctx.page.drawRectangle({ x: MARGIN, y: to, width: CONTENT_W, height: from - to, borderColor: BRAND_GOLD, borderWidth: 1 });
+  const space = (h: number) => { if (ctx.y - h < (ctx.bottom ?? MARGIN)) { frame(boxTop, ctx.y); newPage(ctx); boxTop = ctx.y + 4; } };
+  ctx.y -= pad;
+  for (const raw of legal.widerrufForm) {
+    const isField = FIELD.test(raw);
+    const text = isField ? raw.replace(FIELD, "").trim() : raw;
+    const size = 10.5, lh = size * 1.45;
+    for (const line of wrapText(text, isField ? bold : font, size, innerW)) { space(lh); ctx.page.drawText(line, { x: MARGIN + pad, y: ctx.y - size, size, font: isField ? bold : font, color: TEXT }); ctx.y -= lh; }
+    if (isField) {
+      const multi = /Waren|Anschrift/.test(text), h = multi ? 44 : 26;
+      space(h + 6);
+      ctx.y -= 4;
+      const field = form.createTextField(`widerruf_feld_${++n}`);
+      if (multi) field.enableMultiline();
+      field.addToPage(ctx.page, { x: MARGIN + pad, y: ctx.y - h, width: innerW, height: h, borderColor: BRAND_GOLD, borderWidth: 0.8, backgroundColor: rgb(1, 1, 1), textColor: TEXT });
+      field.setFontSize(10.5);
+      ctx.y -= h;
+    }
+    ctx.y -= 10;
+  }
+  frame(boxTop, ctx.y);
+
+  // Footer like the email: gold rule, brand name, hours, phone/e-mail, address.
+  const pages = doc.getPages();
+  pages.forEach((p, i) => {
+    const top = FOOTER_H;
+    p.drawLine({ start: { x: MARGIN, y: top }, end: { x: MARGIN + CONTENT_W, y: top }, thickness: 0.8, color: BRAND_GOLD });
+    const c = (t: string, yy: number, size: number, f: PDFFont, color = MUTED) => p.drawText(pdfSafe(t), { x: (PAGE_W - f.widthOfTextAtSize(pdfSafe(t), size)) / 2, y: yy, size, font: f, color });
+    c(contact.name, top - 16, 10, serif, MAHOGANY);
+    c(`Öffnungszeiten: ${contact.hoursOpen} · ${contact.hoursClosed}`, top - 30, 8.5, font);
+    c(`Telefon: ${contact.phone} · ${contact.email}`, top - 42, 8.5, font);
+    c(`${contact.street} · ${contact.city}`.toUpperCase(), top - 56, 7.5, serif, MAHOGANY);
+    c(`Widerrufsbelehrung, Fassung ${legal.version} · Seite ${i + 1} von ${pages.length}`, top - 72, 7.5, font);
+  });
+  return { filename: "Widerrufsbelehrung-und-Musterformular.pdf", bytes: await doc.save() };
 }
 
 async function pdfPrivacy(meta: OrderMeta): Promise<OrderPdf> {

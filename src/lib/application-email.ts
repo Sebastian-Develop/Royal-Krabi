@@ -40,6 +40,8 @@ export interface ApplicationEmailData {
 
 const MAHOGANY = "#4A210F";
 const GOLD = "#F1C66B";
+/** Shared brand colours of the email template; PDFs and print views reuse them. */
+export const brandColors = { mahogany: MAHOGANY, gold: GOLD, cream: "#EAD19F", printGold: "#B98A2F" } as const;
 /** Sämtliche Schriften in dem Creme-Gold der Coming-soon-Überschrift (Vorgabe 29.10.2026). */
 const CREAM = "#EAD19F";
 /** Inline text fill limits automatic dark-mode recoloring in supporting email clients. */

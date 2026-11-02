@@ -8,6 +8,7 @@ import { legalTextsFor, WEBSITE_LEGAL_VERSION } from '@/lib/legal-texts';
 import { legalDraftNotice } from '@/lib/legal-draft';
 import { WithdrawalFunction } from '@/components/withdrawal-function';
 import { contact } from '@/lib/contact';
+import dividerAsset from '@/assets/email/email-gold-divider.png.asset.json';
 
 export const Route = createFileRoute("/widerruf")({
   head: () => pageHead("Widerrufsbelehrung & Widerrufsformular | Royal Krabi", "Widerrufsbelehrung für Gutscheine und vorausbezahlte Massagekarten sowie das freiwillige Muster-Widerrufsformular von Royal Krabi Serenity Thaimassage.", "https://royalkrabi-thaimassage.de/widerruf"),
@@ -29,5 +30,11 @@ function Page() {
       <p><LegalText text={`Sie können Ihren Vertrag auch elektronisch über die Funktion ‚Vertrag widerrufen‘ auf dieser Seite widerrufen. Alternativ können Sie den Widerruf per E-Mail an ${contact.email} erklären.`}/></p>
       <WithdrawalFunction/>
     </div> },
-  ]}/></div>;
+  ]}/>
+  <footer className="container withdrawal-brand-footer" aria-label="Kontakt">
+    <img src={dividerAsset.url} alt="" role="presentation" width={1200} height={80}/>
+    <p className="withdrawal-brand-name">{contact.name}</p>
+    <p>Öffnungszeiten:<br/>{contact.hoursOpen} · {contact.hoursClosed}<br/>Telefon: <a href={contact.phoneHref}>{contact.phone}</a> · <a href={`mailto:${contact.email}`}>{contact.email}</a></p>
+    <p className="withdrawal-brand-address">{contact.street} · {contact.city}</p>
+  </footer></div>;
 }

@@ -29,11 +29,14 @@ export function WithdrawalFunction() {
     finally { setBusy(false); }
   }
 
-  if (receipt) return <div className="withdrawal-receipt" role="status">
-    <p><b>Eingangsbestätigung</b></p>
-    <p>{withdrawalReceiptNotice}</p>
-    <p>Eingegangen am: {formatReceivedAt(receipt.receivedAt)}<br/>Vorgangsnummer: {receipt.id}<br/>Name: {receipt.fullName}<br/>E-Mail: {receipt.email}<br/>Bestellkennung: {receipt.orderReference}<br/>Erklärung: „{withdrawalDeclaration}“</p>
-  </div>;
+  if (receipt) {
+    const rows: [string, string][] = [["Eingegangen am", formatReceivedAt(receipt.receivedAt)], ["Vorgangsnummer", receipt.id], ["Name", receipt.fullName], ["E-Mail", receipt.email], ["Bestellkennung", receipt.orderReference], ["Erklärung", `„${withdrawalDeclaration}“`]];
+    return <div className="withdrawal-receipt" role="status">
+      <p className="withdrawal-receipt-title"><b>Eingangsbestätigung</b></p>
+      <p>{withdrawalReceiptNotice}</p>
+      <dl>{rows.map(([k, v]) => <div key={k}><dt>{k}:</dt><dd>{v}</dd></div>)}</dl>
+    </div>;
+  }
 
   if (!open) return <Button className="btn btn-primary" onClick={() => setOpen(true)}>Vertrag widerrufen</Button>;
 
