@@ -21,6 +21,7 @@ export async function loadOrderForEmail(admin: Admin, orderId: string): Promise<
       giftText: order.gift_text, notes: order.notes, totalCents: order.total_cents,
       discountCode: order.discount_code, discountCents: order.discount_cents,
       createdAt: order.created_at, paidAt: order.paid_at, legalVersion: order.legal_version,
+      discountValid: order.discount_valid ?? null,
     },
     lines: (items ?? []).map(i => ({
       name: i.product_name, kind: i.product_kind, quantity: i.quantity,
@@ -102,8 +103,22 @@ export async function finalizePaidOrder(admin: Admin, orderId: string): Promise<
     .update({ status: "paid", paid_at: now })
     .eq("id", orderId)
     .neq("status", "paid")
-    .select("id");
+    .select("id, discount_code");
   if (!updated?.length) return false; // bereits bezahlt – keine doppelte Bestätigung
+
+  // Verbindliche Rabattprüfung: maßgeblich ist der Verifizierungszeitpunkt des
+  // vollständigen Zahlungseingangs (jetzt), nicht der Bestellzeitpunkt.
+  // Liegt er außerhalb der Aktionsfrist, wird die Bestellung zur manuellen
+  // Prüfung markiert – keine automatische Nachbelastung oder Erstattung.
+  const discountCode = updated[0]?.discount_code ?? "";
+  if (discountCode) {
+    const { verifyDiscountAtPayment } = await import("./discount");
+    const check = verifyDiscountAtPayment(discountCode, new Date(now));
+    await admin.from("shop_orders").update({ discount_valid: check.applies, discount_checked_at: check.checkedAt }).eq("id", orderId);
+    if (!check.applies) {
+      await logEmailEvent(admin, orderId, "discount_outside_window", false, "Verifizierter Zahlungseingang außerhalb der Aktionsfrist – manuelle Prüfung erforderlich.");
+    }
+  }
 
   await sendPaidOrderEmails(admin, orderId);
   return true;

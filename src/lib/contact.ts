@@ -45,8 +45,10 @@ export const mailHref = `mailto:${contact.email}?subject=${encodeURIComponent(em
 /** All email links open the prefilled template. */
 export const mailHrefPlain = mailHref;
 
+/** Bestätigte Widerrufs-Adresse (02.11.2026): elektronischer Widerruf per E-Mail, mit oder ohne Formular. */
+export const withdrawalEmail = "widerruf@royalkrabi-thaimassage.de";
 /** Withdrawal contact must not open the appointment request template. */
-export const withdrawalMailHref = `mailto:${contact.email}?subject=${encodeURIComponent("Widerruf – Royal Krabi Serenity Thaimassage")}`;
+export const withdrawalMailHref = `mailto:${withdrawalEmail}?subject=${encodeURIComponent("Widerruf – Royal Krabi Serenity Thaimassage")}`;
 
 /** Signature massage inquiry: standard appointment request with the massage prefilled. */
 export const signatureMassageName = "Royal Sound Healing – Royal Krabi Signature";

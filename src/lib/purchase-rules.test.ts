@@ -9,6 +9,8 @@ test('contract requires verified full payment AND subsequent acceptance, receipt
   expect(canAcceptPurchase(true, false)).toBe(false);
   expect(canAcceptPurchase(true, true)).toBe(true);
   expect(confirmedPurchaseRules.contract.receiptIsAcceptance).toBe(false);
+  expect(confirmedPurchaseRules.contract.prePaymentCommunication).toBe(false);
+  expect(confirmedPurchaseRules.contract.acceptanceChannel).toBe('payment_confirmation_email');
 });
 test('discount basis is verified full payment receipt, not order time', () => {
   expect(confirmedPurchaseRules.discount.basis).toBe('verified_full_payment_receipt');

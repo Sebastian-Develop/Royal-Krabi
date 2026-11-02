@@ -9,8 +9,9 @@ import type { OrderLine } from "./shop-checkout";
  * Wunschbetrag. Zeitraum 07.11.–21.11.2026 (Europe/Berlin), nicht mit
  * anderen Aktionen oder dem Treuepass kombinierbar.
  * Bestätigt 02.11.2026: verifizierter vollständiger Zahlungseingang ist maßgeblich.
- * Der Aufrufer bei Bestellübermittlung liefert bisher nur eine vorläufige Berechnung;
- * die verbindliche Zahlungszeitprüfung bleibt vor Verkaufsfreigabe umzusetzen.
+ * Warenkorb und Kasse zeigen eine vorläufige Vorkalkulation (Bestellzeitpunkt);
+ * die verbindliche Prüfung erfolgt in der bezahlt-Verarbeitung anhand des
+ * Verifizierungszeitpunkts des Zahlungseingangs (verifyDiscountAtPayment).
  */
 export const openingDiscount = {
   code: "ROYALKRABI20",
@@ -57,4 +58,21 @@ export function discountForLines(lines: OrderLine[], code: string, now: Date): D
     return { ok: false, error: "Der Rabatt gilt nur für Angebote ab 60 Minuten." };
   }
   return { ok: true, discountCents: Math.round(eligibleCents * openingDiscount.percent / 100), eligibleCents };
+}
+
+export type PaymentDiscountCheck = { applies: boolean; checkedAt: string };
+
+/**
+ * Verbindliche Rabattprüfung zum Zeitpunkt des unabhängig verifizierten
+ * vollständigen Zahlungseingangs – nicht zum Bestellzeitpunkt.
+ * `paidAt` ist der serverseitige Verifizierungszeitpunkt (ISO), den die
+ * bezahlt-Verarbeitung nach bestätigtem SumUp-Status setzt.
+ * Ergebnis false bedeutet: Rabatt gilt nicht; die Bestellung wird zur
+ * manuellen Prüfung markiert, ohne automatische Nachbelastung oder Erstattung.
+ */
+export function verifyDiscountAtPayment(discountCode: string, paidAt: Date): PaymentDiscountCheck {
+  return {
+    applies: normalizeDiscountCode(discountCode) === openingDiscount.code && isDiscountActiveAt(paidAt),
+    checkedAt: paidAt.toISOString(),
+  };
 }

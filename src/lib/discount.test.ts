@@ -1,6 +1,6 @@
 /// <reference types="bun" />
 import { describe, expect, test } from "bun:test";
-import { berlinDateString, discountForLines, isDiscountActiveAt, isLineEligible, normalizeDiscountCode, openingDiscount } from "./discount";
+import { berlinDateString, discountForLines, isDiscountActiveAt, isLineEligible, normalizeDiscountCode, openingDiscount, verifyDiscountAtPayment } from "./discount";
 import { buildOrderLines } from "./shop-checkout";
 import { shopProducts } from "./shop";
 
@@ -61,5 +61,24 @@ describe("opening discount rules", () => {
     expect(discountForLines([line], "FALSCH", at("2026-11-10T12:00:00"))).toMatchObject({ ok: false, error: "Der Rabattcode ist ungültig." });
     expect(discountForLines([line], "ROYALKRABI20", at("2026-11-01T12:00:00"))).toMatchObject({ ok: false });
     if (short) expect(discountForLines([lineOf(short.id)], "ROYALKRABI20", at("2026-11-10T12:00:00"))).toMatchObject({ ok: false, error: "Der Rabatt gilt nur für Angebote ab 60 Minuten." });
+  });
+});
+
+describe("binding discount check at verified payment receipt", () => {
+  test("payment verified inside the window confirms the discount", () => {
+    const check = verifyDiscountAtPayment("ROYALKRABI20", at("2026-11-10T12:00:00"));
+    expect(check.applies).toBe(true);
+    expect(check.checkedAt).toBe(at("2026-11-10T12:00:00").toISOString());
+  });
+  test("payment verified before or after the window rejects the discount", () => {
+    expect(verifyDiscountAtPayment("ROYALKRABI20", at("2026-11-06T23:59:00")).applies).toBe(false);
+    expect(verifyDiscountAtPayment("ROYALKRABI20", at("2026-11-22T00:00:00")).applies).toBe(false);
+  });
+  test("window edges are inclusive in Europe/Berlin", () => {
+    expect(verifyDiscountAtPayment("ROYALKRABI20", at("2026-11-07T00:00:00")).applies).toBe(true);
+    expect(verifyDiscountAtPayment("ROYALKRABI20", at("2026-11-21T23:59:00")).applies).toBe(true);
+  });
+  test("unknown code never applies, even inside the window", () => {
+    expect(verifyDiscountAtPayment("FALSCH", at("2026-11-10T12:00:00")).applies).toBe(false);
   });
 });

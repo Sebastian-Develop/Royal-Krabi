@@ -1,7 +1,7 @@
 import { contractAcceptanceNotice } from "./purchase-rules";
 import { formatCents as eur } from "./money";
 import { legalTextsFor } from "./legal-texts";
-import { contact } from "./contact";
+import { contact, withdrawalEmail } from "./contact";
 import { brandEmailHtml, emailBlocks } from "./application-email";
 
 export interface EmailAttachment {
@@ -44,6 +44,8 @@ export type EmailOrder = {
   street: string; postalCode: string; city: string; recipient: string; giftText: string; notes: string;
   totalCents: number; discountCode: string; discountCents: number;
   createdAt: string; paidAt: string | null; legalVersion: string;
+  /** Ergebnis der verbindlichen Rabattprüfung zum verifizierten Zahlungseingang (null = nicht geprüft). */
+  discountValid?: boolean | null;
 };
 
 export const kindLabel = (kind: string) => kind === "voucher" ? "Gutschein" : kind === "five" ? "5er-Karte" : "10er-Karte";
@@ -94,6 +96,7 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
     emailBlocks.p("Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab."),
     emailBlocks.p(`An dieser E-Mail finden Sie ${hasPrivacy ? "fünf" : "vier"} PDF-Dokumente – jeweils in der für Ihre Bestellung maßgeblichen Fassung: ${attachments}.`),
     ...(hasPrivacy ? [emailBlocks.p("Die Datenschutzinformationen sind zur Information beigefügt; damit wird keine Einwilligung verlangt oder erklärt.")] : []),
+    emailBlocks.p(`<b>Widerruf:</b> Ihren Widerruf können Sie jederzeit per E-Mail an ${esc(withdrawalEmail)} erklären. Das beigefügte Muster-Widerrufsformular können Sie dafür verwenden, es ist jedoch nicht vorgeschrieben – eine eindeutige Erklärung per E-Mail genügt. Einzelheiten stehen in der beigefügten Widerrufsbelehrung.`),
     emailBlocks.p(`Bei Fragen erreichen Sie uns unter ${esc(contact.phone)} oder ${esc(contact.email)}.`),
   ].join("");
 
@@ -116,6 +119,8 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
     "",
     `Anhänge: ${attachments}`,
     "",
+    `Widerruf: jederzeit per E-Mail an ${withdrawalEmail} – das beigefügte Muster-Widerrufsformular kann verwendet werden, ist aber nicht vorgeschrieben.`,
+    "",
     `${contact.name} · ${contact.street}, ${contact.city}`,
     `Telefon: ${contact.phone} · ${contact.email}`,
   ].filter(l => l !== "").join("\n");
@@ -125,9 +130,13 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
 
 /** Betreiberbenachrichtigung – ausschließlich nach bestätigter Zahlung. */
 export function operatorEmail(order: EmailOrder, lines: EmailLine[]): { subject: string; html: string } {
+  const discountWarning = order.discountCode && order.discountValid === false
+    ? `<p><b>⚠ Rabattprüfung:</b> Der Rabattcode ${esc(order.discountCode)} wurde angewendet, aber der verifizierte Zahlungseingang liegt außerhalb der Aktionsfrist. Bitte manuell prüfen – es erfolgt keine automatische Nachbelastung oder Erstattung.</p>`
+    : "";
   return {
     subject: `Zahlung bestätigt – ${order.fullName}`,
     html: `<h2>Bestellung bezahlt</h2>
+${discountWarning}
 <p><b>Bestellnummer:</b> ${esc(order.id)}</p>
 <p><b>Bestellung eingegangen am:</b> ${berlinDateTime(order.createdAt)}${order.paidAt ? `<br><b>Zahlung bestätigt am:</b> ${berlinDateTime(order.paidAt)}` : ""}</p>
 <table>${([["Name", order.fullName], ["E-Mail", order.email], ["Telefon", order.phone], ["Lieferart", order.delivery === "post" ? `DHL-Versand: ${order.street}, ${order.postalCode} ${order.city}` : "Abholung"], ["Empfänger", order.recipient || "-"], ["Geschenktext", order.giftText || "-"], ["Anmerkungen", order.notes || "-"]] as [string, string][]).map(([k, v]) => `<tr><td><b>${k}:</b></td><td>${esc(v)}</td></tr>`).join("")}</table>

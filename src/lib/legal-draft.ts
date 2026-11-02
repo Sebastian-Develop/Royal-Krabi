@@ -1,6 +1,6 @@
-import { contact } from './contact';
+import { contact, withdrawalEmail } from './contact';
 import { sumupGiftCardUrl } from './value-voucher';
-import { contractAcceptanceNotice, openingPaymentNotice, massageVoucherPartialNotice, massageVoucherChangeNotice, priceIncreaseNotice } from './purchase-rules';
+import { contractAcceptanceNotice, openingPaymentNotice, massageVoucherPartialNotice, massageVoucherChangeNotice, priceIncreaseNotice, noCashPayoutNotice, earlyStartDeclaration, earlyStartNotice } from './purchase-rules';
 
 /** Business wishes for the unreleased 2 November draft, not live sales settings. */
 export const draftBusinessRules = {
@@ -30,7 +30,7 @@ export const legalDraftAgb = [
     'Der vorgesehene Onlinevertrieb unterscheidet zwei Kaufwege: Massagegutscheine und Royalpässe werden über unseren Website-Warenkorb und SumUp Hosted Checkout gekauft. Die Bestellung wird übermittelt; danach erfolgt die direkte Onlinezahlung ohne manuelle Vorabfreigabe. Der Zahlungseingang wird unabhängig serverseitig geprüft. Die bloße Rückkehr von SumUp ist keine Zahlungsbestätigung.',
     `„Wertgutschein · Wunschbetrag“ wird ausschließlich über den externen Gutscheinshop ${sumupGiftCardUrl} angeboten. Betrag und Zahlung werden dort gewählt. Externe Käufe werden nicht automatisch in unsere Bestellverwaltung übernommen und lösen keine Bestell-E-Mails oder PDF-Anhänge unserer Website aus. Die konkreten Verkäufer-, Vertrags-, Zustellungs- und Einlösungsinformationen dieses Shops müssen vor einer Freigabe mit unseren Bedingungen abgeglichen werden; SumUp wird nicht allein wegen der Zahlungsabwicklung als Verkäufer der Massageleistung bezeichnet.`,
     contractAcceptanceNotice,
-    'Der elektronische Eingang einer Website-Bestellung ist unverzüglich gesondert zu bestätigen. Eine ausschließlich nach erfolgreicher Zahlung versandte Nachricht erfüllt diese Pflicht nicht zwangsläufig. Diese Eingangsbestätigung und die ausdrückliche Vertragsannahme müssen in Inhalt und Zeitpunkt getrennt erkennbar sein. Die zusätzliche Eingangsbestätigung ist technisch noch nicht eingerichtet.',
+    'Bestätigte Regel (02.11.2026): Vor der verifizierten Zahlung wird keine E-Mail und keine Kundenbestätigung versendet – weder beim Ablegen im Warenkorb, noch beim Absenden des Bestellformulars, bei Abbruch oder Fehlschlag der Zahlung. Erst nach unabhängig verifiziertem vollständigem Zahlungseingang geht automatisch eine einzige Bestätigungs-E-Mail. Sie enthält die Bestätigung des Zahlungseingangs, die ausdrückliche Annahme der Bestellung durch Royal Krabi, Bestellnummer und gekaufte Produkte, den Hinweis auf AGB und Widerrufsbelehrung sowie Informationen zu Versand oder Abholung. Rechtlich zu prüfen: Ob diese einzige Nachricht nach verifizierter Zahlung die gesetzliche Pflicht zur unverzüglichen elektronischen Bestätigung des Bestelleingangs erfüllt.',
     'Ein Kauf im Studio kommt durch die dort getroffene Vereinbarung zustande. Terminanfragen sind kein Produktkauf. Termine werden telefonisch oder per E-Mail vereinbart und erst durch unsere Bestätigung verbindlich; eine automatische Online-Terminbuchung gibt es nicht.',
   ] },
   { title: '3. Leistungen, Gesundheit und Mitwirkung', paragraphs: [
@@ -55,14 +55,15 @@ export const legalDraftAgb = [
     massageVoucherPartialNotice,
     massageVoucherChangeNotice,
     priceIncreaseNotice,
-    'Eine freiwillige Barauszahlung ist nicht vorgesehen; gesetzliche Rückzahlungsrechte bleiben unberührt.',
+    noCashPayoutNotice,
   ] },
   { title: '7. 5er Royalpass und 10er Royalpass', paragraphs: [
     priceIncreaseNotice,
     'Der 5er Royalpass umfasst fünf, der 10er Royalpass zehn Massagen der beim Kauf ausgewählten Art und Dauer gegen einmalige Vorauszahlung. Es gibt keine automatische Verlängerung und keinen laufenden Zahlungsvertrag. Ein Wechsel von Massageart oder Dauer erfordert eine vorherige Vereinbarung; ein dabei entstehender Preisunterschied kann vereinbart werden. Paarmassagen sind nicht Bestandteil dieser Einzel-Royalpässe.',
     'Royalpässe sind persönlich und nicht übertragbar. Sie dürfen ausschließlich von der Person verwendet werden, auf deren Namen sie ausgestellt sind. Verkauf, Weitergabe oder Übertragung sind ausgeschlossen. Die rechtliche Angemessenheit dieser Beschränkung ist vor Freigabe zu prüfen.',
     'Gewünschte Gültigkeitsregeln – rechtlich zu prüfen, noch nicht freigegeben: 5er Royalpass zwölf Monate, 10er Royalpass 24 Monate ab Zahlungseingang; bei Website-Zahlung ist dessen unabhängige Verifizierung maßgeblich. Die Befristungen und Folgen des Ablaufs einschließlich angemessener Ausnahmen bedürfen der rechtlichen Prüfung. Ein automatischer vollständiger Guthabenverlust wird nicht vereinbart.',
-    'Nur tatsächlich erbrachte Massagen werden vom Kontingent abgezogen. Eine Absage durch das Studio verbraucht keine Massage. Bei Kundenabsagen gilt Abschnitt 9 ohne doppelte Belastung und ohne pauschalen vollständigen Kontingentabzug. Gesetzliche Widerrufs-, Beendigungs- und Erstattungsrechte bleiben erhalten. Eine freiwillige Auszahlung verbleibender Massagen ist nicht vorgesehen.',
+    'Nur tatsächlich erbrachte Massagen werden vom Kontingent abgezogen. Eine Absage durch das Studio verbraucht keine Massage. Bei Kundenabsagen gilt Abschnitt 9 ohne doppelte Belastung und ohne pauschalen vollständigen Kontingentabzug. Gesetzliche Widerrufs-, Beendigungs- und Erstattungsrechte bleiben erhalten.',
+    noCashPayoutNotice,
   ] },
   { title: '8. Neueröffnungsaktion und Rabatte', paragraphs: [
     'Code ROYALKRABI20: vom 07.11. bis einschließlich 21.11.2026, Zeitzone Europe/Berlin, 20 % auf berechtigte Massageangebote ab 60 Minuten, Massagegutscheine mit festgelegter Dauer ab 60 Minuten und 5er/10er Royalpässe ab 60 Minuten je Massage. Berechnungsbasis ist der ausgewiesene Verkaufs- beziehungsweise Paketpreis.',
@@ -108,7 +109,7 @@ export const legalDraftWithdrawal = [
   { title: 'Widerrufsrecht – Dienstleistungsentwurf', paragraphs: [
     'Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen.',
     'Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsabschlusses, soweit die gesetzlich erforderliche Belehrung ordnungsgemäß erteilt wurde. Bei fehlender oder fehlerhafter Belehrung gelten die gesetzlichen Regeln zum verlängerten Widerrufsrecht.',
-    `Um Ihr Widerrufsrecht auszuüben, müssen Sie uns (${draftIdentity}) mittels einer eindeutigen Erklärung, beispielsweise durch einen mit der Post versandten Brief oder eine E-Mail, über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren. Sie können dafür das nachfolgende Muster-Widerrufsformular verwenden, das jedoch nicht vorgeschrieben ist.`,
+    `Um Ihr Widerrufsrecht auszuüben, müssen Sie uns (${contact.owner}, tätig unter ${contact.name}, ${contact.street}, ${contact.city}, Deutschland. Telefon: ${contact.phone} – E-Mail: ${withdrawalEmail}) mittels einer eindeutigen Erklärung, beispielsweise durch einen mit der Post versandten Brief oder eine E-Mail an ${withdrawalEmail}, über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren. Sie können dafür das nachfolgende Muster-Widerrufsformular verwenden, das jedoch nicht vorgeschrieben ist. Ein Widerruf ist auch ohne Formular per E-Mail an ${withdrawalEmail} möglich.`,
     'Zur Wahrung der Widerrufsfrist reicht es aus, dass Sie die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absenden.',
   ] },
   { title: 'Folgen des Widerrufs', paragraphs: [
@@ -117,13 +118,14 @@ export const legalDraftWithdrawal = [
   ] },
   { title: 'Vorzeitige Einlösung und ergänzende Klarstellungen', paragraphs: [
     'Ein Widerruf wird nicht pauschal auf unbenutzte Gutscheine oder Royalpässe begrenzt. Eine erste Teilmassage eines Royalpasses ist keine vollständige Vertragserfüllung. Das Zusenden einer Karte oder eines Gutscheincodes ist nicht automatisch die vollständige Erbringung der versprochenen Massageleistung.',
-    'Bei entgeltlichen Dienstleistungen erlischt das Widerrufsrecht erst bei vollständiger Leistung und nur, wenn sämtliche gesetzlichen Voraussetzungen erfüllt sind, insbesondere die ausdrückliche Zustimmung zum Beginn vor Ablauf der Frist und die bestätigte Kenntnis vom Verlust des Widerrufsrechts bei vollständiger Vertragserfüllung. Erforderliche gesonderte Erklärungen müssen vor Freigabe geprüft und eingerichtet werden. Die allgemeine AGB-Checkbox ersetzt diese Erklärungen nicht.',
+    'Bei entgeltlichen Dienstleistungen erlischt das Widerrufsrecht erst bei vollständiger Leistung und nur, wenn sämtliche gesetzlichen Voraussetzungen erfüllt sind, insbesondere die ausdrückliche Zustimmung zum Beginn vor Ablauf der Frist und die bestätigte Kenntnis vom Verlust des Widerrufsrechts bei vollständiger Vertragserfüllung. Die allgemeine AGB-Checkbox ersetzt diese Erklärungen nicht.',
+    `Bestätigte Erklärung zum vorzeitigen Massagebeginn (02.11.2026): „${earlyStartDeclaration}“ ${earlyStartNotice} Die Dokumentation am Termin ist vor Freigabe noch einzurichten.`,
     'Es werden keine Widerrufs-, Storno- oder Bearbeitungsgebühren erhoben. Regeln über eine nicht freiwillig angebotene Barauszahlung begrenzen keine gesetzlichen Erstattungsrechte. Die Terminabsage gemäß AGB ist vom gesetzlichen Widerruf getrennt.',
   ] },
 ];
 export const legalDraftForm = [
   '(Wenn Sie den Vertrag widerrufen wollen, dann füllen Sie bitte dieses Formular aus und senden Sie es zurück.)',
-  `An ${draftIdentity}`,
+  `An ${contact.owner}, tätig unter ${contact.name}, ${contact.street}, ${contact.city}, Deutschland. Telefon: ${contact.phone} – E-Mail: ${withdrawalEmail}.`,
   'Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/die Erbringung der folgenden Dienstleistung (*): ______________________________________________',
   'Bestellt am (*)/erhalten am (*): ______________________________________________',
   'Name des/der Verbraucher(s): ______________________________________________',
@@ -144,8 +146,9 @@ export const legalDraftReview = [
     'Externer SumUp-Shop: angezeigter Verkäufer, anwendbare Vertragsinformationen, tatsächliche Zustellung, 24-Monatswunsch und Restguthaben-/Einlösungsregeln konnten für diesen Shop nicht bestätigt werden. Vor Freigabe anhand der tatsächlichen Kaufansicht abgleichen; keine deutschen Bedingungen aus ausländischen SumUp-Texten ableiten.',
   ] },
   { title: 'Technisch noch offen – keine Freischaltung', paragraphs: [
-    'Unverzügliche gesonderte elektronische Bestelleingangsbestätigung ist nicht vorhanden; die bestehende Kundenmail folgt ausschließlich nach verifizierter Zahlung. Die anschließende ausdrückliche Vertragsannahme muss als separater Vorgang erkennbar sein; eine automatische Annahme wird nicht zugesagt. Namensbindung der persönlichen Royalpässe vor Kauf eindeutig erfassen und bei Einlösung sicherstellen.',
-    'Die bestehende Rabattberechnung prüft noch den Bestellzeitpunkt und ist nur eine vorläufige Vorschau, keine Umsetzung der bestätigten Zahlungseingangsregel. Vor Verkaufsfreigabe müssen der unabhängig verifizierte vollständige Zahlungseingang und die Aktionsfrist verbindlich geprüft werden. Der Umgang mit bereits rabattiert bezahlten Bestellungen außerhalb der Frist ist gesondert festzulegen; keine automatische Nachbelastung, Erstattung oder Vertragsannahme wird eingeführt.',
+    'Bestätigt und umgesetzt (02.11.2026): Vor der verifizierten Zahlung gibt es keine Kundenkommunikation; die einzige Bestätigungs-E-Mail nach unabhängig verifiziertem vollständigem Zahlungseingang enthält die ausdrückliche Vertragsannahme. Rechtlich zu prüfen bleibt, ob diese einzige Nachricht die gesetzliche Eingangsbestätigungspflicht erfüllt. Namensbindung der persönlichen Royalpässe vor Kauf eindeutig erfassen und bei Einlösung sicherstellen.',
+    'Bestätigt und umgesetzt (02.11.2026): Die verbindliche Rabattprüfung verwendet den serverseitigen Verifizierungszeitpunkt des vollständigen Zahlungseingangs, nicht den Bestellzeitpunkt. Warenkorb und Kasse zeigen eine vorläufige Vorkalkulation. Liegt der verifizierte Zahlungseingang außerhalb der Aktionsfrist, wird die Bestellung zur manuellen Prüfung markiert; keine automatische Nachbelastung, Erstattung oder Vertragsannahme wird eingeführt. Der Umgang mit bereits rabattiert bezahlten Bestellungen außerhalb der Frist ist gesondert festzulegen.',
+    `Elektronischer Widerruf per E-Mail an ${withdrawalEmail} ist bestätigt und in Belehrung, Musterformular und Bestätigungs-E-Mail hinterlegt; das PDF-Formular bleibt freiwillig. Offener Blocker: Der E-Mail-Empfang unter ${withdrawalEmail} ist in der aktuellen Umgebung nicht eingerichtet – das Postfach beziehungsweise eine Weiterleitung muss beim E-Mail-Anbieter der Domain geschaffen werden, sonst gehen Widerrufe ins Leere. Die Versandfunktion der Website kann keine eingehenden E-Mails empfangen.`,
     'Gesonderte Erklärungen für einen gewünschten vorzeitigen Leistungsbeginn fehlen. Seit 19.06.2026 verlangt § 356a BGB für über eine Online-Benutzeroberfläche geschlossene Fernabsatzverträge mit gesetzlichem Widerrufsrecht eine gut sichtbare, während der Widerrufsfrist durchgehend verfügbare Funktion „Vertrag widerrufen“ mit abschließendem „Widerruf bestätigen“. Sie muss Name, Vertrag oder Vertragsteil und elektronische Kontaktadresse erfassen und unverzüglich eine Bestätigung auf dauerhaftem Datenträger mit Inhalt, Eingangsdatum und Uhrzeit übermitteln. Diese Funktion fehlt hier und ist ein konkreter Blocker vor Verkaufsfreigabe; Druckformular und E-Mail-Link ersetzen sie nicht. Anschließend ist die Belehrung um Existenz und Ort der Funktion zu ergänzen.',
     'Offizielle Quellen (Stand 02.11.2026): § 356a BGB, https://www.gesetze-im-internet.de/bgb/__356a.html; Gesetz vom 03.02.2026, BGBl. 2026 I Nr. 28, Artikel 1 Nr. 8 und Artikel 10 Absatz 1, https://www.recht.bund.de/bgbl/1/2026/28/regelungstext.pdf; §§ 355, 356 und 357a BGB zu Fristbeginn, Erlöschen und Wertersatz, https://www.gesetze-im-internet.de/bgb/. Die Umsetzung im externen SumUp-Shop muss gesondert bestätigt werden.',
     'Automatische Online-Einlösung von SumUp-Gutscheincodes bleibt gesondert zu prüfen. Externe Käufe werden nicht importiert. Bestell-/Zahlungs-PDFs verweisen auf die AGB, deren eigene Fassung die gewünschten Laufzeiten vollständig enthält. Historische Bestellungen und Dokumentfassungen bleiben unverändert. Keine neue Bestellung und kein Dokumentversand mit dieser ungeprüften Fassung.',

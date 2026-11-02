@@ -1,4 +1,4 @@
-import { contractAcceptanceNotice, openingPaymentNotice, openingEligibilityNotice, massageVoucherPartialNotice, massageVoucherChangeNotice, priceIncreaseNotice } from './purchase-rules';
+import { contractAcceptanceNotice, openingPaymentNotice, openingEligibilityNotice, massageVoucherPartialNotice, massageVoucherChangeNotice, priceIncreaseNotice, noCashPayoutNotice } from './purchase-rules';
 export type Massage = { name: string; desc: string; prices: [number, number][]; category: "classic" | "premium" | "signature"; note?: string };
 export const categoryBadges = { classic: "KLASSISCH", premium: "PREMIUM", signature: "ROYAL KRABI SIGNATURE" } as const;
 export const partialBadge = "FOKUS";
@@ -98,6 +98,7 @@ export const faqs = [
   ["Kann ich einen Massagegutschein teilweise einlösen?", massageVoucherPartialNotice + " Beispiel: Ein 90-Minuten-Massagegutschein wird zunächst für eine 60-Minuten-Massage genutzt. Es verbleiben 30 Minuten Guthaben, die später für dieselbe oder eine andere Massageart verwendet werden können. Preisunterschiede werden ausgeglichen."],
   ["Kann ich mit meinem Massagegutschein die Massageart wechseln?", massageVoucherChangeNotice],
   ["Was gilt bei einer Preiserhöhung nach dem Kauf?", priceIncreaseNotice + " Diese Regel ist Bestandteil des rechtlich zu prüfenden AGB-Entwurfs."],
+  ["Werden Gutscheine oder Royalpässe in Bargeld ausgezahlt?", noCashPayoutNotice],
   ["Muss ich einen Termin vereinbaren?", "Ja. Massagen erfolgen ausschließlich nach vorheriger Terminvereinbarung – telefonisch unter 069 60511884 oder per E-Mail an kontakt@royalkrabi-thaimassage.de."],
   ["Was soll ich zur Massage mitbringen?", "Sie müssen nichts Besonderes mitbringen. Bequeme Kleidung und ein paar Minuten Zeit zum Ankommen genügen."],
   ["Kann ich Gutscheine verschenken?", "Massagegutscheine und Wertgutscheine sind als Geschenke übertragbar. Royalpässe sind dagegen persönlich und nicht übertragbar. Die Bedingungen stehen im noch nicht freigegebenen AGB-Entwurf."],
