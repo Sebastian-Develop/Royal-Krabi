@@ -28,11 +28,13 @@ import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as MassagenPreiseRouteImport } from './routes/massagen-preise'
 import { Route as OnlineBuchenRouteImport } from './routes/online-buchen'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermineRouteImport } from './routes/termine'
 import { Route as TreuepassRouteImport } from './routes/treuepass'
 import { Route as UeberUnsRouteImport } from './routes/ueber-uns'
 import { Route as WarenkorbRouteImport } from './routes/warenkorb'
 import { Route as WiderrufRouteImport } from './routes/widerruf'
+import { Route as VerwaltungWiderrufeRouteImport } from './routes/verwaltung.widerrufe'
 import { Route as ApiPublicBewerbungRouteImport } from './routes/api/public/bewerbung'
 import { Route as ApiPublicFlyerImageRouteImport } from './routes/api/public/flyer-image'
 import { Route as ApiPublicSumupWebhookRouteImport } from './routes/api/public/sumup-webhook'
@@ -132,6 +134,11 @@ const ShopRoute = ShopRouteImport.update({
   path: '/shop',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermineRoute = TermineRouteImport.update({
   id: '/termine',
   path: '/termine',
@@ -155,6 +162,11 @@ const WarenkorbRoute = WarenkorbRouteImport.update({
 const WiderrufRoute = WiderrufRouteImport.update({
   id: '/widerruf',
   path: '/widerruf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerwaltungWiderrufeRoute = VerwaltungWiderrufeRouteImport.update({
+  id: '/verwaltung/widerrufe',
+  path: '/verwaltung/widerrufe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicBewerbungRoute = ApiPublicBewerbungRouteImport.update({
@@ -193,11 +205,13 @@ export interface FileRoutesByFullPath {
   '/massagen-preise': typeof MassagenPreiseRoute
   '/online-buchen': typeof OnlineBuchenRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/termine': typeof TermineRoute
   '/treuepass': typeof TreuepassRoute
   '/ueber-uns': typeof UeberUnsRoute
   '/warenkorb': typeof WarenkorbRoute
   '/widerruf': typeof WiderrufRoute
+  '/verwaltung/widerrufe': typeof VerwaltungWiderrufeRoute
   '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
   '/api/public/flyer-image': typeof ApiPublicFlyerImageRoute
   '/api/public/sumup-webhook': typeof ApiPublicSumupWebhookRoute
@@ -222,11 +236,13 @@ export interface FileRoutesByTo {
   '/massagen-preise': typeof MassagenPreiseRoute
   '/online-buchen': typeof OnlineBuchenRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/termine': typeof TermineRoute
   '/treuepass': typeof TreuepassRoute
   '/ueber-uns': typeof UeberUnsRoute
   '/warenkorb': typeof WarenkorbRoute
   '/widerruf': typeof WiderrufRoute
+  '/verwaltung/widerrufe': typeof VerwaltungWiderrufeRoute
   '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
   '/api/public/flyer-image': typeof ApiPublicFlyerImageRoute
   '/api/public/sumup-webhook': typeof ApiPublicSumupWebhookRoute
@@ -252,11 +268,13 @@ export interface FileRoutesById {
   '/massagen-preise': typeof MassagenPreiseRoute
   '/online-buchen': typeof OnlineBuchenRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/termine': typeof TermineRoute
   '/treuepass': typeof TreuepassRoute
   '/ueber-uns': typeof UeberUnsRoute
   '/warenkorb': typeof WarenkorbRoute
   '/widerruf': typeof WiderrufRoute
+  '/verwaltung/widerrufe': typeof VerwaltungWiderrufeRoute
   '/api/public/bewerbung': typeof ApiPublicBewerbungRoute
   '/api/public/flyer-image': typeof ApiPublicFlyerImageRoute
   '/api/public/sumup-webhook': typeof ApiPublicSumupWebhookRoute
@@ -283,11 +301,13 @@ export interface FileRouteTypes {
     | '/massagen-preise'
     | '/online-buchen'
     | '/shop'
+    | '/sitemap.xml'
     | '/termine'
     | '/treuepass'
     | '/ueber-uns'
     | '/warenkorb'
     | '/widerruf'
+    | '/verwaltung/widerrufe'
     | '/api/public/bewerbung'
     | '/api/public/flyer-image'
     | '/api/public/sumup-webhook'
@@ -312,11 +332,13 @@ export interface FileRouteTypes {
     | '/massagen-preise'
     | '/online-buchen'
     | '/shop'
+    | '/sitemap.xml'
     | '/termine'
     | '/treuepass'
     | '/ueber-uns'
     | '/warenkorb'
     | '/widerruf'
+    | '/verwaltung/widerrufe'
     | '/api/public/bewerbung'
     | '/api/public/flyer-image'
     | '/api/public/sumup-webhook'
@@ -341,11 +363,13 @@ export interface FileRouteTypes {
     | '/massagen-preise'
     | '/online-buchen'
     | '/shop'
+    | '/sitemap.xml'
     | '/termine'
     | '/treuepass'
     | '/ueber-uns'
     | '/warenkorb'
     | '/widerruf'
+    | '/verwaltung/widerrufe'
     | '/api/public/bewerbung'
     | '/api/public/flyer-image'
     | '/api/public/sumup-webhook'
@@ -371,11 +395,13 @@ export interface RootRouteChildren {
   MassagenPreiseRoute: typeof MassagenPreiseRoute
   OnlineBuchenRoute: typeof OnlineBuchenRoute
   ShopRoute: typeof ShopRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermineRoute: typeof TermineRoute
   TreuepassRoute: typeof TreuepassRoute
   UeberUnsRoute: typeof UeberUnsRoute
   WarenkorbRoute: typeof WarenkorbRoute
   WiderrufRoute: typeof WiderrufRoute
+  VerwaltungWiderrufeRoute: typeof VerwaltungWiderrufeRoute
   ApiPublicBewerbungRoute: typeof ApiPublicBewerbungRoute
   ApiPublicFlyerImageRoute: typeof ApiPublicFlyerImageRoute
   ApiPublicSumupWebhookRoute: typeof ApiPublicSumupWebhookRoute
@@ -516,6 +542,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/termine': {
       id: '/termine'
       path: '/termine'
@@ -549,6 +582,13 @@ declare module '@tanstack/react-router' {
       path: '/widerruf'
       fullPath: '/widerruf'
       preLoaderRoute: typeof WiderrufRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verwaltung/widerrufe': {
+      id: '/verwaltung/widerrufe'
+      path: '/verwaltung/widerrufe'
+      fullPath: '/verwaltung/widerrufe'
+      preLoaderRoute: typeof VerwaltungWiderrufeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/bewerbung': {
@@ -595,11 +635,13 @@ const rootRouteChildren: RootRouteChildren = {
   MassagenPreiseRoute: MassagenPreiseRoute,
   OnlineBuchenRoute: OnlineBuchenRoute,
   ShopRoute: ShopRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermineRoute: TermineRoute,
   TreuepassRoute: TreuepassRoute,
   UeberUnsRoute: UeberUnsRoute,
   WarenkorbRoute: WarenkorbRoute,
   WiderrufRoute: WiderrufRoute,
+  VerwaltungWiderrufeRoute: VerwaltungWiderrufeRoute,
   ApiPublicBewerbungRoute: ApiPublicBewerbungRoute,
   ApiPublicFlyerImageRoute: ApiPublicFlyerImageRoute,
   ApiPublicSumupWebhookRoute: ApiPublicSumupWebhookRoute,
