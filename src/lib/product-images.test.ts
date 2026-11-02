@@ -4,7 +4,7 @@ import { brandFallbackPhoto, massagePhotos } from './massage-photos';
 import { cartLines, normalizeCart } from './cart';
 
 test('Mixed vouchers and 5/10 cards resolve exact catalog images after stored ID reload', () => {
-  const names = ['60 Minuten Royal Thai Massage – ohne Öl', '5er-Abo · Hot-Stone-Massage', '10er-Abo · Aromaöl-Massage'];
+  const names = ['60 Minuten Royal Thai Massage – ohne Öl', '5er Royalpass · Hot-Stone-Massage', '10er Royalpass · Aromaöl-Massage'];
   const products = names.map(name => shopProducts.find(p => p.name === name));
   if (products.some(p => !p)) throw new Error('Missing test catalog products');
   const stored = JSON.stringify(products.flatMap(p => p ? [{ productId: p.id, quantity: 2 }] : []));

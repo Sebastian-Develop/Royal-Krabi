@@ -4,17 +4,17 @@ import { brandFallbackPhoto, shopProductPhoto, type MassagePhoto } from './massa
 import { valueVoucherDescription } from './value-voucher';
 
 export const shopPolicy = { salesEnabled: false, shippingCountry: "DE", shippingProvider: "DHL", shippingCost: 0, minimumOrderValue: 0, minimumQuantity: 1, handoverWorkingDays: 3, automaticRenewal: false, manualAcceptance: true, validityMonths: null, transferable: null } as const;
-export const validityNotice = "Gültigkeitsdauer und Nutzungsbedingungen gemäß unseren AGB.";
+export const validityNotice = "Gültigkeit und Nutzungsbedingungen gemäß AGB-Entwurf; vor Verkaufsfreigabe rechtlich zu prüfen.";
 export const shippingNotice = "Versand innerhalb Deutschlands mit DHL. Kostenfrei. Wir bearbeiten Ihre Bestellung und geben sie nach Prüfung des Zahlungseingangs in der Regel innerhalb von 3 Werktagen bei DHL ein. Die DHL-Laufzeit kommt hinzu. Sie erhalten auf Anfrage einen Einlieferungsbeleg als Nachweis der Übergabe an DHL.";
 /** Short confirmed shipping rule shown at purchasable offers, cart and checkout. */
 export const shippingNoticeShort = "Kostenfreier Versand innerhalb Deutschlands. Abholung nach Vereinbarung.";
 export type ShopProduct = { id: string; kind: "voucher" | "five" | "ten"; name: string; description: string; price: number | null; regular: number | null; badge: string; photo: MassagePhoto; duration: number | null; massageName: string | null; massageCount: number | null; SUMUP_LINK_GUTSCHEIN: string; SUMUP_LINK_5ER_ABO: string; SUMUP_LINK_10ER_ABO: string };
 const emptyLinks = { SUMUP_LINK_GUTSCHEIN: "", SUMUP_LINK_5ER_ABO: "", SUMUP_LINK_10ER_ABO: "" };
 /** Abo badges carry the massage category plus the fixed duration, e.g. "KLASSISCH · 5er-Abo (60 Minuten)". */
-const aboBadge = (abo: Subscription) => `${categoryBadgeFor(abo.name) ?? "Abo"} · ${abo.count}er-Abo (${abo.duration} Minuten)`;
+const aboBadge = (abo: Subscription) => `${categoryBadgeFor(abo.name) ?? "Royalpass"} · ${abo.count}er Royalpass (${abo.duration} Minuten)`;
 export const shopProducts: ShopProduct[] = [
   ...vouchers.map(([name, price, description], index) => ({ id: `gutschein-${index + 1}`, kind: "voucher" as const, name: name ?? "Gutschein", description: name === 'Individueller Wunschbetrag' ? valueVoucherDescription : description || "Zeit, Ruhe und Wohlbefinden verschenken.", price: price?.endsWith(" €") ? Number(price.replace(" €", "")) : null, regular: null, badge: "Gutschein", photo: shopProductPhoto(name ?? '') ?? brandFallbackPhoto, duration: name?.match(/^(\d+) Minuten /) ? Number(name.split(' ')[0]) : null, massageName: name?.startsWith('Individueller') ? null : (name ?? '').replace(/^\d+ Minuten /, ''), massageCount: null, ...emptyLinks })),
-  ...subscriptions.map((abo, index) => ({ id: `abo-${index + 1}`, kind: abo.count === 5 ? "five" as const : "ten" as const, name: `${abo.count}er-Abo · ${abo.name}`, description: `${abo.count} Massagen · je ${abo.duration} Minuten. ${[...massages, ...partialMassages].find(m => m.name === abo.name)?.desc ?? ""}`, price: abo.price, regular: abo.regular, badge: aboBadge(abo), photo: shopProductPhoto(abo.name) ?? brandFallbackPhoto, duration: abo.duration, massageName: abo.name, massageCount: abo.count, ...emptyLinks })),
+  ...subscriptions.map((abo, index) => ({ id: `abo-${index + 1}`, kind: abo.count === 5 ? "five" as const : "ten" as const, name: `${abo.count}er Royalpass · ${abo.name}`, description: `${abo.count} Massagen · je ${abo.duration} Minuten. ${[...massages, ...partialMassages].find(m => m.name === abo.name)?.desc ?? ""}`, price: abo.price, regular: abo.regular, badge: aboBadge(abo), photo: shopProductPhoto(abo.name) ?? brandFallbackPhoto, duration: abo.duration, massageName: abo.name, massageCount: abo.count, ...emptyLinks })),
 ];
 export const getProductLink = (product: ShopProduct) => product.kind === "voucher" ? product.SUMUP_LINK_GUTSCHEIN : product.kind === "five" ? product.SUMUP_LINK_5ER_ABO : product.SUMUP_LINK_10ER_ABO;
 export function isApprovedPaymentLink(value: string) {

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { pageHead } from "@/lib/meta";
 import { LegalText } from '@/components/legal-text';
 import { legalTextsFor, WEBSITE_LEGAL_VERSION } from '@/lib/legal-texts';
+import { legalDraftNotice, legalDraftReview } from '@/lib/legal-draft';
 
 export const Route = createFileRoute("/widerruf")({
   head: () => pageHead("Widerrufsbelehrung & Widerrufsformular | Royal Krabi", "Widerrufsbelehrung für Gutscheine und vorausbezahlte Massagekarten sowie das freiwillige Muster-Widerrufsformular von Royal Krabi Serenity Thaimassage.", "https://royalkrabi-thaimassage.de/widerruf"),
@@ -13,11 +14,8 @@ export const Route = createFileRoute("/widerruf")({
 
 function Page() {
   const legal = legalTextsFor(WEBSITE_LEGAL_VERSION);
-  const paragraphs = (index: number) => legal.widerruf[index]?.paragraphs.map((text, i) => <p key={i}><LegalText text={text}/></p>);
-  return <div className="withdrawal-page"><LegalPage title="Widerrufsbelehrung & Widerrufsformular" sections={[
-    { title: 'Geltungsbereich', body: <>{paragraphs(0)}</> },
-    { title: 'Widerrufsbelehrung', body: <><h3>Widerrufsrecht</h3>{paragraphs(1)}<h3>Folgen des Widerrufs</h3>{paragraphs(2)}</> },
-    { title: 'Ergänzende Klarstellungen', body: <>{paragraphs(3)}</> },
+  return <div className="withdrawal-page"><LegalPage title="Widerrufsbelehrung & Widerrufsformular" notice={legalDraftNotice} sections={[
+    ...legal.widerruf.map(section => ({ title: section.title, body: <>{section.paragraphs.map((text, i) => <p key={i}><LegalText text={text}/></p>)}</> })),
     { title: "Muster-Widerrufsformular", body: <>
       <div className="withdrawal-print-actions"><Button variant="outline" className="btn btn-outline" onClick={() => window.print()}><Printer size={18}/> Drucken</Button></div>
       <div className="withdrawal-form">
@@ -25,5 +23,6 @@ function Page() {
       </div>
 
     </> },
+    { title: 'Vor Freigabe zu ergänzende Pflichtfunktion', body: <>{legalDraftReview[2]?.paragraphs.slice(1,3).map((text,i) => <p key={i}><LegalText text={text}/></p>)}</> },
   ]}/></div>;
 }

@@ -1,5 +1,4 @@
-
-
+import { legalDraftAgb, legalDraftWithdrawal, legalDraftForm } from './legal-draft';
 /**
  * Versionierte Rechtstexte für Bestellunterlagen (PDF-Anhänge).
  * Jede Bestellung speichert ihre Textfassung; spätere Änderungen an einer
@@ -286,9 +285,15 @@ const v20261101: LegalTextVersion = {
 ],
 };
 
-const LEGAL_VERSIONS: Record<string, LegalTextVersion> = { [v20261021.version]: v20261021, [v20261101.version]: v20261101 };
+const v20261102: LegalTextVersion = {
+  version: '2026-11-02-review', released: false,
+  agb: legalDraftAgb, widerruf: legalDraftWithdrawal, widerrufForm: legalDraftForm,
+  // Privacy review is separate; retaining its previous draft never constitutes a release.
+  ...(v20261101.datenschutz ? { datenschutz: structuredClone(v20261101.datenschutz) } : {}),
+};
+const LEGAL_VERSIONS: Record<string, LegalTextVersion> = { [v20261021.version]: v20261021, [v20261101.version]: v20261101, [v20261102.version]: v20261102 };
 export const CURRENT_LEGAL_VERSION = v20261021.version;
-export const WEBSITE_LEGAL_VERSION = v20261101.version;
+export const WEBSITE_LEGAL_VERSION = v20261102.version;
 /** No complete released online-sale version exists yet. Set only after explicit content release. */
 export const CURRENT_ORDER_LEGAL_VERSION: string | null = null;
 export function legalTextsFor(version: string | null | undefined): LegalTextVersion {

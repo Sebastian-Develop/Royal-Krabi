@@ -1,4 +1,6 @@
 # Roadmap
+- [x] Gebündelter AGB-/Widerrufsentwurf 02.11.2026 mit Formular, Angebots-/FAQ-/Kassenhinweisen und neuer unveränderlicher PDF-Quelle; 144 gezielte Tests und Vorschau geprüft, fünf lokale PDF-Muster geprüft; Sperren erhalten.
+- [ ] Verkaufsfreigabe blockiert: ausdrückliche Vertragsannahme und Aktionszeitpunkt entscheiden; Massagegutschein-Wechsel/Teileinlösung/Preisänderungen und Paar-Upgrade-Anteile klären; rechtliche Prüfung der Befristungen/Ausfallpauschale/Widerrufseinordnung; externen Shop abgleichen. Nach Freigabe gesonderte Eingangsbestätigung, elektronische Widerrufsfunktion nach § 356a BGB und frühe Leistungsbeginn-Erklärungen umsetzen.
 - [x] Wunschbetrag in Cent sicher kaufbar machen, eigenes Motiv zentral ersetzen und Zahlen in Website/E-Mails/PDFs ausrichten.
 - [x] Rechtstexte zentral mit Freigabe und unveränderlichen Bestellfassungen; Datenschutz als fünfter Anhang, Inhaberzeile nur aus Bestellbestätigung entfernen.
 - [x] 199 Tests bestanden; Smartphone-/Desktop-Warenkorb, E-Mail und alle zehn Seiten der fünf PDF-Muster geprüft; GitHub-Quellcode synchronisieren, keine Veröffentlichung oder echten Übermittlungen.

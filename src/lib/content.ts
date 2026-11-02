@@ -81,20 +81,23 @@ export const subscriptions: Subscription[] = subscriptionOffers.flatMap(offer =>
 }));
 export const subscriptionRules = { counts: [5,10], sameTypeAndDuration: true, pairIncluded: false, combinableByDefault: false } as const;
 export const subscriptionConditions = [
-  "Jedes 5er-Abo umfasst fünf, jedes 10er-Abo zehn Massagen derselben Massageart und Dauer.",
+  "Jeder 5er Royalpass umfasst fünf, jeder 10er Royalpass zehn Massagen derselben Massageart und Dauer; einmalige Vorauszahlung ohne automatische Verlängerung.",
   "Massageart und Massage-Dauer sind beim Kauf festgelegt. Ein Wechsel ist nur nach vorheriger Vereinbarung möglich; ein Preisunterschied kann berechnet werden.",
-  "Paarmassagen sind nicht Bestandteil der Einzel-Abos.",
-  "Abos sind nicht mit anderen Rabatten oder Sonderangeboten kombinierbar, sofern nicht ausdrücklich anders angegeben.",
+  "Paarmassagen sind nicht Bestandteil der Einzel-Royalpässe.",
+  "Der Eröffnungsrabatt gilt für berechtigte Royalpässe ab 60 Minuten je Massage; mehrere Rabattaktionen werden nicht kombiniert.",
   "Termine erfolgen nach Vereinbarung.",
-  "Gültigkeit sowie Widerrufs-, Erstattungs- und Einlösungsbedingungen werden in den verbindlichen Abo-Bedingungen festgelegt und müssen den geltenden gesetzlichen Bestimmungen entsprechen.",
+  "Persönliche, nicht übertragbare Nutzung und gewünschte 12-/24-Monatslaufzeiten sind im AGB-Entwurf dargestellt und vor Freigabe rechtlich zu prüfen.",
 ];
 
 export const faqs = [
   ["Muss ich einen Termin vereinbaren?", "Ja. Massagen erfolgen ausschließlich nach vorheriger Terminvereinbarung – telefonisch unter 069 60511884 oder per E-Mail an kontakt@royalkrabi-thaimassage.de."],
   ["Was soll ich zur Massage mitbringen?", "Sie müssen nichts Besonderes mitbringen. Bequeme Kleidung und ein paar Minuten Zeit zum Ankommen genügen."],
-  ["Kann ich Gutscheine verschenken?", "Ja. Bei Royal Krabi erhalten Sie Gutscheine für ausgewählte Anwendungen oder einen individuellen Wunschbetrag."],
-  ["Kann ich einen Gutschein oder ein Abo online kaufen?", "Ein Online-Kauf ist derzeit nicht möglich. Gutscheine sowie 5er- und 10er-Abos erhalten Sie nach telefonischer Absprache, per E-Mail oder direkt im Studio."],
+  ["Kann ich Gutscheine verschenken?", "Massagegutscheine und Wertgutscheine sind als Geschenke übertragbar. Royalpässe sind dagegen persönlich und nicht übertragbar. Die Bedingungen stehen im noch nicht freigegebenen AGB-Entwurf."],
+  ["Welche Online-Kaufwege sind vorgesehen?", "Massagegutscheine und Royalpässe: Website-Warenkorb mit SumUp Hosted Checkout. Wertgutschein · Wunschbetrag: ausschließlich externer SumUp-Gutscheinshop. Externe Käufe werden nicht in unsere Bestellverwaltung übernommen. Website-Verkauf bleibt bis zur Freigabe gesperrt."],
   ["Ist eine Paarmassage möglich?", "Ja, eine Paarmassage kann je nach Verfügbarkeit telefonisch oder per E-Mail angefragt werden."],
-  ["Sind Massagen bei Beschwerden geeignet?", "Unsere Anwendungen dienen dem Wohlbefinden und der Entspannung. Bei akuten Beschwerden, Erkrankungen, Verletzungen oder Unsicherheiten sprechen Sie bitte vorher mit einer Ärztin, einem Arzt oder einer qualifizierten Fachperson."],
-  ["Wie kann ich einen Termin stornieren oder verschieben?", "Bitte kontaktieren Sie uns so früh wie möglich. Die finalen Stornierungsbedingungen werden vor Veröffentlichung ergänzt."],
+  ["Sind Massagen bei Beschwerden geeignet?", "Unsere Massagen dienen dem Wohlbefinden und der Entspannung. Bei akuten Beschwerden, Erkrankungen, Verletzungen oder Unsicherheiten sprechen Sie bitte vorher mit einer Ärztin oder einem Arzt. Bitte teilen Sie relevante Einschränkungen, Schwangerschaft und Unverträglichkeiten vorab sowie Schmerzen während der Massage unmittelbar mit."],
+  ["Wie kann ich einen Termin absagen oder verschieben?", "Bitte kontaktieren Sie uns telefonisch oder per E-Mail. Der rechtlich zu prüfende AGB-Entwurf sieht kostenlose Absage oder Verschiebung bis spätestens fünf Stunden vorher und danach beziehungsweise bei Nichterscheinen eine 50-%-Ausfallpauschale vor. Kein doppelter Abzug; Nachweis eines fehlenden oder wesentlich geringeren Schadens bleibt möglich. Diese Regel ist noch nicht freigegeben."],
+  ["Wie lange gelten Gutscheine und Royalpässe?", "Gewünscht sind 24 Monate für Massage- und Wertgutscheine, zwölf Monate für den 5er Royalpass und 24 Monate für den 10er Royalpass ab Zahlungseingang, online nach unabhängiger Verifizierung. Befristungen und Ablauf werden rechtlich geprüft; kein automatischer ersatzloser Verlust wird zugesagt. Maßgeblich sind erst später freigegebene AGB."],
+  ["Kann ich einen SumUp-Gutscheincode online einlösen?", "Eine automatische Einlösung in unserem Website-Checkout ist nicht eingerichtet. Diese Möglichkeit wird getrennt geprüft. Für Wertguthaben sind Teileinlösung, Restguthaben und Zuzahlung vorgesehen; die externen Shopbedingungen müssen noch abgeglichen werden."],
+  ["Wie sammle ich Treuestempel?", "Der Treuepass wird manuell geführt: unter 60 Minuten kein Stempel, 60 Minuten ein, 90 Minuten 1,5 und 120 Minuten zwei Stempel pro Person für tatsächlich durchgeführte Massagen, auch mit Gutscheinen, Royalpässen oder Aktionen. Zehn Stempel bringen 50 % auf die nächste Massage; überzählige bleiben erhalten. Paar-Anteile werden je Person berücksichtigt. Kein Kaufstempel und keine Kombination des Prämienrabatts mit einer weiteren Aktion."],
 ];

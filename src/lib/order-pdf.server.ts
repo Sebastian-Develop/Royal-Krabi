@@ -27,13 +27,12 @@ const berlinDateTime = (iso: string) =>
 
 const kindLabel = (kind: string) => (kind === "voucher" ? "Gutschein" : kind === "five" ? "5er-Karte" : "10er-Karte");
 
-/** Gültigkeitsende: Zahlungszeitpunkt plus Laufzeit in Monaten. */
+/** Only historical versions retain their original document presentation. */
 function validityEnd(paidAt: string, months: number): string {
   const d = new Date(paidAt);
   d.setMonth(d.getMonth() + months);
   return d.toLocaleDateString("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", year: "numeric" });
 }
-
 interface Ctx {
   doc: PDFDocument;
   page: PDFPage;
@@ -207,12 +206,14 @@ async function pdfOrderReceived(order: EmailOrder, lines: EmailLine[], meta: Ord
   positionsTable(ctx, lines);
   totals(ctx, order, lines);
   heading(ctx, "Produktbedingungen");
-  for (const l of lines) {
-    if (l.validityMonths) {
-      paragraph(ctx, `${kindLabel(l.kind)} „${l.name}": Gültigkeit ${l.validityMonths} Monate ab bestätigtem Zahlungseingang.`, { size: 9, gapAfter: 3 });
-    }
+  if (meta.legalVersion === '2026-11-02-review') {
+    paragraph(ctx, "Gültigkeit und Nutzungsbedingungen finden Sie in den beigefügten AGB der zu dieser Bestellung gespeicherten Fassung.", { size: 9 });
+  } else {
+    for (const l of lines) if (l.validityMonths) paragraph(ctx, `${kindLabel(l.kind)} „${l.name}": Gültigkeit ${l.validityMonths} Monate ab bestätigtem Zahlungseingang.`, { size: 9, gapAfter: 3 });
   }
-  paragraph(ctx, "Diese Bestätigung dokumentiert den elektronischen Eingang der Bestellung. Der Vertragsschluss erfolgt erst durch unsere ausdrückliche manuelle Annahme.", { size: 9, color: MUTED });
+  paragraph(ctx, meta.legalVersion === '2026-11-02-review'
+    ? "Entwurf: Diese Bestätigung dokumentiert den elektronischen Eingang. Eine ausdrückliche automatische Vertragsannahme nach verifizierter Zahlung ist noch gesondert zu bestätigen und umzusetzen; Zahlung allein ist keine Annahme."
+    : "Diese Bestätigung dokumentiert den elektronischen Eingang der Bestellung. Der Vertragsschluss erfolgt erst durch unsere ausdrückliche manuelle Annahme.", { size: 9, color: MUTED });
   footer(ctx, "Bestelleingangsbestätigung");
   return { filename: "Bestelleingangsbestätigung.pdf", bytes: await ctx.doc.save() };
 }
@@ -228,12 +229,12 @@ async function pdfPaymentConfirmed(order: EmailOrder, lines: EmailLine[], meta: 
   paragraph(ctx, `Bestätigter Betrag: ${eur(order.totalCents)} (EUR)`, { font: ctx.bold, gapAfter: 2 });
   paragraph(ctx, "Zahlungsdienstleister: SumUp", { gapAfter: 2 });
   paragraph(ctx, "Diese Bestätigung ist keine steuerlich vollständige Rechnung.", { size: 9, color: MUTED });
-  heading(ctx, "Zugehörige Positionen und Gültigkeit");
+  heading(ctx, meta.legalVersion === '2026-11-02-review' ? "Zugehörige Positionen" : "Zugehörige Positionen und Gültigkeit");
   positionsTable(ctx, lines);
-  for (const l of lines) {
-    if (l.validityMonths) {
-      paragraph(ctx, `${kindLabel(l.kind)} „${l.name}": gültig ab ${berlinDateTime(meta.paidAt)} bis ${validityEnd(meta.paidAt, l.validityMonths)}.`, { size: 9, gapAfter: 3 });
-    }
+  if (meta.legalVersion === '2026-11-02-review') {
+    paragraph(ctx, "Gültigkeit und Nutzungsbedingungen finden Sie in den beigefügten AGB der zu dieser Bestellung gespeicherten Fassung.", { size: 9 });
+  } else {
+    for (const l of lines) if (l.validityMonths) paragraph(ctx, `${kindLabel(l.kind)} „${l.name}": gültig ab ${berlinDateTime(meta.paidAt)} bis ${validityEnd(meta.paidAt, l.validityMonths)}.`, { size: 9, gapAfter: 3 });
   }
   footer(ctx, "Zahlungsbestätigung");
   return { filename: "Zahlungsbestätigung.pdf", bytes: await ctx.doc.save() };

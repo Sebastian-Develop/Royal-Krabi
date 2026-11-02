@@ -2,8 +2,9 @@ import { expect, test } from "bun:test";
 import { addItem, cartTotal, cartLines, removeItem, setQuantity, normalizeCart, MAX_QUANTITY } from "./cart";
 import { shopProducts } from "./shop";
 
-const card5 = shopProducts.find(p => p.name === "5er-Abo · Royal Thai Massage – ohne Öl")!;
-const voucher = shopProducts.find(p => p.name === "60 Minuten Royal Thai Massage – ohne Öl")!;
+const card5 = shopProducts.find(p => p.name === "5er Royalpass · Royal Thai Massage – ohne Öl");
+const voucher = shopProducts.find(p => p.name === "60 Minuten Royal Thai Massage – ohne Öl");
+if (!card5 || !voucher) throw new Error('Missing catalog fixtures');
 const variable = shopProducts.find(p => p.price === null);
 
 test("Total sums all lines with no shipping cost", () => {
