@@ -18,6 +18,8 @@ test("Only home, the flyer and the two legal pages remain public during launch",
     expect(shouldRedirectDuringLaunch(url)).toBe(url.pathname !== "/");
   }
   expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/api/public/flyer-image"))).toBe(false);
+  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/robots.txt"))).toBe(false);
+  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/sitemap.xml"))).toBe(false);
 });
 test("Full website remains available on main, draft, commit and local previews", () => {
   for (const host of ["localhost", "id-preview--example.lovable.app", "id-preview-6--example.lovable.app", "id-preview-abc123--example.lovable.app", "preview-3--example.workspace.lovable.app", "project--example-dev.lovable.app", "example.lovableproject.com"]) {

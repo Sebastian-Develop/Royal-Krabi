@@ -6,7 +6,7 @@ export const contact = {
   phone: "069 60511884",
   phoneHref: "tel:+496960511884",
   email: "kontakt@royalkrabi-thaimassage.de",
-  website: "https://www.royalkrabi-thaimassage.de",
+  website: "https://royalkrabi-thaimassage.de",
   hoursOpen: "Dienstag bis Samstag: 10:00–20:00 Uhr",
   hoursShort: "Di.–Sa.: 10:00–20:00 Uhr",
   hoursShortClosed: "So. & Mo.: geschlossen",

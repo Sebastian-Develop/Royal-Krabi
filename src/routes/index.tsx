@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Gift, Leaf, HandHeart, Sparkles, MapPin, Layers3, Phone, Mail, Clock, CalendarDays } from "lucide-react";
 import { AddressLink, BookingCta, BrandHeading, ButtonLink, ContactButtons, HoursNote, PriceVatNotice, RouteButton, address } from "@/components/site";
 import { contact, mailHrefPlain } from "@/lib/contact";
+import { socialProfiles } from "@/lib/social";
 import { pageHead } from "@/lib/meta";
 import { massages } from "@/lib/content";
 import heroImage from "@/assets/royal-krabi-reception-clean.jpg.asset.json";
@@ -14,7 +15,7 @@ import { ComingSoon } from "@/components/coming-soon";
 import { launch } from "@/lib/launch";
 
 export const Route = createFileRoute("/")({
-  head: ({ match }) => match.context.launchShell ? pageHead("Royal Krabi | Neueröffnung & Tag der offenen Tür am 07.11.2026", "Ein Stück Thailand kommt nach Offenbach-Bürgel: Neueröffnung mit Thai-Snacks, Thai-Tanz und 20 % Eröffnungsrabatt. Eintritt frei.", launch.permanentUrl) : ({ ...pageHead("Royal Krabi Serenity Thaimassage | Thai-Massagen in Offenbach", "Royal Krabi Serenity Thaimassage in Offenbach. Traditionelle Thai-Massagen in exklusivem Ambiente. Termine telefonisch oder per E-Mail nach Vereinbarung.", "/"), scripts: [{ type: "application/ld+json", children: JSON.stringify({ "@context":"https://schema.org", "@type":"HealthAndBeautyBusiness", additionalType:"https://schema.org/DaySpa", name:contact.name, url:contact.website, address:{"@type":"PostalAddress",streetAddress:"Offenbacher Str. 32",postalCode:"63075",addressLocality:"Offenbach am Main",addressCountry:"DE"}, telephone:"+49 69 60511884", email:contact.email, openingHoursSpecification:[{"@type":"OpeningHoursSpecification",dayOfWeek:["Tuesday","Wednesday","Thursday","Friday","Saturday"],opens:"10:00",closes:"20:00"}], knowsAbout:["Thai Massage","Traditionelle Thai-Massage","Wellness"] }) }] }),
+  head: ({ match }) => match.context.launchShell ? pageHead("Royal Krabi | Neueröffnung & Tag der offenen Tür am 07.11.2026", "Ein Stück Thailand kommt nach Offenbach-Bürgel: Neueröffnung mit Thai-Snacks, Thai-Tanz und 20 % Eröffnungsrabatt. Eintritt frei.", "/", { image: true }) : ({ ...pageHead("Thaimassage Offenbach-Bürgel | Royal Krabi Serenity", "Entdecken Sie Royal Krabi Serenity Thaimassage in Offenbach-Bürgel. Genießen Sie traditionelle Thai-Massagen, Aromaölmassagen und königliche Entspannung. Jetzt Termin vereinbaren!", "/", { image: true }), scripts: [{ type: "application/ld+json", children: JSON.stringify({ "@context":"https://schema.org", "@type":"HealthAndBeautyBusiness", additionalType:"https://schema.org/DaySpa", name:contact.name, url:contact.website, address:{"@type":"PostalAddress",streetAddress:"Offenbacher Str. 32",postalCode:"63075",addressLocality:"Offenbach am Main",addressCountry:"DE"}, telephone:"+49 69 60511884", email:contact.email, openingHoursSpecification:[{"@type":"OpeningHoursSpecification",dayOfWeek:["Tuesday","Wednesday","Thursday","Friday","Saturday"],opens:"10:00",closes:"20:00"}], sameAs:socialProfiles.map((p) => p.href), knowsAbout:["Thai Massage","Traditionelle Thai-Massage","Wellness"] }) }] }),
   component: Home,
 });
 

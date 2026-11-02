@@ -46,6 +46,6 @@ export function shouldRedirectDuringLaunch(url: URL) {
   if (/^\/(?:assets|__l5e\/assets-v1)\//.test(url.pathname)) return false;
   if (url.pathname === "/api/public/bewerbung") return false;
   if (url.pathname === "/api/public/flyer-image") return false;
-  if (["/favicon.png", "/favicon.ico", "/robots.txt"].includes(url.pathname)) return false;
+  if (["/favicon.png", "/favicon.ico", "/robots.txt", "/sitemap.xml"].includes(url.pathname)) return false;
   return true;
 }
