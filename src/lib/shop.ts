@@ -3,8 +3,8 @@ import { massages, partialMassages, subscriptions, vouchers, categoryBadgeFor, t
 import { brandFallbackPhoto, shopProductPhoto, type MassagePhoto } from './massage-photos';
 import { valueVoucherDescription } from './value-voucher';
 
-export const shopPolicy = { salesEnabled: false, shippingCountry: "DE", shippingProvider: "DHL", shippingCost: 0, minimumOrderValue: 0, minimumQuantity: 1, handoverWorkingDays: 3, automaticRenewal: false, manualAcceptance: true, validityMonths: null, transferable: null } as const;
-export const validityNotice = "Gültigkeit und Nutzungsbedingungen gemäß AGB-Entwurf; vor Verkaufsfreigabe rechtlich zu prüfen.";
+export const shopPolicy = { salesEnabled: true, shippingCountry: "DE", shippingProvider: "DHL", shippingCost: 0, minimumOrderValue: 0, minimumQuantity: 1, handoverWorkingDays: 3, automaticRenewal: false, manualAcceptance: true, validityMonths: null, transferable: null } as const;
+export const validityNotice = "Gültigkeit und Nutzungsbedingungen gemäß unseren AGB.";
 export const shippingNotice = "Versand innerhalb Deutschlands mit DHL. Kostenfrei. Wir bearbeiten Ihre Bestellung und geben sie nach Prüfung des Zahlungseingangs in der Regel innerhalb von 3 Werktagen bei DHL ein. Die DHL-Laufzeit kommt hinzu. Sie erhalten auf Anfrage einen Einlieferungsbeleg als Nachweis der Übergabe an DHL.";
 /** Short confirmed shipping rule shown at purchasable offers, cart and checkout. */
 export const shippingNoticeShort = "Kostenfreier Versand innerhalb Deutschlands. Abholung nach Vereinbarung.";

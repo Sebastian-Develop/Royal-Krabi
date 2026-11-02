@@ -41,6 +41,10 @@ export const createShopCheckout = createServerFn({ method: "POST" })
     const releaseError = orderLegalReleaseError();
     if (releaseError || !CURRENT_ORDER_LEGAL_VERSION) return { ok: false, error: releaseError ?? GENERIC_ERROR };
 
+    // Website not live yet: preview/local hosts never create a real SumUp payment.
+    const { isInternalPreview } = await import("./launch");
+    if (isInternalPreview(new URL(getRequest().url).hostname)) return { ok: false, error: "Vorschau: Hier wird keine echte Zahlung ausgelöst. Die Zahlung ist erst auf der veröffentlichten Website möglich." };
+
     const apiKey = process.env["SUMUP_API_KEY"];
     if (!apiKey) return { ok: false, error: "Die Online-Zahlung ist derzeit nicht erreichbar. Bitte kontaktieren Sie uns telefonisch oder per E-Mail." };
 

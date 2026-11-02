@@ -78,8 +78,8 @@ describe("Rechtstext-Versionierung", () => {
     expect(() => legalTextsFor("unbekannt")).toThrow();
   });
   test("neue Bestellfassung muss vollständig freigegeben sein", () => {
-    expect(orderLegalReleaseError()).not.toBeNull();
-    expect(legalTextsFor(WEBSITE_LEGAL_VERSION).released).toBe(false);
+    expect(orderLegalReleaseError()).toBeNull();
+    expect(legalTextsFor(WEBSITE_LEGAL_VERSION).released).toBe(true);
   });
   test("neue und alte Fassungen bleiben getrennt und unverändert", () => {
     const original = legalTextsFor('2026-10-21');
@@ -108,10 +108,10 @@ describe("PDF-Anhänge", () => {
       expect(new TextDecoder("latin1").decode(pdf.bytes.subarray(0, 5))).toBe("%PDF-");
     }
   });
-  test('fünf neue Anhänge nur im ausdrücklich gekennzeichneten Testmodus', async () => {
+  test('freigegebene Fassung liefert fünf Anhänge; Entwurf bleibt gesperrt', async () => {
     const { buildOrderPdfs } = await import('./order-pdf.server');
     const meta = { createdAt: order.createdAt, paidAt: '2026-11-08T10:19:00Z', legalVersion: WEBSITE_LEGAL_VERSION };
-    await expect(buildOrderPdfs(order, lines, meta)).rejects.toThrow('nicht zum Versand freigegeben');
+    await expect(buildOrderPdfs(order, lines, { ...meta, legalVersion: '2026-11-02-review' })).rejects.toThrow('nicht zum Versand freigegeben');
     const pdfs = await buildOrderPdfs({ ...order, legalVersion: WEBSITE_LEGAL_VERSION }, lines, { ...meta, preview: true });
     expect(pdfs.map(p => p.filename)).toEqual(['Bestelleingangsbestätigung.pdf', 'Zahlungsbestätigung.pdf', 'AGB.pdf', 'Widerrufsbelehrung-und-Musterformular.pdf', 'Datenschutzinformationen.pdf']);
   });

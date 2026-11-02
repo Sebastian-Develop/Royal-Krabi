@@ -44,9 +44,9 @@ test('price increases apply to fixed vouchers, partial balances and both passes,
   expect(['fixed_massage_voucher','partial_massage_voucher_balance','five_royalpass','ten_royalpass','value_voucher'].map(priceIncreaseAppliesTo)).toEqual([true,true,true,true,false]);
   expect(confirmedPurchaseRules.priceIncrease.currentPriceDifferencePayable).toBe(true);
 });
-test('superseded draft remains distinct and current new draft cannot release checkout', () => {
+test('superseded draft remains distinct and released 02.11 version drives checkout', () => {
   expect(legalTextsFor('2026-11-02-review').version).toBe('2026-11-02-review');
   expect(WEBSITE_LEGAL_VERSION).toBe('2026-11-02-confirmed-review');
-  expect(legalTextsFor(WEBSITE_LEGAL_VERSION).released).toBe(false);
-  expect(CURRENT_ORDER_LEGAL_VERSION).toBeNull();
+  expect(legalTextsFor(WEBSITE_LEGAL_VERSION).released).toBe(true);
+  expect(CURRENT_ORDER_LEGAL_VERSION).toBe('2026-11-02-confirmed-review');
 });

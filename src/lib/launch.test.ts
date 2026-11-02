@@ -54,3 +54,9 @@ test("Launch gate stays on unless a build explicitly switches it off", () => {
   expect(resolvePublicComingSoon("false")).toBe(false);
   expect(resolvePublicComingSoon(false)).toBe(false);
 });
+import { isInternalPreview as previewHost } from "./launch";
+test("checkout preview guard: preview hosts never create real payments, live domain may", () => {
+  expect(previewHost("id-preview--8b969554-43d1-4653-abfd-07ad93d8716c.lovable.app")).toBe(true);
+  expect(previewHost("localhost")).toBe(true);
+  expect(previewHost("royalkrabi-thaimassage.de")).toBe(false);
+});

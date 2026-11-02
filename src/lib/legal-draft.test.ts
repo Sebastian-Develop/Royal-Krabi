@@ -27,11 +27,11 @@ test('passes personal, vouchers transferable', () => {
   expect(draftBusinessRules.passesTransferable).toBe(false);
   expect(draftBusinessRules.vouchersTransferable).toBe(true);
 });
-test('new draft never activates order or public sales release', () => {
+test('released 02.11 version enables sales; older drafts stay unreleased', () => {
   expect(WEBSITE_LEGAL_VERSION).toBe('2026-11-02-confirmed-review');
-  expect(legalTextsFor(WEBSITE_LEGAL_VERSION).released).toBe(false);
-  expect(CURRENT_ORDER_LEGAL_VERSION).toBeNull();
-  expect(orderLegalReleaseError()).not.toBeNull();
-  expect(shopPolicy.salesEnabled).toBe(false);
+  expect(legalTextsFor(WEBSITE_LEGAL_VERSION).released).toBe(true);
+  expect(CURRENT_ORDER_LEGAL_VERSION).toBe('2026-11-02-confirmed-review');
+  expect(orderLegalReleaseError()).toBeNull();
+  expect(shopPolicy.salesEnabled).toBe(true);
   expect(legalTextsFor('2026-11-01-review').released).toBe(false);
 });

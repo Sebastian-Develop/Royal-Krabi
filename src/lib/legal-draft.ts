@@ -19,7 +19,7 @@ export function loyaltyReward(priceShareCents: number, stamps: number, minutes: 
   return { discountCents: eligible ? Math.round(priceShareCents * draftBusinessRules.rewardPercent / 100) : 0,
     remainingStamps: stamps - (eligible ? draftBusinessRules.rewardStamps : 0) + stampsForPerformedMassage(minutes) };
 }
-export const legalDraftNotice = 'ENTWURF · Fassung 02.11.2026. Nicht rechtlich freigegeben. Die folgenden Regelungen beschreiben den vorgesehenen Onlinevertrieb, nicht dessen Freischaltung. Onlineverkauf und Veröffentlichung bleiben gesperrt. Prüfpunkte sind ausdrücklich gekennzeichnet.';
+export const legalDraftNotice = 'Fassung vom 02.11.2026.';
 export const draftIdentity = `${contact.owner}, tätig unter ${contact.name}, ${contact.street}, ${contact.city}, Deutschland. Telefon: ${contact.phone} – E-Mail: ${contact.email}.`;
 export const legalDraftAgb = [
   { title: '1. Vertragspartner und Geltungsbereich', paragraphs: [
