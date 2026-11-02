@@ -563,3 +563,4 @@ body{font-variant-numeric:lining-nums tabular-nums}
 .withdrawal-online-form .withdrawal-declaration { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; }
 .withdrawal-error { color: var(--destructive); }
 @media print { .withdrawal-online { display: none; } }
+
