@@ -1,0 +1,16 @@
+CREATE TYPE public.app_role AS ENUM ('admin');
+CREATE TABLE public.user_roles (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE, role public.app_role NOT NULL, UNIQUE(user_id, role));
+GRANT SELECT ON public.user_roles TO authenticated;
+GRANT ALL ON public.user_roles TO service_role;
+ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users read own roles" ON public.user_roles FOR SELECT TO authenticated USING (user_id = auth.uid());
+CREATE FUNCTION public.has_role(_user_id uuid, _role public.app_role) RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$ SELECT EXISTS (SELECT 1 FROM public.user_roles WHERE user_id = _user_id AND role = _role); $$;
+REVOKE ALL ON FUNCTION public.has_role(uuid, public.app_role) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) TO authenticated, service_role;
+ALTER TABLE public.withdrawal_requests ADD COLUMN handling_status text NOT NULL DEFAULT 'open' CHECK (handling_status IN ('open', 'processed')), ADD COLUMN internal_notes text NOT NULL DEFAULT '', ADD COLUMN processed_at timestamptz, ADD COLUMN updated_by uuid, ADD COLUMN updated_at timestamptz;
+GRANT SELECT ON public.withdrawal_requests TO authenticated;
+GRANT UPDATE (handling_status, internal_notes, processed_at, updated_by, updated_at) ON public.withdrawal_requests TO authenticated;
+CREATE POLICY "Admins read withdrawals" ON public.withdrawal_requests FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Admins manage withdrawal handling" ON public.withdrawal_requests FOR UPDATE TO authenticated USING (public.has_role(auth.uid(), 'admin')) WITH CHECK (public.has_role(auth.uid(), 'admin'));
+CREATE FUNCTION public.audit_withdrawal_handling() RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$ BEGIN NEW.updated_at = now(); NEW.updated_by = auth.uid(); IF NEW.handling_status = 'processed' THEN NEW.processed_at = COALESCE(OLD.processed_at, now()); ELSE NEW.processed_at = NULL; END IF; RETURN NEW; END; $$;
+CREATE TRIGGER audit_withdrawal_handling BEFORE UPDATE ON public.withdrawal_requests FOR EACH ROW EXECUTE FUNCTION public.audit_withdrawal_handling();

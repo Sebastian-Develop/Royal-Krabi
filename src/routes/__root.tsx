@@ -17,7 +17,7 @@ import { CookieBanner, SiteFooter, SiteHeader, TidioLoader } from "../components
 import { GoldCursor } from "../components/gold-cursor";
 import { LaunchFooter, LaunchHeader } from "../components/coming-soon";
 import { getPublicLaunchMode } from "../lib/launch-mode";
-import { isLaunchPage, launch } from "../lib/launch";
+import { isLaunchPage, isOperatorPage, launch } from "../lib/launch";
 
 function NotFoundComponent() {
   return (
@@ -86,7 +86,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   },
   beforeLoad: ({ location, search }) => {
     const publicLaunch = getPublicLaunchMode();
-    if (publicLaunch && !isLaunchPage(location.pathname)) throw redirect({ to: "/", search: {} });
+    if (publicLaunch && !isLaunchPage(location.pathname) && !isOperatorPage(location.pathname)) throw redirect({ to: "/", search: {} });
     return { publicLaunch, launchShell: publicLaunch || search.ansicht === "coming-soon" || (launch.publicComingSoon && location.pathname === "/" && search.ansicht !== "website") };
   },
   head: () => ({

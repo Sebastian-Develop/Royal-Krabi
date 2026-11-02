@@ -36,12 +36,18 @@ export function isPublicComingSoon(hostname: string) {
 }
 
 export function isLaunchPage(path: string) {
-  return ["/", "/impressum", "/datenschutz", "/jobs", "/flyer"].includes(path);
+  return ["/", "/impressum", "/datenschutz", "/jobs", "/flyer", "/widerruf"].includes(path);
 }
 
+/** Public login shell only; all operator data operations independently require an admin role. */
+export const isOperatorPage = (path: string) => path === "/verwaltung/widerrufe";
+
+/** Only explicitly supplied withdrawal RPC paths bypass launch presentation, never other server functions. */
+export const isWithdrawalRpcPath = (path: string, allowed: readonly string[]) => allowed.includes(path);
+
 /** Exact page allowlist; no query string can bypass the public launch gate. */
-export function shouldRedirectDuringLaunch(url: URL) {
-  if (!isPublicComingSoon(url.hostname) || isLaunchPage(url.pathname)) return false;
+export function shouldRedirectDuringLaunch(url: URL, withdrawalRpcPaths: readonly string[] = []) {
+  if (!isPublicComingSoon(url.hostname) || isLaunchPage(url.pathname) || isOperatorPage(url.pathname) || isWithdrawalRpcPath(url.pathname, withdrawalRpcPaths)) return false;
   // Hosting serves bundled/static resources separately; keep their fallback requests usable.
   if (/^\/(?:assets|__l5e\/assets-v1)\//.test(url.pathname)) return false;
   if (url.pathname === "/api/public/bewerbung") return false;

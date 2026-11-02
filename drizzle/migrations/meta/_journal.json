@@ -36,6 +36,13 @@
       "when": 1793638046036,
       "tag": "0004_create_withdrawal_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793641825228,
+      "tag": "0005_withdrawal_operator_management",
+      "breakpoints": true
     }
   ]
 }

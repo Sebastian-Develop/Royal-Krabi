@@ -32,6 +32,7 @@
 - Keep unreleased consolidated business rules and review notes in the legal draft module; register each new legal version without mutating historical texts, and show its preview status on legal/product/checkout views without changing sales or payment gates.
 - Keep confirmed purchase-rule data and notices in purchase-rules.ts, consumed by drafts and customer views; snapshot superseded draft registry entries before revision so historical documents remain unchanged. This prevents contradictory wording without activating payment or acceptance workflows.
 - All customer-facing emails share the brandEmailHtml shell and emailBlocks from src/lib/application-email.ts (logo, divider, contact block, social footer) so styling and Gmail/Outlook protections stay identical.
+- Keep withdrawal launch exceptions limited to the public withdrawal page, the operator login shell and exact runtime-resolved withdrawal RPC URLs; require authenticated server-side admin-role checks and RLS for all administration reads/updates, allowing only handling status/notes so orders remain untouched.
 
 ## GitHub sync
 - Push site changes to github.com/Sebastian-Develop/Royal-Krabi (branch main) after each meaningful change via https://connector-gateway.lovable.dev/github with headers `Authorization: Bearer $LOVABLE_API_KEY` and `X-Connection-Api-Key: $GITHUB_API_KEY`; use Git Data API with `base_tree` and only changed files, since full-tree posts (155 entries) fail with 422.

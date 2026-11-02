@@ -47,7 +47,14 @@ function isH3SwallowedErrorBody(body: string): boolean {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
-    if (shouldRedirectDuringLaunch(new URL(request.url))) {
+    const url = new URL(request.url);
+    let withdrawalRpcPaths: string[] = [];
+    if (url.pathname.startsWith("/_serverFn/")) {
+      const { submitWithdrawal } = await import("./lib/withdrawal-request.functions");
+      const { listWithdrawals, updateWithdrawalHandling } = await import("./lib/withdrawal-admin.functions");
+      withdrawalRpcPaths = [submitWithdrawal, listWithdrawals, updateWithdrawalHandling].map(fn => new URL(fn.url, url.origin).pathname);
+    }
+    if (shouldRedirectDuringLaunch(url, withdrawalRpcPaths)) {
       return new Response(null, { status: 302, headers: { location: "/", "cache-control": "no-store" } });
     }
     try {
