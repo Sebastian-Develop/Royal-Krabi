@@ -14,8 +14,16 @@ import lounge from "@/assets/relax-lounge.jpg";
 import { ComingSoon } from "@/components/coming-soon";
 import { launch } from "@/lib/launch";
 
+/** Confirmed business facts only; shown on both the coming-soon page and the full home page. */
+const businessJsonLd = { "@context":"https://schema.org", "@type":"HealthAndBeautyBusiness", additionalType:"https://schema.org/DaySpa", name:contact.name, url:contact.website, address:{"@type":"PostalAddress",streetAddress:"Offenbacher Str. 32",postalCode:"63075",addressLocality:"Offenbach am Main",addressCountry:"DE"}, telephone:"+49 69 60511884", email:contact.email, openingHoursSpecification:[{"@type":"OpeningHoursSpecification",dayOfWeek:["Tuesday","Wednesday","Thursday","Friday","Saturday"],opens:"10:00",closes:"20:00"}], sameAs:socialProfiles.map((p) => p.href), knowsAbout:["Thai Massage","Traditionelle Thai-Massage","Wellness"] };
+
 export const Route = createFileRoute("/")({
-  head: ({ match }) => match.context.launchShell ? pageHead("Thaimassage Offenbach-Bürgel | Royal Krabi Serenity", "Royal Krabi Serenity Thaimassage in Offenbach-Bürgel. Traditionelle Thai-Massage, Aromaölmassage und wohltuende Entspannung. Jetzt Termin vereinbaren!", "/", { image: true }) : ({ ...pageHead("Thaimassage Offenbach-Bürgel | Royal Krabi Serenity", "Royal Krabi Serenity Thaimassage in Offenbach-Bürgel. Traditionelle Thai-Massage, Aromaölmassage und wohltuende Entspannung. Jetzt Termin vereinbaren!", "/", { image: true }), scripts: [{ type: "application/ld+json", children: JSON.stringify({ "@context":"https://schema.org", "@type":"HealthAndBeautyBusiness", additionalType:"https://schema.org/DaySpa", name:contact.name, url:contact.website, address:{"@type":"PostalAddress",streetAddress:"Offenbacher Str. 32",postalCode:"63075",addressLocality:"Offenbach am Main",addressCountry:"DE"}, telephone:"+49 69 60511884", email:contact.email, openingHoursSpecification:[{"@type":"OpeningHoursSpecification",dayOfWeek:["Tuesday","Wednesday","Thursday","Friday","Saturday"],opens:"10:00",closes:"20:00"}], sameAs:socialProfiles.map((p) => p.href), knowsAbout:["Thai Massage","Traditionelle Thai-Massage","Wellness"] }) }] }),
+  head: ({ match }) => {
+    const base = match.context.launchShell
+      ? pageHead("Thaimassage Offenbach-Bürgel | Royal Krabi Serenity", "Royal Krabi Serenity: Thaimassage in Offenbach-Bürgel. Neueröffnung und Tag der offenen Tür am 07.11.2026. Jetzt informieren und Termin vereinbaren.", "/", { image: true })
+      : pageHead("Thaimassage Offenbach-Bürgel | Royal Krabi Serenity", "Royal Krabi Serenity Thaimassage in Offenbach-Bürgel. Traditionelle Thai-Massage, Aromaölmassage und wohltuende Entspannung. Jetzt Termin vereinbaren!", "/", { image: true });
+    return { ...base, scripts: [{ type: "application/ld+json", children: JSON.stringify(businessJsonLd) }] };
+  },
   component: Home,
 });
 

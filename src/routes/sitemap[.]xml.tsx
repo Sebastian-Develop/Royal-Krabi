@@ -3,7 +3,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import { isPublicComingSoon, launch } from "@/lib/launch";
 
 /** While the public launch gate is on, only the publicly reachable pages are listed. */
-const comingSoonUrls = ["/", "/impressum", "/datenschutz", "/jobs", "/flyer"];
+const comingSoonUrls = ["/", "/impressum", "/datenschutz", "/jobs", "/flyer", "/widerruf"];
 
 /** Full-site list for after the launch switch: indexable content pages only, no cart/checkout/order-status. */
 const fullSiteUrls = [
