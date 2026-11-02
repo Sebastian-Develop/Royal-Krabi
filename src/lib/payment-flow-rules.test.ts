@@ -25,14 +25,14 @@ test('no cash payout rule is confirmed and consolidated in draft, FAQ and notice
   expect(faqs.some(([q, a]) => q.includes('Bargeld') && a.includes('nicht in Bargeld ausgezahlt'))).toBe(true);
 });
 
-test('withdrawal email address is the confirmed widerruf address everywhere required', () => {
-  expect(withdrawalEmail).toBe('widerruf@royalkrabi-thaimassage.de');
+test('withdrawal email address is the contact address everywhere required', () => {
+  expect(withdrawalEmail).toBe('kontakt@royalkrabi-thaimassage.de');
+  expect(JSON.stringify([legalDraftWithdrawal, legalDraftForm])).not.toContain(['widerruf','@'].join(''));
   expect(withdrawalMailHref).toContain(`mailto:${withdrawalEmail}`);
-  expect(withdrawalMailHref).not.toContain(contact.email);
   expect(flatten(legalDraftWithdrawal)).toContain(withdrawalEmail);
   expect(legalDraftForm.join('\n')).toContain(withdrawalEmail);
   // Formular bleibt freiwillig, Widerruf ohne Formular per E-Mail möglich:
-  expect(flatten(legalDraftWithdrawal)).toContain('nicht vorgeschrieben');
+  expect(flatten(legalDraftWithdrawal)).toContain('Muster-Widerrufsformulars ist freiwillig');
   expect(flatten(legalDraftWithdrawal)).toContain('auch ohne Formular per E-Mail');
 });
 
