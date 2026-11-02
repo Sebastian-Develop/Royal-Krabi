@@ -564,3 +564,4 @@ body{font-variant-numeric:lining-nums tabular-nums}
 .withdrawal-error { color: var(--destructive); }
 @media print { .withdrawal-online { display: none; } }
 
+.hero-slogan{color:var(--gold, currentColor);font-style:italic;margin-top:.25rem}
