@@ -1,3 +1,4 @@
+import { contractAcceptanceNotice, openingPaymentNotice, openingEligibilityNotice, massageVoucherPartialNotice, massageVoucherChangeNotice, priceIncreaseNotice } from './purchase-rules';
 export type Massage = { name: string; desc: string; prices: [number, number][]; category: "classic" | "premium" | "signature"; note?: string };
 export const categoryBadges = { classic: "KLASSISCH", premium: "PREMIUM", signature: "ROYAL KRABI SIGNATURE" } as const;
 export const partialBadge = "FOKUS";
@@ -86,10 +87,17 @@ export const subscriptionConditions = [
   "Paarmassagen sind nicht Bestandteil der Einzel-Royalpässe.",
   "Der Eröffnungsrabatt gilt für berechtigte Royalpässe ab 60 Minuten je Massage; mehrere Rabattaktionen werden nicht kombiniert.",
   "Termine erfolgen nach Vereinbarung.",
+  priceIncreaseNotice,
+  openingPaymentNotice,
   "Persönliche, nicht übertragbare Nutzung und gewünschte 12-/24-Monatslaufzeiten sind im AGB-Entwurf dargestellt und vor Freigabe rechtlich zu prüfen.",
 ];
 
 export const faqs = [
+  ["Wann kommt der Kaufvertrag zustande?", contractAcceptanceNotice + " Die Rechtstextfassung bleibt ein ungeprüfter Entwurf; der Website-Verkauf ist gesperrt."],
+  ["Welcher Zeitpunkt gilt für den Eröffnungsrabatt?", openingPaymentNotice + " " + openingEligibilityNotice],
+  ["Kann ich einen Massagegutschein teilweise einlösen?", massageVoucherPartialNotice + " Beispiel: Ein 90-Minuten-Massagegutschein wird zunächst für eine 60-Minuten-Massage genutzt. Es verbleiben 30 Minuten Guthaben, die später für dieselbe oder eine andere Massageart verwendet werden können. Preisunterschiede werden ausgeglichen."],
+  ["Kann ich mit meinem Massagegutschein die Massageart wechseln?", massageVoucherChangeNotice],
+  ["Was gilt bei einer Preiserhöhung nach dem Kauf?", priceIncreaseNotice + " Diese Regel ist Bestandteil des rechtlich zu prüfenden AGB-Entwurfs."],
   ["Muss ich einen Termin vereinbaren?", "Ja. Massagen erfolgen ausschließlich nach vorheriger Terminvereinbarung – telefonisch unter 069 60511884 oder per E-Mail an kontakt@royalkrabi-thaimassage.de."],
   ["Was soll ich zur Massage mitbringen?", "Sie müssen nichts Besonderes mitbringen. Bequeme Kleidung und ein paar Minuten Zeit zum Ankommen genügen."],
   ["Kann ich Gutscheine verschenken?", "Massagegutscheine und Wertgutscheine sind als Geschenke übertragbar. Royalpässe sind dagegen persönlich und nicht übertragbar. Die Bedingungen stehen im noch nicht freigegebenen AGB-Entwurf."],

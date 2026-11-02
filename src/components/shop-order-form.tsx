@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react";
 import { ShopProductImage } from "./shop-product-image";
 import { isValueVoucher, valueVoucherLabel } from "@/lib/value-voucher";
 import { formatCents as eur, formatEuro } from "@/lib/money";
+import { contractAcceptanceNotice, openingPaymentNotice, openingEligibilityNotice, massageVoucherPartialNotice, massageVoucherChangeNotice, priceIncreaseNotice } from "@/lib/purchase-rules";
 import { PriceVatNotice } from "@/components/site";
 
 
@@ -64,7 +65,7 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
     setSubmitting(false);
   }
 
-  return <section className="shop-order" id="bestellformular" aria-labelledby="order-title"><div className="shop-section-heading"><span className="eyebrow">KASSE</span><h2 id="order-title">Bestellformular</h2><p>Entwurf – Onlineverkauf noch nicht freigegeben. Vorgesehen: direkte Zahlung über SumUp, unabhängige Zahlungsprüfung und danach ausdrückliche automatische Vertragsannahme. Eine Zahlungsbestätigung allein ist keine Vertragsannahme. Die Vertragsregel sowie die unverzügliche gesonderte Eingangsbestätigung sind vor Freigabe zu klären.</p></div><form onSubmit={submit} noValidate>
+  return <section className="shop-order" id="bestellformular" aria-labelledby="order-title"><div className="shop-section-heading"><span className="eyebrow">KASSE</span><h2 id="order-title">Bestellformular</h2><p>Entwurf – Onlineverkauf noch nicht freigegeben. Vorgesehen: direkte Zahlung über SumUp und unabhängige Zahlungsprüfung. {contractAcceptanceNotice} Die unverzügliche gesonderte Eingangsbestätigung bleibt vor Freigabe umzusetzen.</p></div><form onSubmit={submit} noValidate>
     <div className="form-grid"><label className="field"><span>Vor- und Nachname *</span><input name="fullName" autoComplete="name" required maxLength={100}/></label><label className="field"><span>E-Mail-Adresse *</span><input name="email" type="email" autoComplete="email" required maxLength={255}/></label><label className="field"><span>Telefonnummer *</span><input name="phone" type="tel" autoComplete="tel" required maxLength={40}/></label></div>
     <fieldset><legend>Lieferart *</legend><label className="check"><input type="radio" name="delivery" value="pickup" checked={delivery === "pickup"} onChange={() => setDelivery("pickup")}/><span>Abholung im Studio</span></label><label className="check"><input type="radio" name="delivery" value="post" checked={delivery === "post"} onChange={() => setDelivery("post")}/><span>Versand innerhalb Deutschlands (DHL, kostenfrei)</span></label></fieldset>
     <input type="hidden" name="country" value="DE"/>
@@ -72,6 +73,7 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
     <div className="form-grid"><label className="field"><span>Empfängername (optional)</span><input name="recipient" maxLength={100}/></label><label className="field"><span>Geschenktext (optional)</span><textarea name="giftText" rows={3} maxLength={500}/></label></div>
     <label className="field"><span>Anmerkungen (optional)</span><textarea name="notes" rows={3} maxLength={1000}/></label>
     <label className="field"><span>Rabattcode (optional)</span><input name="discountCode" value={discountCode} onChange={e => setDiscountCode(e.target.value)} maxLength={40} autoComplete="off" placeholder={openingDiscount.code}/></label>
+    <p>{openingEligibilityNotice}</p><p>{openingPaymentNotice}</p><p>Die angezeigte Rabattberechnung ist vorläufig. Die verbindliche Prüfung anhand des Zahlungseingangs ist noch nicht eingerichtet; der Website-Verkauf bleibt gesperrt.</p>
     {preview.message && <p className="form-error" role="alert">{preview.message}</p>}
     <div className="shop-order-summary" aria-label="Bestellübersicht"><strong>Bestellübersicht</strong>
       {lines.length ? <table className="order-table"><thead><tr><th>Produkt</th><th>Menge</th><th>Einzelpreis</th><th>Zwischensumme</th></tr></thead><tbody>{lines.map(l => <tr key={l.key}><td><div className="checkout-product"><ShopProductImage product={l.product} thumbnail/><div>{isValueVoucher(l.product) ? valueVoucherLabel : l.product.name}{isValueVoucher(l.product) && <span>Gutscheinwert: {formatEuro(l.unitPrice)}</span>}</div></div></td><td data-label="Menge">{l.quantity}</td><td data-label="Einzelpreis">{formatEuro(l.unitPrice)}</td><td data-label="Zwischensumme">{formatEuro(l.subtotal)}</td></tr>)}</tbody><tfoot>
@@ -80,6 +82,7 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
         <tr><td colSpan={3}>Gesamtsumme</td><td><strong>{eur(preview.totalCents)}</strong></td></tr>
       </tfoot></table> : <p>Ihr Warenkorb ist leer. <Link to="/gutscheine">Zu den Gutscheinen</Link> · <Link to="/abos">Zu den Abos</Link></p>}
       <PriceVatNotice cautious={lines.some(l => isValueVoucher(l.product))}/><p>{shippingNoticeShort}</p><p>{validityNotice} <Link to="/agb">AGB-Entwurf lesen</Link></p><p><Link to="/warenkorb">Warenkorb bearbeiten</Link></p></div>
+    <p>{priceIncreaseNotice}</p>{lines.some(l => l.product.kind === "voucher" && !isValueVoucher(l.product)) && <><p>{massageVoucherPartialNotice}</p><p>{massageVoucherChangeNotice}</p></>}
     <div className="shop-legal-links"><Link to="/agb">AGB</Link><Link to="/datenschutz">Datenschutzerklärung</Link><Link to="/widerruf">Widerrufsbelehrung & Widerrufsformular</Link></div>
     <p>AGB und Widerrufsbelehrung sind ungeprüfte Entwürfe. Die elektronische Widerrufsfunktion fehlt noch. Diese Auswahl ersetzt keine gesonderte Erklärung zu einem vorzeitigen Massagebeginn.</p>
     <label className="check"><input type="checkbox" name="acceptTerms" required/><span>Ich habe den <Link to="/agb">AGB-Entwurf</Link> gelesen (keine Verkaufsfreigabe).</span></label><label className="check"><input type="checkbox" name="acknowledgePrivacy" required/><span>Ich habe die <Link to="/datenschutz">Datenschutzerklärung</Link> zur Kenntnis genommen.</span></label>

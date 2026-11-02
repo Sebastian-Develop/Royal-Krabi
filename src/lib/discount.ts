@@ -8,8 +8,9 @@ import type { OrderLine } from "./shop-checkout";
  * Paketpreis. Kein Rabatt unter 60 Minuten und nicht auf den freien
  * Wunschbetrag. Zeitraum 07.11.–21.11.2026 (Europe/Berlin), nicht mit
  * anderen Aktionen oder dem Treuepass kombinierbar.
- * Offen: maßgeblicher Aktionszeitpunkt (Bestellung oder Zahlung) – aktuell
- * wird der Zeitpunkt der Bestellübermittlung geprüft.
+ * Bestätigt 02.11.2026: verifizierter vollständiger Zahlungseingang ist maßgeblich.
+ * Der Aufrufer bei Bestellübermittlung liefert bisher nur eine vorläufige Berechnung;
+ * die verbindliche Zahlungszeitprüfung bleibt vor Verkaufsfreigabe umzusetzen.
  */
 export const openingDiscount = {
   code: "ROYALKRABI20",

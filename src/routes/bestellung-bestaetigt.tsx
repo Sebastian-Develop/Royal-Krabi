@@ -5,6 +5,8 @@ import { PageHero, ContactButtons } from "@/components/site";
 import { pageHead } from "@/lib/meta";
 import { getShopOrderStatus, type ShopOrderStatusResult } from "@/lib/shop-checkout.functions";
 
+import { contractAcceptanceNotice } from "@/lib/purchase-rules";
+
 export const Route = createFileRoute("/bestellung-bestaetigt")({
   validateSearch: (search: Record<string, unknown>) => ({
     bestellung: typeof search["bestellung"] === "string" ? (search["bestellung"] as string) : "",
@@ -19,8 +21,8 @@ const berlinDateTime = (iso: string) =>
 
 const STATUS_TEXT: Record<ShopOrderStatusResult["status"], { heading: string; body: string }> = {
   paid: {
-    heading: "Ihre Bestellung und Zahlung sind bestätigt.",
-    body: "Vielen Dank! Ihre Zahlung wurde von unserem Zahlungsdienstleister bestätigt. Sie erhalten eine E-Mail mit Ihrer Bestellzusammenfassung und allen Unterlagen als PDF-Anhang. Ihre Bestellung wird nun von uns persönlich geprüft und angenommen. Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab. Gültigkeit und Nutzungsbedingungen richten sich nach unseren AGB.",
+    heading: "Ihre Zahlung wurde bestätigt – Vertragsannahme ausstehend.",
+    body: `Vielen Dank! Ihre Zahlung wurde von unserem Zahlungsdienstleister bestätigt. Sie erhalten eine E-Mail mit Ihrer Bestellzusammenfassung und allen Unterlagen als PDF-Anhang. ${contractAcceptanceNotice} Eine Zahlungsbestätigung allein ist keine Vertragsannahme. Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab. Gültigkeit und Nutzungsbedingungen richten sich nach unseren AGB.`,
   },
   pending: {
     heading: "Ihre Bestellung ist eingegangen – Zahlung ausstehend.",

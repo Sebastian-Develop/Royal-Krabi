@@ -1,3 +1,4 @@
+import { contractAcceptanceNotice } from "./purchase-rules";
 import { formatCents as eur } from "./money";
 import { legalTextsFor } from "./legal-texts";
 import { contact } from "./contact";
@@ -70,6 +71,7 @@ export const orderConfirmationSubject = "Ihre Bestellung und Zahlung sind bestä
  * Wird ausschließlich aus der bezahlt-Verarbeitung aufgerufen.
  */
 export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { subject: string; html: string; text: string } {
+  const acceptance = order.legalVersion === '2026-11-02-confirmed-review' ? contractAcceptanceNotice : "Ihre Bestellung wird nun von uns persönlich geprüft und angenommen.";
   const hasPrivacy = Boolean(legalTextsFor(order.legalVersion).datenschutz);
   const attachments = 'Bestelleingangsbestätigung.pdf, Zahlungsbestätigung.pdf, AGB.pdf, Widerrufsbelehrung-und-Musterformular.pdf' + (hasPrivacy ? ', Datenschutzinformationen.pdf' : '');
   const greeting = order.fullName.trim() ? `Guten Tag ${esc(order.fullName.trim())},` : "Guten Tag,";
@@ -83,7 +85,7 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
 
   const main = [
     emailBlocks.h1("Vielen Dank! Ihre Zahlung wurde bestätigt."),
-    emailBlocks.p(`${greeting} Ihre Bestellung und die zugehörige Zahlung sind bei uns bestätigt eingegangen. Ihre Bestellung wird nun von uns persönlich geprüft und angenommen.`),
+    emailBlocks.p(`${greeting} Ihre Bestellung und die zugehörige Zahlung sind bei uns bestätigt eingegangen. ${acceptance}`),
     meta,
     emailBlocks.p("Ihre Bestellung im Überblick:"),
     linesTable(lines),
@@ -98,7 +100,7 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
   const text = [
     "Vielen Dank! Ihre Zahlung wurde bestätigt.",
     "",
-    `${order.fullName.trim() ? `Guten Tag ${order.fullName.trim()},` : "Guten Tag,"} Ihre Bestellung und die zugehörige Zahlung sind bei uns bestätigt eingegangen. Ihre Bestellung wird nun von uns persönlich geprüft und angenommen.`,
+    `${order.fullName.trim() ? `Guten Tag ${order.fullName.trim()},` : "Guten Tag,"} Ihre Bestellung und die zugehörige Zahlung sind bei uns bestätigt eingegangen. ${acceptance}`,
     "",
     `Bestellnummer: ${order.id}`,
     `Bestellung eingegangen am: ${berlinDateTime(order.createdAt)}`,

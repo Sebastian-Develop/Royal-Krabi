@@ -1,3 +1,4 @@
+import { openingPaymentNotice } from "./purchase-rules";
 import { contact } from "./contact";
 
 /** Studio opening event copy. Event time stays null until the owner confirms it; never reuse business hours. */
@@ -21,11 +22,11 @@ export const openingEvent = {
     heading: "20 % Neueröffnungsrabatt",
     percent: 20,
     minMinutes: 60,
-    text: "Auf alle Angebote ab 60 Minuten – auch auf entsprechende Massagegutscheine und Abos.",
-    aboNote: "Bei Abos gilt die Mindestdauer von 60 Minuten für die einzelne Massage.",
+    text: "Auf berechtigte Massageangebote und Massagegutscheine mit festgelegter Dauer ab 60 Minuten sowie 5er/10er Royalpässe. Berechnungsbasis ist der ausgewiesene Verkaufs- beziehungsweise Paketpreis.",
+    aboNote: "Code ROYALKRABI20. Bei Royalpässen gilt die Mindestdauer von 60 Minuten je Massage. Kein Eröffnungsrabatt auf Wertgutschein · Wunschbetrag.",
     validFrom: "2026-11-07",
     validUntil: "2026-11-21",
-    validity: "Gültig vom 07.11. bis einschließlich 21.11.2026.",
+    validity: openingPaymentNotice,
     invite: "Lernen Sie uns am Eröffnungstag persönlich kennen und reservieren Sie Ihren nächsten Wohlfühltermin direkt vor Ort.",
   },
   hoursHeading: "Unsere regulären Öffnungszeiten ab der Eröffnung",

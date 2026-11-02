@@ -1,0 +1,16 @@
+/** Confirmed business decisions; not a legal release or a balance ledger. */
+export const confirmedPurchaseRules = {
+  contract: { requiresVerifiedFullPayment: true, requiresSubsequentAcceptance: true, receiptIsAcceptance: false },
+  discount: { basis: 'verified_full_payment_receipt', code: 'ROYALKRABI20', percent: 20, minMinutes: 60, from: '2026-11-07', until: '2026-11-21', timezone: 'Europe/Berlin', valueVoucherEligible: false },
+  massageVoucher: { partialDurations: [60, 90, 120], balanceBasis: 'unused_minutes', otherMassageAllowed: true, equalPriceSurcharge: 0, higherPriceDifferencePayable: true, lowerPriceBalanceRetained: true },
+  priceIncrease: { appliesTo: ['fixed_massage_voucher', 'partial_massage_voucher_balance', 'five_royalpass', 'ten_royalpass'], currentPriceDifferencePayable: true },
+} as const;
+export const canAcceptPurchase = (verifiedFullPayment: boolean, subsequentlyAccepted: boolean) => verifiedFullPayment && subsequentlyAccepted;
+export const canPartiallyRedeemMassageVoucher = (minutes: number) => confirmedPurchaseRules.massageVoucher.partialDurations.some(duration => duration === minutes);
+export const priceIncreaseAppliesTo = (kind: string) => confirmedPurchaseRules.priceIncrease.appliesTo.some(product => product === kind);
+export const contractAcceptanceNotice = 'Ein Kaufvertrag kommt erst zustande, wenn der vollständige Zahlungseingang verifiziert wurde und Royal Krabi die Bestellung anschließend annimmt. Die Bestelleingangsbestätigung stellt keine Annahme des Angebots dar.';
+export const openingPaymentNotice = 'Für die Eröffnungsaktion ist der Zeitpunkt des verifizierten vollständigen Zahlungseingangs maßgeblich, nicht der Bestellzeitpunkt. Der Rabatt gilt, wenn der vollständige Zahlungseingang vom 07.11. bis einschließlich 21.11.2026 (Europe/Berlin) erfolgt.';
+export const openingEligibilityNotice = 'ROYALKRABI20: 20 % auf berechtigte Massageangebote ab 60 Minuten, Massagegutscheine mit festgelegter Dauer ab 60 Minuten und 5er/10er Royalpässe ab 60 Minuten je Massage. Berechnungsbasis ist der ausgewiesene Verkaufs- beziehungsweise Paketpreis. Kein Eröffnungsrabatt auf Wertgutschein · Wunschbetrag.';
+export const massageVoucherPartialNotice = 'Massagegutscheine mit einer Dauer von 60, 90 oder 120 Minuten können teilweise eingelöst werden. Der verbleibende Gutscheinwert entspricht der noch nicht in Anspruch genommenen Massagedauer und kann für eine weitere Massage derselben oder einer anderen Massageart verwendet werden.';
+export const massageVoucherChangeNotice = 'Ein Wechsel zu einer anderen Massageart ist möglich. Bei gleicher Dauer und gleichem Preis erfolgt kein Aufschlag. Bei einem höheren Preis wird die Differenz zugezahlt. Bei einem geringeren Preis verbleibt der entsprechende Restwert auf dem Massagegutschein.';
+export const priceIncreaseNotice = 'Bei einer Preiserhöhung nach Kauf wird bei Massagegutscheinen mit fester Dauer, Restguthaben aus teilweise eingelösten Massagegutscheinen sowie 5er und 10er Royalpässen die Differenz zum aktuell geltenden Preis zugezahlt.';

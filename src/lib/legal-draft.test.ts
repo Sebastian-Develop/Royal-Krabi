@@ -28,7 +28,7 @@ test('passes personal, vouchers transferable', () => {
   expect(draftBusinessRules.vouchersTransferable).toBe(true);
 });
 test('new draft never activates order or public sales release', () => {
-  expect(WEBSITE_LEGAL_VERSION).toBe('2026-11-02-review');
+  expect(WEBSITE_LEGAL_VERSION).toBe('2026-11-02-confirmed-review');
   expect(legalTextsFor(WEBSITE_LEGAL_VERSION).released).toBe(false);
   expect(CURRENT_ORDER_LEGAL_VERSION).toBeNull();
   expect(orderLegalReleaseError()).not.toBeNull();

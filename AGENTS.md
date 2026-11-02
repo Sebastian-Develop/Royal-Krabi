@@ -30,6 +30,7 @@
 - Order emails go out only after independently verified payment: one combined customer email (subject "Ihre Bestellung und Zahlung sind bestätigt – Royal Krabi") with five server-built PDFs for newly released legal versions (historical four-document versions remain preserved) (src/lib/order-pdf.server.ts, pdf-lib) plus one operator notice; send attempts are logged in shop_email_events and retryPaidOrderEmails re-sends from stored order data without touching payment state.
 - Website and PDFs render the shared legal version registry; freeze historical identity literals, reject missing versions, and block new checkout/email documents until a complete version is released; add versions instead of editing historical entries.
 - Keep unreleased consolidated business rules and review notes in the legal draft module; register each new legal version without mutating historical texts, and show its preview status on legal/product/checkout views without changing sales or payment gates.
+- Keep confirmed purchase-rule data and notices in purchase-rules.ts, consumed by drafts and customer views; snapshot superseded draft registry entries before revision so historical documents remain unchanged. This prevents contradictory wording without activating payment or acceptance workflows.
 - All customer-facing emails share the brandEmailHtml shell and emailBlocks from src/lib/application-email.ts (logo, divider, contact block, social footer) so styling and Gmail/Outlook protections stay identical.
 
 ## GitHub sync

@@ -5,6 +5,7 @@
  * Reine Text-PDFs mit hellem Hintergrund, Logo und dezenten Goldakzenten.
  */
 import { PDFDocument, StandardFonts, rgb, type PDFPage, type PDFFont } from "pdf-lib";
+import { contractAcceptanceNotice } from "./purchase-rules";
 import { contact } from "./contact";
 import { legalTextsFor } from "./legal-texts";
 import type { EmailLine, EmailOrder } from "./order-email";
@@ -206,12 +207,12 @@ async function pdfOrderReceived(order: EmailOrder, lines: EmailLine[], meta: Ord
   positionsTable(ctx, lines);
   totals(ctx, order, lines);
   heading(ctx, "Produktbedingungen");
-  if (meta.legalVersion === '2026-11-02-review') {
+  if (meta.legalVersion === '2026-11-02-review' || meta.legalVersion === '2026-11-02-confirmed-review') {
     paragraph(ctx, "Gültigkeit und Nutzungsbedingungen finden Sie in den beigefügten AGB der zu dieser Bestellung gespeicherten Fassung.", { size: 9 });
   } else {
     for (const l of lines) if (l.validityMonths) paragraph(ctx, `${kindLabel(l.kind)} „${l.name}": Gültigkeit ${l.validityMonths} Monate ab bestätigtem Zahlungseingang.`, { size: 9, gapAfter: 3 });
   }
-  paragraph(ctx, meta.legalVersion === '2026-11-02-review'
+  paragraph(ctx, meta.legalVersion === '2026-11-02-confirmed-review' ? contractAcceptanceNotice : meta.legalVersion === '2026-11-02-review' || meta.legalVersion === '2026-11-02-confirmed-review'
     ? "Entwurf: Diese Bestätigung dokumentiert den elektronischen Eingang. Eine ausdrückliche automatische Vertragsannahme nach verifizierter Zahlung ist noch gesondert zu bestätigen und umzusetzen; Zahlung allein ist keine Annahme."
     : "Diese Bestätigung dokumentiert den elektronischen Eingang der Bestellung. Der Vertragsschluss erfolgt erst durch unsere ausdrückliche manuelle Annahme.", { size: 9, color: MUTED });
   footer(ctx, "Bestelleingangsbestätigung");
@@ -229,13 +230,14 @@ async function pdfPaymentConfirmed(order: EmailOrder, lines: EmailLine[], meta: 
   paragraph(ctx, `Bestätigter Betrag: ${eur(order.totalCents)} (EUR)`, { font: ctx.bold, gapAfter: 2 });
   paragraph(ctx, "Zahlungsdienstleister: SumUp", { gapAfter: 2 });
   paragraph(ctx, "Diese Bestätigung ist keine steuerlich vollständige Rechnung.", { size: 9, color: MUTED });
-  heading(ctx, meta.legalVersion === '2026-11-02-review' ? "Zugehörige Positionen" : "Zugehörige Positionen und Gültigkeit");
+  heading(ctx, meta.legalVersion === '2026-11-02-review' || meta.legalVersion === '2026-11-02-confirmed-review' ? "Zugehörige Positionen" : "Zugehörige Positionen und Gültigkeit");
   positionsTable(ctx, lines);
-  if (meta.legalVersion === '2026-11-02-review') {
+  if (meta.legalVersion === '2026-11-02-review' || meta.legalVersion === '2026-11-02-confirmed-review') {
     paragraph(ctx, "Gültigkeit und Nutzungsbedingungen finden Sie in den beigefügten AGB der zu dieser Bestellung gespeicherten Fassung.", { size: 9 });
   } else {
     for (const l of lines) if (l.validityMonths) paragraph(ctx, `${kindLabel(l.kind)} „${l.name}": gültig ab ${berlinDateTime(meta.paidAt)} bis ${validityEnd(meta.paidAt, l.validityMonths)}.`, { size: 9, gapAfter: 3 });
   }
+  if (meta.legalVersion === '2026-11-02-confirmed-review') paragraph(ctx, contractAcceptanceNotice, { size: 9, color: MUTED });
   footer(ctx, "Zahlungsbestätigung");
   return { filename: "Zahlungsbestätigung.pdf", bytes: await ctx.doc.save() };
 }
