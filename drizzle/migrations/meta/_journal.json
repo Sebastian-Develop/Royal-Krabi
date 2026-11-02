@@ -22,6 +22,20 @@
       "when": 1793567458978,
       "tag": "0002_shop_legal_version_und_email_protokoll",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793632542796,
+      "tag": "0003_shop_orders_rabatt_pruefung_zahlungseingang",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793638046036,
+      "tag": "0004_create_withdrawal_requests",
+      "breakpoints": true
     }
   ]
 }

@@ -221,6 +221,39 @@ export type Database = {
           },
         ]
       }
+      withdrawal_requests: {
+        Row: {
+          declaration: string
+          email: string
+          full_name: string
+          id: string
+          matched_order_id: string | null
+          order_reference: string
+          received_at: string
+          remark: string
+        }
+        Insert: {
+          declaration: string
+          email: string
+          full_name: string
+          id?: string
+          matched_order_id?: string | null
+          order_reference: string
+          received_at?: string
+          remark?: string
+        }
+        Update: {
+          declaration?: string
+          email?: string
+          full_name?: string
+          id?: string
+          matched_order_id?: string | null
+          order_reference?: string
+          received_at?: string
+          remark?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -113,6 +113,7 @@ export const legalDraftWithdrawal = [
     `Der Widerruf kann per E-Mail an ${withdrawalEmail} erklärt werden.`,
     'Die Verwendung des Muster-Widerrufsformulars ist freiwillig. Der Widerruf kann auch ohne Formular per E-Mail erklärt werden.',
     'Zur Fristwahrung genügt die rechtzeitige Absendung der Widerrufserklärung.',
+    `Sie können Ihren Vertrag auch elektronisch über die Funktion ‚Vertrag widerrufen‘ auf dieser Seite widerrufen. Alternativ können Sie den Widerruf per E-Mail an ${withdrawalEmail} erklären.`,
   ] },
   { title: 'Folgen des Widerrufs', paragraphs: [
     'Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die wir von Ihnen erhalten haben, einschließlich der Lieferkosten (mit Ausnahme zusätzlicher Kosten für eine von Ihnen gewählte andere Lieferung als die von uns angebotene günstigste Standardlieferung), unverzüglich und spätestens binnen vierzehn Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf bei uns eingegangen ist. Für die Rückzahlung verwenden wir dasselbe Zahlungsmittel wie bei der ursprünglichen Transaktion, es sei denn, mit Ihnen wurde ausdrücklich etwas anderes vereinbart. In keinem Fall werden wegen dieser Rückzahlung Entgelte berechnet.',
