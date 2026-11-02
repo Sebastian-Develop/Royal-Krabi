@@ -6,7 +6,7 @@ import { contact, mailHref } from "@/lib/contact";
 import { cartLines, type CartItem } from "@/lib/cart";
 import { shippingNotice, shippingNoticeShort, validityNotice } from "@/lib/shop";
 import { checkoutRequestSchema, orderTotalCents, type OrderLine } from "@/lib/shop-checkout";
-import { discountForLines, openingDiscount } from "@/lib/discount";
+import { discountForLines, isDiscountExpiredAt, openingDiscount } from "@/lib/discount";
 import { createShopCheckout } from "@/lib/shop-checkout.functions";
 import { Loader2 } from "lucide-react";
 import { ShopProductImage } from "./shop-product-image";
@@ -24,7 +24,7 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
   const [discountCode, setDiscountCode] = useState("");
   // Wiederholungsschlüssel: bleibt über Wiederholungsversuche gleich, damit der
   // Server dieselbe Übermittlung erkennt und keine zweite Bestellung anlegt.
-  const [submissionKey] = useState(() => crypto.randomUUID());
+  const [submissionKey, setSubmissionKey] = useState(() => crypto.randomUUID());
   const lines = cartLines(cart);
   const createCheckout = useServerFn(createShopCheckout);
 
@@ -33,6 +33,7 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
     const orderLines: OrderLine[] = lines.map(l => ({ productId: l.product.id, name: l.product.name, kind: l.product.kind, quantity: l.quantity, unitPriceCents: l.unitPriceCents, subtotalCents: l.subtotalCents }));
     const subtotalCents = orderTotalCents(orderLines);
     if (!discountCode.trim()) return { subtotalCents, discountCents: 0, totalCents: subtotalCents, message: "" };
+    if (isDiscountExpiredAt(new Date())) return { subtotalCents, discountCents: 0, totalCents: subtotalCents, message: "Der Aktionszeitraum ist beendet – es gilt der normale Preis." };
     const result = discountForLines(orderLines, discountCode, new Date());
     return result.ok
       ? { subtotalCents, discountCents: result.discountCents, totalCents: subtotalCents - result.discountCents, message: "" }
@@ -47,7 +48,7 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
     const parsed = checkoutRequestSchema.safeParse({
       ...Object.fromEntries(form),
       items: lines.map(l => ({ productId: l.product.id, quantity: l.quantity, ...(l.amountCents === undefined ? {} : { amountCents: l.amountCents }) })),
-      discountCode,
+      discountCode: isDiscountExpiredAt(new Date()) ? "" : discountCode,
       submissionKey,
       acceptTerms: form.get("acceptTerms") === "on",
       acknowledgePrivacy: form.get("acknowledgePrivacy") === "on",
@@ -59,6 +60,7 @@ export function ShopOrderForm({ cart }: { cart: CartItem[] }) {
       const result = await createCheckout({ data: parsed.data });
       if (result.ok) { window.location.assign(result.hostedUrl); return; }
       setError(result.error);
+      if (result.restart) setSubmissionKey(crypto.randomUUID());
     } catch {
       setError("Die Bestellung konnte nicht übermittelt werden. Bitte versuchen Sie es erneut oder kontaktieren Sie uns telefonisch oder per E-Mail.");
     }

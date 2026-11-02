@@ -2,13 +2,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { buildOrderLines, centsToAmount, checkoutRequestSchema, orderTotalCents, validityMonthsFor } from "./shop-checkout";
-import { discountForLines, openingDiscount } from "./discount";
+import { discountForLines, discountPaymentDeadline, isDiscountExpiredAt, openingDiscount } from "./discount";
 
 const GENERIC_ERROR = "Die Bestellung konnte nicht übermittelt werden. Bitte versuchen Sie es erneut oder kontaktieren Sie uns telefonisch oder per E-Mail.";
 
 export type CreateCheckoutResult =
   | { ok: true; orderId: string; token: string; hostedUrl: string }
-  | { ok: false; error: string };
+  | { ok: false; error: string; restart?: true };
 
 /**
  * Nimmt eine Bestellung entgegen: prüft Eingaben, Preise und Rabatt serverseitig,
@@ -26,7 +26,9 @@ export const createShopCheckout = createServerFn({ method: "POST" })
     // Rabatt: Code, Aktionszeitraum und Berechtigung werden ausschließlich hier geprüft.
     let discountCents = 0;
     let discountCode = "";
-    if (data.discountCode) {
+    // Nach Aktionsende wird ein eingegebener Code automatisch ignoriert:
+    // die Zahlungsseite wird ausschließlich zum normalen Preis erstellt.
+    if (data.discountCode && !isDiscountExpiredAt(new Date())) {
       const discount = discountForLines(built.lines, data.discountCode, new Date());
       if (!discount.ok) return { ok: false, error: discount.error };
       discountCents = discount.discountCents;
@@ -48,11 +50,18 @@ export const createShopCheckout = createServerFn({ method: "POST" })
     // Wiederholungsschlüssel: dieselbe Übermittlung liefert die vorhandene Bestellung.
     const { data: existing } = await supabaseAdmin
       .from("shop_orders")
-      .select("id, access_token, status")
+      .select("id, access_token, status, discount_cents")
       .eq("submission_key", data.submissionKey)
       .maybeSingle();
     if (existing) {
       if (existing.status === "paid") return { ok: false, error: "Diese Bestellung wurde bereits bezahlt." };
+      // Eine alte rabattierte Zahlungsseite darf nach Aktionsende nie wieder
+      // ausgegeben werden: verwerfen und neu zum normalen Preis berechnen lassen.
+      if (existing.discount_cents > 0 && isDiscountExpiredAt(new Date())) {
+        await supabaseAdmin.from("shop_payment_attempts").update({ status: "EXPIRED" }).eq("order_id", existing.id).eq("status", "PENDING");
+        await supabaseAdmin.from("shop_orders").update({ status: "payment_failed" }).eq("id", existing.id).neq("status", "paid");
+        return { ok: false, restart: true, error: "Der Aktionszeitraum ist beendet. Der Preis wurde auf den normalen Preis korrigiert. Bitte senden Sie die Bestellung erneut ab." };
+      }
       const { data: openAttempt } = await supabaseAdmin
         .from("shop_payment_attempts")
         .select("hosted_checkout_url")
@@ -136,6 +145,7 @@ export const createShopCheckout = createServerFn({ method: "POST" })
         merchantCode,
         redirectUrl,
         webhookUrl,
+        ...(discountCents > 0 ? { validUntil: discountPaymentDeadline.toISOString() } : {}),
       });
     } catch (error) {
       // Unklarer Ausgang (z. B. Timeout): erst nach einer möglicherweise bereits

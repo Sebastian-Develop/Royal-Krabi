@@ -29,6 +29,18 @@ export function berlinDateString(now: Date): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: openingDiscount.timezone, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
 }
 
+/**
+ * Letzter Moment, in dem eine rabattierte Zahlung verifiziert werden darf:
+ * 21.11.2026, 23:59:59 Uhr Europe/Berlin (MEZ = UTC+1). Rabattierte
+ * SumUp-Zahlungsseiten laufen spätestens zu diesem Zeitpunkt ab.
+ */
+export const discountPaymentDeadline = new Date("2026-11-21T22:59:59Z");
+
+/** Aktion beendet (ab 22.11.2026 Europe/Berlin): es gilt ausschließlich der normale Preis. */
+export function isDiscountExpiredAt(now: Date): boolean {
+  return berlinDateString(now) > openingDiscount.validUntil;
+}
+
 export function isDiscountActiveAt(now: Date): boolean {
   const day = berlinDateString(now);
   return day >= openingDiscount.validFrom && day <= openingDiscount.validUntil;

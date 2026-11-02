@@ -30,7 +30,7 @@ export type CreatedCheckout = { id: string; hostedUrl: string; status: string };
 /** Erstellt einen SumUp Hosted Checkout und liefert die Zahlungsseiten-URL. */
 export async function sumupCreateCheckout(
   apiKey: string,
-  opts: { amount: number; reference: string; description: string; merchantCode: string; redirectUrl: string; webhookUrl: string },
+  opts: { amount: number; reference: string; description: string; merchantCode: string; redirectUrl: string; webhookUrl: string; validUntil?: string },
 ): Promise<CreatedCheckout> {
   const body = await sumupRequest(apiKey, "/v0.1/checkouts", {
     method: "POST",
@@ -43,6 +43,8 @@ export async function sumupCreateCheckout(
       hosted_checkout: { enabled: true },
       redirect_url: opts.redirectUrl,
       return_url: opts.webhookUrl,
+      // Rabattierte Zahlungsseiten verfallen spätestens mit Aktionsende.
+      ...(opts.validUntil ? { valid_until: opts.validUntil } : {}),
     }),
   });
   const id = body["id"];

@@ -82,3 +82,19 @@ describe("binding discount check at verified payment receipt", () => {
     expect(verifyDiscountAtPayment("FALSCH", at("2026-11-10T12:00:00")).applies).toBe(false);
   });
 });
+
+describe("no discounted payment after 21.11.2026", () => {
+  test("payment deadline is 21.11.2026 23:59:59 Berlin", async () => {
+    const { discountPaymentDeadline } = await import("./discount");
+    expect(berlinDateString(discountPaymentDeadline)).toBe("2026-11-21");
+    expect(berlinDateString(new Date(discountPaymentDeadline.getTime() + 1000))).toBe("2026-11-22");
+  });
+  test("expired from 22.11.2026 Berlin, not on 21.11.", async () => {
+    const { isDiscountExpiredAt } = await import("./discount");
+    expect(isDiscountExpiredAt(new Date("2026-11-21T22:59:00Z"))).toBe(false);
+    expect(isDiscountExpiredAt(new Date("2026-11-21T23:00:00Z"))).toBe(true);
+  });
+  test("payment verified on 22.11. gets normal price", () => {
+    expect(verifyDiscountAtPayment("ROYALKRABI20", new Date("2026-11-21T23:00:00Z")).applies).toBe(false);
+  });
+});
