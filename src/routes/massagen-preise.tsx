@@ -8,7 +8,7 @@ import { Mail } from "lucide-react";
 import room from "@/assets/massage-room.jpg";
 import { MassagePhotoCard, MassagePhotoName } from "@/components/massage-photo";
 
-export const Route = createFileRoute("/massagen-preise")({ head: () => pageHead("Massagen & Preise | Thai-Massagen Offenbach | Royal Krabi", "Traditionelle Thai-Massagen, Thai-Öl-Massagen, Paarmassagen und Wellness in Offenbach – alle Dauern und Endpreise. Termine telefonisch oder per E-Mail.", "/massagen-preise"), component: Prices });
+export const Route = createFileRoute("/massagen-preise")({ head: () => pageHead("Thaimassage Preise Offenbach | Royal Krabi", "Informieren Sie sich über die Preise unserer Thai-Massagen in Offenbach-Bürgel. Entdecken Sie unsere Massagen und finden Sie Ihre passende Massage.", "/massagen-preise"), component: Prices });
 function Prices(){return <><PageHero brandDecoration title="Massagen & Preise" intro="Entdecken Sie unsere traditionellen Thai-Massagen und wohltuenden Wellnessanwendungen. Alle Preise sind Endpreise in Euro. Unsere Massagen dienen der Entspannung und dem Wohlbefinden." image={room}/><main className="section container">
   <PriceVatNotice align="center"/>
   <SectionTitle title="Klassische Massagen"/><MassageGrid items={massages.filter(m => m.category === "classic")}/><TreatmentCta/>
