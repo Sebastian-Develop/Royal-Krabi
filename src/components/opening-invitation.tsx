@@ -4,6 +4,7 @@ import receptionA from "@/assets/royal-krabi-reception-clean.jpg.asset.json";
 import receptionB from "@/assets/royal-krabi-reception-2.webp.asset.json";
 import flyerImage from "@/assets/royal-krabi-flyer.jpg";
 import { contact, mapsRouteUrl, mapsRouteHint } from "@/lib/contact";
+import { OpeningDiscountNotice } from "./opening-discount-notice";
 import { openingEvent as ev, whatsappContactHref, whatsappShareHref } from "@/lib/opening-event";
 
 const icons = { snacks: UtensilsCrossed, dance: Sparkles, studio: Flower2, advice: CalendarHeart };
@@ -37,13 +38,7 @@ export function OpeningInvitation() {
       </div>
     </section>
 
-    <section className="opening-offer" aria-labelledby="offer-title">
-      <h2 id="offer-title">{ev.offer.heading}</h2>
-      <p className="opening-offer-text">{ev.offer.text}</p>
-      <p className="opening-validity">{ev.offer.validity}</p>
-      <p className="opening-small">{ev.offer.aboNote}</p>
-      <p className="opening-text">{ev.offer.invite}</p>
-    </section>
+    <OpeningDiscountNotice/>
 
     <section className="opening-section" aria-labelledby="studio-title">
       <h2 id="studio-title">Einblicke ins Studio</h2>

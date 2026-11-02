@@ -482,10 +482,11 @@ a.address-link-block{display:inline-block}
 .opening-card h3{font-size:19px;color:var(--gold-soft);margin:10px 0 6px}
 .opening-card p{font-size:14px;line-height:1.7;color:var(--foreground)}
 .opening-icon{display:inline-flex;width:42px;height:42px;align-items:center;justify-content:center;border:1px solid var(--gold);border-radius:50%;color:var(--gold)}
-.opening-offer{margin:8px 0 0;padding:36px 24px;border:1px solid var(--gold);border-radius:18px;background:var(--launch-highlight)}
+.opening-offer{margin:8px 0 0;padding:28px 24px;border:1px solid var(--gold);border-radius:18px;background:var(--launch-highlight)}
 .opening-percent{font-family:var(--font-display);font-size:88px;line-height:1;color:var(--gold)}
 .opening-offer h2{margin:6px 0 12px}
-.opening-offer-text{font-size:16px;color:var(--foreground)}
+.opening-offer-text{font-size:16px;color:var(--foreground);margin:0 0 10px}
+.opening-code{display:inline-block;padding:2px 10px;border:1px dashed var(--gold);border-radius:8px;color:var(--gold);letter-spacing:.08em;font-weight:700}
 .opening-validity{margin-top:12px;font-weight:700;color:var(--gold-soft)}
 .opening-small{margin-top:8px;font-size:13px;color:var(--muted-foreground)}
 .opening-photos{display:grid;grid-template-columns:1fr 1fr;gap:12px}

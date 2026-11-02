@@ -12,7 +12,8 @@ import { cartItemKey } from '@/lib/cart';
 import { isValueVoucher, valueVoucherLabel, sumupGiftCardUrl, sumupGiftCardButtonLabel, sumupGiftCardHint } from '@/lib/value-voucher';
 import { formatEuro } from '@/lib/money';
 import oils from "@/assets/orchid-oils.jpg";
-import { contractAcceptanceNotice, openingPaymentNotice, openingEligibilityNotice } from "@/lib/purchase-rules";
+import { contractAcceptanceNotice } from "@/lib/purchase-rules";
+import { OpeningDiscountNotice } from "./opening-discount-notice";
 type Kind = "voucher" | "five" | "ten";
 const sections = [ ["voucher", "Gutscheine", "FREUDE SCHENKEN"], ["five", "5er Royalpässe", "FÜNF MOMENTE DER RUHE"], ["ten", "10er Royalpässe", "ZEHN MOMENTE DER RUHE"] ] as const;
 export function ShopProductsPage({ kinds, title, intro, lead }: { kinds: Kind[]; title: string; intro: string; lead: string }) {
@@ -24,7 +25,7 @@ export function ShopProductsPage({ kinds, title, intro, lead }: { kinds: Kind[];
   return <><PageHero title={title} intro={intro}/><main className="section container shop-page">
     <div className="shop-intro"><img src={oils} width={700} height={500} alt="Orchideen und Massageöle im Royal-Krabi-Ambiente"/><div><span className="eyebrow">FREUDE SCHENKEN · RUHE GENIESSEN</span><h2>Eine Auszeit, die bleibt</h2><p>{lead}</p><ContactButtons short/></div></div>
     <section className="shop-flow" aria-label="Bestellablauf"><h2>Ihr Weg zur Auszeit</h2><ol>{["Massagegutscheine und Royalpässe in den Warenkorb legen", "Warenkorb prüfen und Menge anpassen", "Zur Kasse gehen", "Kontaktdaten und Lieferart angeben", "Gesamtsumme über SumUp bezahlen", "Unabhängige Prüfung des Zahlungseingangs", "Anschließende Annahme durch Royal Krabi", "Versand mit DHL oder Abholung"].map(step => <li key={step}>{step}</li>)}</ol><p><CreditCard size={18}/> Zahlung über SumUp</p><p>Dieser Ablauf gilt für unseren Website-Warenkorb. Wertgutschein · Wunschbetrag wird ausschließlich im externen SumUp-Shop gekauft. Dessen Vertrags- und Zustellungsinformationen sind noch abzugleichen; externe Käufe werden nicht importiert. {contractAcceptanceNotice} Es gelten unsere <Link to="/agb">AGB</Link>.</p></section>
-    <section className="shop-conditions"><h2>Eröffnungsrabatt</h2><p>{openingEligibilityNotice}</p><p>{openingPaymentNotice}</p></section>
+    <OpeningDiscountNotice className="shop-conditions"/>
     <div className="shop-shipping"><Package size={24}/><div><p>{shippingNotice}</p><p>Werktage: Montag bis Freitag, ausgenommen gesetzliche Feiertage am Betriebsort. Alternativ: Abholung im Studio nach Vereinbarung.</p></div></div>
     <MiniCart cart={cart} addedId={added} onClose={() => setAdded("")}/>
     {sections.filter(([k]) => kinds.includes(k)).map(([kind, sectionTitle, eyebrow]) => {

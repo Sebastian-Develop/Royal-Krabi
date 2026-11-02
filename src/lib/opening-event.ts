@@ -22,6 +22,7 @@ export const openingEvent = {
     heading: "20 % Neueröffnungsrabatt",
     percent: 20,
     minMinutes: 60,
+    code: "ROYALKRABI20",
     text: "Auf berechtigte Massageangebote und Massagegutscheine mit festgelegter Dauer ab 60 Minuten sowie 5er/10er Royalpässe. Berechnungsbasis ist der ausgewiesene Verkaufs- beziehungsweise Paketpreis.",
     aboNote: "Code ROYALKRABI20. Bei Royalpässen gilt die Mindestdauer von 60 Minuten je Massage. Kein Eröffnungsrabatt auf Wertgutschein · Wunschbetrag.",
     validFrom: "2026-11-07",
