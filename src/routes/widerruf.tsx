@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { getWithdrawalPdf } from "@/lib/withdrawal-pdf.functions";
 import { Printer } from "lucide-react";
 import { LegalPage } from "@/components/legal-page";
 import { Button } from "@/components/ui/button";
@@ -16,11 +18,20 @@ export const Route = createFileRoute("/widerruf")({
 });
 
 function Page() {
+  const fetchPdf = useServerFn(getWithdrawalPdf);
+  // Opens the exact same PDF that customers receive, so print = PDF 1:1.
+  async function openPdf() {
+    const win = window.open("", "_blank");
+    const { base64, filename } = await fetchPdf();
+    const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+    const url = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
+    if (win) win.location.href = url; else { const a = document.createElement("a"); a.href = url; a.download = filename; a.click(); }
+  }
   const legal = legalTextsFor(WEBSITE_LEGAL_VERSION);
   return <div className="withdrawal-page"><LegalPage title="Widerrufsbelehrung & Widerrufsformular" notice={legalDraftNotice} sections={[
     ...legal.widerruf.map(section => ({ title: section.title, body: <>{section.paragraphs.map((text, i) => <p key={i}><LegalText text={text}/></p>)}</> })),
     { title: "Muster-Widerrufsformular", body: <>
-      <div className="withdrawal-print-actions"><Button variant="outline" className="btn btn-outline" onClick={() => window.print()}><Printer size={18}/> Drucken</Button></div>
+      <div className="withdrawal-print-actions"><Button variant="outline" className="btn btn-outline" onClick={openPdf}><Printer size={18}/> Drucken / PDF</Button></div>
       <div className="withdrawal-form">
         {legal.widerrufForm.map((text,i) => <p key={i}><LegalText text={text}/></p>)}
       </div>

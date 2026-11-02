@@ -279,6 +279,9 @@ async function pdfWiderruf(meta: OrderMeta): Promise<OrderPdf> {
   return { filename: "Widerrufsbelehrung-und-Musterformular.pdf", bytes: await ctx.doc.save() };
 }
 
+/** Withdrawal PDF shown on the website (same layout as the order attachment). */
+export const buildWithdrawalPdf = (legalVersion: string) => pdfWiderruf({ createdAt: '', paidAt: '', legalVersion });
+
 async function pdfPrivacy(meta: OrderMeta): Promise<OrderPdf> {
   const legal = legalTextsFor(meta.legalVersion);
   const ctx = await newCtx();

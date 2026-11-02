@@ -52,7 +52,8 @@ export default {
     if (url.pathname.startsWith("/_serverFn/")) {
       const { submitWithdrawal } = await import("./lib/withdrawal-request.functions");
       const { listWithdrawals, updateWithdrawalHandling } = await import("./lib/withdrawal-admin.functions");
-      withdrawalRpcPaths = [submitWithdrawal, listWithdrawals, updateWithdrawalHandling].map(fn => new URL(fn.url, url.origin).pathname);
+      const { getWithdrawalPdf } = await import("./lib/withdrawal-pdf.functions");
+      withdrawalRpcPaths = [submitWithdrawal, listWithdrawals, updateWithdrawalHandling, getWithdrawalPdf].map(fn => new URL(fn.url, url.origin).pathname);
     }
     if (shouldRedirectDuringLaunch(url, withdrawalRpcPaths)) {
       return new Response(null, { status: 302, headers: { location: "/", "cache-control": "no-store" } });
