@@ -108,16 +108,12 @@ export async function finalizePaidOrder(admin: Admin, orderId: string): Promise<
 
   // Verbindliche Rabattprüfung: maßgeblich ist der Verifizierungszeitpunkt des
   // vollständigen Zahlungseingangs (jetzt), nicht der Bestellzeitpunkt.
-  // Liegt er außerhalb der Aktionsfrist, wird die Bestellung zur manuellen
-  // Prüfung markiert – keine automatische Nachbelastung oder Erstattung.
+  // Außerhalb der Aktionsfrist gilt der normale Preis.
   const discountCode = updated[0]?.discount_code ?? "";
   if (discountCode) {
     const { verifyDiscountAtPayment } = await import("./discount");
     const check = verifyDiscountAtPayment(discountCode, new Date(now));
     await admin.from("shop_orders").update({ discount_valid: check.applies, discount_checked_at: check.checkedAt }).eq("id", orderId);
-    if (!check.applies) {
-      await logEmailEvent(admin, orderId, "discount_outside_window", false, "Verifizierter Zahlungseingang außerhalb der Aktionsfrist – manuelle Prüfung erforderlich.");
-    }
   }
 
   await sendPaidOrderEmails(admin, orderId);

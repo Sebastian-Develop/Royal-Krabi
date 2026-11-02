@@ -62,10 +62,9 @@ test('payment confirmation email contains acceptance, order number, products, wi
   expect(mail.text).toContain('nicht vorgeschrieben');
 });
 
-test('operator email warns when the binding discount check failed at payment time', () => {
+test('operator email has no manual discount review marking', () => {
   const warn = operatorEmail({ ...sampleOrder, discountValid: false }, sampleLines);
-  expect(warn.html).toContain('Rabattprüfung');
-  expect(warn.html).toContain('keine automatische Nachbelastung');
+  expect(warn.html).not.toContain('Rabattprüfung');
   const ok = operatorEmail({ ...sampleOrder, discountValid: true }, sampleLines);
   expect(ok.html).not.toContain('Rabattprüfung');
 });
@@ -75,4 +74,15 @@ test('review notes keep the legal check points instead of silent release', () =>
   expect(review).toContain('Eingangsbestätigungspflicht');
   expect(review).toContain(withdrawalEmail);
   expect(review).toContain('356a');
+});
+
+test('final discount window: 07.11.2026 00:00 to 21.11.2026 23:59 Berlin, normal price outside', async () => {
+  const { verifyDiscountAtPayment } = await import('./discount');
+  const { openingPaymentNotice } = await import('./purchase-rules');
+  expect(verifyDiscountAtPayment('ROYALKRABI20', new Date('2026-11-06T22:59:59Z')).applies).toBe(false);
+  expect(verifyDiscountAtPayment('ROYALKRABI20', new Date('2026-11-06T23:00:00Z')).applies).toBe(true);
+  expect(verifyDiscountAtPayment('ROYALKRABI20', new Date('2026-11-21T22:59:59Z')).applies).toBe(true);
+  expect(verifyDiscountAtPayment('ROYALKRABI20', new Date('2026-11-21T23:00:00Z')).applies).toBe(false);
+  expect(openingPaymentNotice).toContain('21.11.2026, 23:59 Uhr (Europe/Berlin)');
+  expect(openingPaymentNotice).not.toMatch(/manuell|Nachbelastung|Erstattung/);
 });

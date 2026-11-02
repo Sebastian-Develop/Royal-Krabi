@@ -130,13 +130,9 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
 
 /** Betreiberbenachrichtigung – ausschließlich nach bestätigter Zahlung. */
 export function operatorEmail(order: EmailOrder, lines: EmailLine[]): { subject: string; html: string } {
-  const discountWarning = order.discountCode && order.discountValid === false
-    ? `<p><b>⚠ Rabattprüfung:</b> Der Rabattcode ${esc(order.discountCode)} wurde angewendet, aber der verifizierte Zahlungseingang liegt außerhalb der Aktionsfrist. Bitte manuell prüfen – es erfolgt keine automatische Nachbelastung oder Erstattung.</p>`
-    : "";
   return {
     subject: `Zahlung bestätigt – ${order.fullName}`,
     html: `<h2>Bestellung bezahlt</h2>
-${discountWarning}
 <p><b>Bestellnummer:</b> ${esc(order.id)}</p>
 <p><b>Bestellung eingegangen am:</b> ${berlinDateTime(order.createdAt)}${order.paidAt ? `<br><b>Zahlung bestätigt am:</b> ${berlinDateTime(order.paidAt)}` : ""}</p>
 <table>${([["Name", order.fullName], ["E-Mail", order.email], ["Telefon", order.phone], ["Lieferart", order.delivery === "post" ? `DHL-Versand: ${order.street}, ${order.postalCode} ${order.city}` : "Abholung"], ["Empfänger", order.recipient || "-"], ["Geschenktext", order.giftText || "-"], ["Anmerkungen", order.notes || "-"]] as [string, string][]).map(([k, v]) => `<tr><td><b>${k}:</b></td><td>${esc(v)}</td></tr>`).join("")}</table>

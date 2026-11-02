@@ -67,8 +67,7 @@ export type PaymentDiscountCheck = { applies: boolean; checkedAt: string };
  * vollständigen Zahlungseingangs – nicht zum Bestellzeitpunkt.
  * `paidAt` ist der serverseitige Verifizierungszeitpunkt (ISO), den die
  * bezahlt-Verarbeitung nach bestätigtem SumUp-Status setzt.
- * Ergebnis false bedeutet: Rabatt gilt nicht; die Bestellung wird zur
- * manuellen Prüfung markiert, ohne automatische Nachbelastung oder Erstattung.
+ * Ergebnis false bedeutet: Rabatt gilt nicht; es gilt der normale Preis.
  */
 export function verifyDiscountAtPayment(discountCode: string, paidAt: Date): PaymentDiscountCheck {
   return {
