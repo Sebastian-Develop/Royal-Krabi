@@ -20,6 +20,8 @@ test("Only explicitly allowed pages remain public during launch", () => {
   expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/api/public/flyer-image"))).toBe(false);
   expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/robots.txt"))).toBe(false);
   expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/sitemap.xml"))).toBe(false);
+  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/llms.txt"))).toBe(false);
+  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/.well-known/ard.json"))).toBe(false);
 });
 test("Withdrawal remains reachable on both live hostnames without opening other pages", () => {
   for (const host of ["royalkrabi-thaimassage.de", "www.royalkrabi-thaimassage.de"]) {
