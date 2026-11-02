@@ -4,8 +4,8 @@ import { contact } from "./contact";
 /** Studio opening event copy. Event time stays null until the owner confirms it; never reuse business hours. */
 export const openingEvent = {
   tagline: "Wo thailändische Tradition auf königliche Ruhe trifft",
-  heading: "Ein Stück Thailand kommt nach Offenbach-Bürgel",
-  subheading: "Neueröffnung & Tag der offenen Tür am 07.11.2026",
+  heading: "Thaimassage Offenbach",
+  subheading: "Ein Stück Thailand kommt nach Offenbach-Bürgel – Neueröffnung & Tag der offenen Tür am 07.11.2026",
   date: "07.11.2026",
   time: null as string | null,
   invitation: "Feiern Sie mit uns die Eröffnung unseres neuen Thai-Massagestudios! Freuen Sie sich auf kleine thailändische Snacks, traditionellen Thai-Tanz und Einblicke in unsere neuen Räume. Lernen Sie uns persönlich kennen und reservieren Sie Ihren nächsten Wohlfühltermin direkt vor Ort.",
