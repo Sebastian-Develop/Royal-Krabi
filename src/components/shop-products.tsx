@@ -4,7 +4,7 @@ import { Gift, Package, CreditCard, ChevronDown, ChevronUp } from "lucide-react"
 import { ContactButtons, PageHero, PriceVatNotice } from "@/components/site";
 import { Button } from "@/components/ui/button";
 import { isCartable, useCart } from "@/lib/cart";
-import { shopProducts, shippingNotice, shippingNoticeShort } from "@/lib/shop";
+import { shopProducts, previewTestProduct, shippingNotice, shippingNoticeShort } from "@/lib/shop";
 import { subscriptionConditions } from "@/lib/content";
 import { ShopProductImage } from "./shop-product-image";
 import { MiniCart } from "./mini-cart";
@@ -13,6 +13,7 @@ import { isValueVoucher, valueVoucherLabel, sumupGiftCardUrl, sumupGiftCardButto
 import { formatEuro } from '@/lib/money';
 import oils from "@/assets/orchid-oils.jpg";
 import { contractAcceptanceNotice } from "@/lib/purchase-rules";
+import { getPreviewTestMode } from "@/lib/preview-test-mode";
 import { OpeningDiscountNotice } from "./opening-discount-notice";
 type Kind = "voucher" | "five" | "ten";
 const sections = [ ["voucher", "Gutscheine", "FREUDE SCHENKEN"], ["five", "5er Royalpässe", "FÜNF MOMENTE DER RUHE"], ["ten", "10er Royalpässe", "ZEHN MOMENTE DER RUHE"] ] as const;
@@ -28,6 +29,7 @@ export function ShopProductsPage({ kinds, title, intro, lead }: { kinds: Kind[];
     <OpeningDiscountNotice className="shop-conditions"/>
     <div className="shop-shipping"><Package size={24}/><div><p>{shippingNotice}</p><p>Werktage: Montag bis Freitag, ausgenommen gesetzliche Feiertage am Betriebsort. Alternativ: Abholung im Studio nach Vereinbarung.</p></div></div>
     <MiniCart cart={cart} addedId={added} onClose={() => setAdded("")}/>
+    {kinds.includes("voucher") && getPreviewTestMode() && <section className="shop-product-section"><h2>Testkauf</h2><article className="shop-product max-w-sm"><ShopProductImage product={previewTestProduct}/><span className="signature-badge">Echter Testkauf</span><h3>{previewTestProduct.name}</h3><p>{previewTestProduct.description}</p><strong className="shop-price">{formatEuro(1)}</strong><p>Keine Versandkosten · keine physische Lieferung</p><Button variant="outline" onClick={() => addToCart(previewTestProduct.id)}><Gift size={17}/> In den Warenkorb</Button></article></section>}
     {sections.filter(([k]) => kinds.includes(k)).map(([kind, sectionTitle, eyebrow]) => {
       const products = shopProducts.filter(p => p.kind === kind);
       const collapsible = kind !== "voucher";

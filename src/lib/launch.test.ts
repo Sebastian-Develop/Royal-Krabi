@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { isInternalPreview, isPublicComingSoon, launch, resolvePublicComingSoon, shouldRedirectDuringLaunch, websiteStartStatus } from "./launch";
+import { canCreatePayment, isPaymentPreview, isInternalPreview, isPublicComingSoon, launch, resolvePublicComingSoon, shouldRedirectDuringLaunch, websiteStartStatus } from "./launch";
 
 test("No launch date or countdown is assumed without confirmation", () => {
   expect(launch.websiteStart).toBeNull();
@@ -56,9 +56,16 @@ test("Launch gate stays on unless a build explicitly switches it off", () => {
   expect(resolvePublicComingSoon("false")).toBe(false);
   expect(resolvePublicComingSoon(false)).toBe(false);
 });
-import { isInternalPreview as previewHost } from "./launch";
-test("checkout preview guard: preview hosts never create real payments, live domain may", () => {
-  expect(previewHost("id-preview--8b969554-43d1-4653-abfd-07ad93d8716c.lovable.app")).toBe(true);
-  expect(previewHost("localhost")).toBe(true);
-  expect(previewHost("royalkrabi-thaimassage.de")).toBe(false);
+test("real preview purchases allowed; public and local direct RPCs blocked", () => {
+  expect(canCreatePayment("id-preview--8b969554-43d1-4653-abfd-07ad93d8716c.lovable.app")).toBe(true);
+  for (const host of ["localhost", "127.0.0.1", "royalkrabi-thaimassage.de", "www.royalkrabi-thaimassage.de", "royalkrabi-thaimassage.lovable.app"]) expect(canCreatePayment(host)).toBe(false);
+});
+test("only exact SumUp callback bypasses public launch", () => {
+  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/api/public/sumup-webhook"))).toBe(false);
+  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/api/public/sumup-webhook/extra"))).toBe(true);
+});
+test("branded main and draft previews supported, unrelated domains rejected", () => {
+  expect(isPaymentPreview("live--8b969554-43d1-4653-abfd-07ad93d8716c.workspace.lovable.app")).toBe(true);
+  expect(isPaymentPreview("live--8b969554-43d1-4653-abfd-07ad93d8716c-thr_abc.workspace.lovable.app")).toBe(true);
+  expect(isPaymentPreview("live--8b969554-43d1-4653-abfd-07ad93d8716c.evil.com")).toBe(false);
 });

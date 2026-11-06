@@ -25,11 +25,14 @@ export const checkoutRequestSchema = orderSchemaBase.omit({ productId: true }).e
   discountCode: z.string().trim().max(40).optional().default(""),
   /** Wiederholungsschlüssel des Formulars: dieselbe Übermittlung erzeugt keine zweite Bestellung. */
   submissionKey: z.string().uuid(),
-}).superRefine(orderAddressRefinement);
+}).superRefine(orderAddressRefinement).superRefine((data, ctx) => {
+  const onlyTests = data.items.every(item => item.productId === "preview-test-1-eur");
+  if ((data.delivery === "none") !== onlyTests) ctx.addIssue({ code: "custom", path: ["delivery"], message: "Testartikel werden nicht geliefert; für reguläre Produkte wählen Sie Versand oder Abholung." });
+});
 export type CheckoutRequest = z.infer<typeof checkoutRequestSchema>;
 
 /** Bestätigte Laufzeiten ab verifiziertem Zahlungseingang (rechtliche Prüfung bleibt offen). */
-export const validityMonthsFor = (kind: string): number => kind === "five" ? 12 : 24;
+export const validityMonthsFor = (kind: string): number | null => kind === "test" ? null : kind === "five" ? 12 : 24;
 
 export type OrderLine = {
   productId: string;

@@ -76,17 +76,27 @@ export async function sendPaidOrderEmails(admin: Admin, orderId: string): Promis
     return;
   }
 
-  const customerMail = paymentConfirmedEmail(order, lines);
-  const customerOk = await sendOrderEmail({
-    to: order.email, subject: customerMail.subject, html: customerMail.html, text: customerMail.text, attachments,
-  });
-  await logEmailEvent(admin, orderId, "customer_confirmation", customerOk, customerOk ? undefined : "Versand fehlgeschlagen");
-  if (customerOk) await admin.from("shop_orders").update({ paid_email_sent_at: now }).eq("id", orderId);
-
-  const opsMail = operatorEmail(order, lines);
-  const opsOk = await sendOrderEmail({ to: contact.email, subject: opsMail.subject, html: opsMail.html, replyTo: order.email });
-  await logEmailEvent(admin, orderId, "operator_notice", opsOk, opsOk ? undefined : "Versand fehlgeschlagen");
-  if (opsOk) await admin.from("shop_orders").update({ operator_notified_at: now }).eq("id", orderId);
+  const deliveryKinds = ["customer", "operator"] as const;
+  for (const kind of deliveryKinds) {
+    const sentColumn = kind === "customer" ? "paid_email_sent_at" : "operator_notified_at";
+    const claimColumn = kind === "customer" ? "customer_email_claimed_at" : "operator_email_claimed_at";
+    // Persistent atomic claim: simultaneous webhook/refresh/retry cannot send twice.
+    const claimUpdate = kind === "customer" ? { customer_email_claimed_at: now } : { operator_email_claimed_at: now };
+    const { data: claimed } = await admin.from("shop_orders").update(claimUpdate)
+      .eq("id", orderId).is(sentColumn, null).is(claimColumn, null).select("id");
+    if (!claimed?.length) continue;
+    const mail = kind === "customer" ? paymentConfirmedEmail(order, lines) : operatorEmail(order, lines);
+    try {
+      const ok = await sendOrderEmail({ to: kind === "customer" ? order.email : contact.email,
+        subject: mail.subject, html: mail.html, ...(kind === "customer" ? { text: paymentConfirmedEmail(order, lines).text, attachments } : { replyTo: order.email }),
+        idempotencyKey: `order-${orderId}-${kind}` });
+      await logEmailEvent(admin, orderId, kind === "customer" ? "customer_confirmation" : "operator_notice", ok, ok ? undefined : "Versand fehlgeschlagen");
+      if (ok) await admin.from("shop_orders").update(kind === "customer" ? { paid_email_sent_at: now } : { operator_notified_at: now }).eq("id", orderId);
+      // Fail closed on an uncertain result: retain the claim rather than double-send.
+    } catch {
+      await logEmailEvent(admin, orderId, kind, false, "Unklarer Versandstatus; Versandanspruch bleibt gesperrt, um Doppelsendung zu verhindern.");
+    }
+  }
 }
 
 /**
@@ -110,7 +120,7 @@ export async function finalizePaidOrder(admin: Admin, orderId: string): Promise<
   // vollständigen Zahlungseingangs (jetzt), nicht der Bestellzeitpunkt.
   // Außerhalb der Aktionsfrist gilt der normale Preis.
   const discountCode = updated[0]?.discount_code ?? "";
-  if (discountCode) {
+  if (discountCode && discountCode !== "TESTCODE20") {
     const { verifyDiscountAtPayment } = await import("./discount");
     const check = verifyDiscountAtPayment(discountCode, new Date(now));
     await admin.from("shop_orders").update({ discount_valid: check.applies, discount_checked_at: check.checkedAt }).eq("id", orderId);
@@ -140,7 +150,6 @@ export async function retryPaidOrderEmails(admin: Admin, orderId: string): Promi
  * So wird eine Zahlung auch erkannt, wenn der Kunde die Bestellseite nie wieder öffnet.
  */
 export async function reconcileOpenPayments(admin: Admin, apiKey: string): Promise<{ checked: number; paid: number }> {
-  const { sumupGetCheckoutStatus } = await import("./shop-checkout.server");
   const { data: attempts } = await admin
     .from("shop_payment_attempts")
     .select("id, order_id, sumup_checkout_id")
@@ -150,17 +159,31 @@ export async function reconcileOpenPayments(admin: Admin, apiKey: string): Promi
   let paid = 0;
   for (const attempt of attempts ?? []) {
     try {
-      const status = await sumupGetCheckoutStatus(apiKey, attempt.sumup_checkout_id as string);
-      if (status === "PAID") {
-        await admin.from("shop_payment_attempts").update({ status: "PAID", verified_at: new Date().toISOString() }).eq("id", attempt.id);
-        if (await finalizePaidOrder(admin, attempt.order_id)) paid++;
-      } else if (status === "FAILED" || status === "EXPIRED") {
-        await admin.from("shop_payment_attempts").update({ status }).eq("id", attempt.id);
-        await admin.from("shop_orders").update({ status: "payment_failed" }).eq("id", attempt.order_id).eq("status", "awaiting_payment");
-      }
+      const status = await verifyStoredPayment(admin, apiKey, attempt.sumup_checkout_id as string);
+      if (status === "PAID") paid++;
     } catch (error) {
       console.error("[shop-reconcile] Statusabfrage fehlgeschlagen:", error instanceof Error ? error.message : "unbekannt");
     }
   }
   return { checked: attempts?.length ?? 0, paid };
+}
+
+/** Shared verified processing for callback, browser status and existing reconciliation. */
+export async function verifyStoredPayment(admin: Admin, apiKey: string, checkoutId: string): Promise<string> {
+  const { sumupGetCheckout } = await import("./shop-checkout.server");
+  const { matchesStoredPayment } = await import("./payment-verification");
+  const { data: attempt } = await admin.from("shop_payment_attempts").select("id, order_id").eq("sumup_checkout_id", checkoutId).maybeSingle();
+  if (!attempt) return "IGNORED";
+  const { data: order } = await admin.from("shop_orders").select("id, total_cents, currency, status").eq("id", attempt.order_id).maybeSingle();
+  if (!order) return "IGNORED";
+  const checkout = await sumupGetCheckout(apiKey, checkoutId);
+  if (!matchesStoredPayment(checkout, { checkoutId, orderId: order.id, totalCents: order.total_cents, currency: order.currency })) throw new Error("Zahlungszuordnung, Betrag oder Währung stimmen nicht überein.");
+  if (checkout.status === "PAID") {
+    await admin.from("shop_payment_attempts").update({ status: "PAID", verified_at: new Date().toISOString() }).eq("id", attempt.id);
+    await finalizePaidOrder(admin, order.id);
+  } else if ((checkout.status === "FAILED" || checkout.status === "EXPIRED") && order.status !== "paid") {
+    await admin.from("shop_payment_attempts").update({ status: checkout.status }).eq("id", attempt.id).neq("status", "PAID");
+    await admin.from("shop_orders").update({ status: "payment_failed" }).eq("id", order.id).eq("status", "awaiting_payment");
+  }
+  return checkout.status;
 }

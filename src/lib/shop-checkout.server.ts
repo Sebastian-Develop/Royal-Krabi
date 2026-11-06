@@ -63,6 +63,12 @@ export async function sumupGetCheckoutStatus(apiKey: string, checkoutId: string)
   return typeof status === "string" ? status : "PENDING";
 }
 
+/** Full independently retrieved proof, including amount/currency/order mapping. */
+export async function sumupGetCheckout(apiKey: string, checkoutId: string) {
+  const body = await sumupRequest(apiKey, `/v0.1/checkouts/${encodeURIComponent(checkoutId)}`);
+  return { id: String(body["id"] ?? ""), status: String(body["status"] ?? "PENDING"), reference: String(body["checkout_reference"] ?? ""), amount: typeof body["amount"] === "number" ? body["amount"] : NaN, currency: String(body["currency"] ?? "") };
+}
+
 /**
  * Sucht eine bestehende Checkout-Session anhand unserer Bestellnummer.
  * Wichtig nach einem Timeout: erst suchen, bevor eine neue Session entsteht.

@@ -1,3 +1,4 @@
+import { isPaymentPreview } from "./launch";
 import { shopProducts } from "./shop";
 import type { OrderLine } from "./shop-checkout";
 
@@ -86,4 +87,17 @@ export function verifyDiscountAtPayment(discountCode: string, paidAt: Date): Pay
     applies: normalizeDiscountCode(discountCode) === openingDiscount.code && isDiscountActiveAt(paidAt),
     checkedAt: paidAt.toISOString(),
   };
+}
+
+/** Separate fixed-date test code: existing opening promotion remains unchanged. */
+export const testDiscount = { code: "TESTCODE20", percent: 20, from: "2026-11-05T23:00:00Z", until: "2026-11-06T22:59:59.999Z" } as const;
+export const isTestCode = (code: string) => normalizeDiscountCode(code) === testDiscount.code;
+export function checkoutDiscount(lines: OrderLine[], code: string, now: Date, hostname: string): DiscountResult {
+  if (!code.trim()) return { ok: true, discountCents: 0, eligibleCents: 0 };
+  if (!isTestCode(code)) return isDiscountExpiredAt(now) ? { ok: true, discountCents: 0, eligibleCents: 0 } : discountForLines(lines, code, now);
+  if (!isPaymentPreview(hostname)) return { ok: false, error: "Dieser Testcode ist ausschließlich im Vorschau-Testzugang gültig." };
+  if (now.getTime() < Date.parse(testDiscount.from) || now.getTime() > Date.parse(testDiscount.until)) return { ok: false, error: "TESTCODE20 ist abgelaufen bzw. noch nicht gültig. Gültig ausschließlich am 06.11.2026 (Europe/Berlin)." };
+  const eligibleCents = lines.filter(line => line.productId === "preview-test-1-eur" && line.kind === "test" && line.unitPriceCents === 100).reduce((sum, line) => sum + line.subtotalCents, 0);
+  if (!eligibleCents) return { ok: false, error: "TESTCODE20 gilt ausschließlich für den Testartikel – 1 €." };
+  return { ok: true, discountCents: Math.round(eligibleCents * 20 / 100), eligibleCents };
 }

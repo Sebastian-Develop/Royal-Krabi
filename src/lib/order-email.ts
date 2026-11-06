@@ -11,12 +11,12 @@ export interface EmailAttachment {
 }
 
 /** Versand über Resend – gleiches Muster wie das Bewerbungsformular, mit Anhängen und Textversion. */
-export async function sendOrderEmail(opts: { to: string; subject: string; html: string; text?: string; replyTo?: string; attachments?: EmailAttachment[] }): Promise<boolean> {
+export async function sendOrderEmail(opts: { to: string; subject: string; html: string; text?: string; replyTo?: string; attachments?: EmailAttachment[]; idempotencyKey?: string }): Promise<boolean> {
   const key = process.env["RESEND_API_KEY"];
   if (!key) { console.error("[order-email] RESEND_API_KEY fehlt."); return false; }
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", ...(opts.idempotencyKey ? { "Idempotency-Key": opts.idempotencyKey } : {}) },
     body: JSON.stringify({
       from: process.env["RESEND_SHOP_FROM"] || process.env["RESEND_FROM"] || "Royal Krabi Shop <shop@royalkrabi-thaimassage.de>",
       to: [opts.to],
@@ -48,8 +48,8 @@ export type EmailOrder = {
   discountValid?: boolean | null;
 };
 
-export const kindLabel = (kind: string) => kind === "voucher" ? "Gutschein" : kind === "five" ? "5er-Karte" : "10er-Karte";
-const deliveryLabel = (order: EmailOrder) => order.delivery === "post"
+export const kindLabel = (kind: string) => kind === "test" ? "Echter Testkauf" : kind === "voucher" ? "Gutschein" : kind === "five" ? "5er-Karte" : "10er-Karte";
+const deliveryLabel = (order: EmailOrder) => order.delivery === "none" ? "Keine physische Lieferung · keine Versandkosten" : order.delivery === "post"
   ? `Versand mit DHL (kostenfrei) an: ${esc(order.street)}, ${esc(order.postalCode)} ${esc(order.city)}`
   : "Abholung im Studio (wird persönlich mit Ihnen abgestimmt)";
 
@@ -82,7 +82,7 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
     + emailBlocks.row("Bestellnummer", order.id)
     + emailBlocks.row("Bestellung eingegangen am", berlinDateTime(order.createdAt))
     + (order.paidAt ? emailBlocks.row("Zahlung bestätigt am", berlinDateTime(order.paidAt)) : "")
-    + emailBlocks.row("Lieferart", order.delivery === "post" ? "DHL-Versand (kostenfrei)" : "Abholung im Studio"),
+    + emailBlocks.row("Lieferart", order.delivery === "none" ? "Keine Lieferung (Testkauf)" : order.delivery === "post" ? "DHL-Versand (kostenfrei)" : "Abholung im Studio"),
   );
 
   const main = [
@@ -90,10 +90,11 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
     emailBlocks.p(`${greeting} Ihre Bestellung und die zugehörige Zahlung sind bei uns bestätigt eingegangen. ${acceptance}`),
     meta,
     emailBlocks.p("Ihre Bestellung im Überblick:"),
+    ...(lines.some(line => line.kind === "test") ? [emailBlocks.p("Testpositionen sind echte Testkäufe ohne einlösbaren Gutschein, Massageguthaben oder Royalpass-Sitzungen.")] : []),
     linesTable(lines),
     totalsBlock(order, lines),
     emailBlocks.p(`<b>Lieferart:</b> ${deliveryLabel(order)}`),
-    emailBlocks.p("Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab."),
+    emailBlocks.p(order.delivery === "none" ? "Echter Testkauf: kein einlösbarer Gutschein, kein Massageguthaben und keine Royalpass-Sitzungen. Zahlungs- und Bestellnachweise bleiben erhalten." : "Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab."),
     emailBlocks.p(`An dieser E-Mail finden Sie ${hasPrivacy ? "fünf" : "vier"} PDF-Dokumente – jeweils in der für Ihre Bestellung maßgeblichen Fassung: ${attachments}.`),
     ...(hasPrivacy ? [emailBlocks.p("Die Datenschutzinformationen sind zur Information beigefügt; damit wird keine Einwilligung verlangt oder erklärt.")] : []),
     emailBlocks.p(`<b>Widerruf:</b> Ihren Widerruf können Sie jederzeit per E-Mail an ${esc(withdrawalEmail)} erklären. Das beigefügte Muster-Widerrufsformular können Sie dafür verwenden, es ist jedoch nicht vorgeschrieben – eine eindeutige Erklärung per E-Mail genügt. Einzelheiten stehen in der beigefügten Widerrufsbelehrung.`),
@@ -114,8 +115,8 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
     order.discountCents > 0 ? `Rabatt (${order.discountCode}): −${eur(order.discountCents)}` : "",
     `Bezahlter Gesamtbetrag: ${eur(order.totalCents)} (alle Preise inklusive Mehrwertsteuer)`,
     "",
-    `Lieferart: ${order.delivery === "post" ? `DHL-Versand (kostenfrei) an: ${order.street}, ${order.postalCode} ${order.city}` : "Abholung im Studio (wird persönlich abgestimmt)"}`,
-    "Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab.",
+    `Lieferart: ${order.delivery === "none" ? "Keine physische Lieferung · keine Versandkosten" : order.delivery === "post" ? `DHL-Versand (kostenfrei) an: ${order.street}, ${order.postalCode} ${order.city}` : "Abholung im Studio (wird persönlich abgestimmt)"}`,
+    order.delivery === "none" ? "Echter Testkauf: kein einlösbarer Gutschein, kein Massageguthaben und keine Royalpass-Sitzungen. Nachweise bleiben erhalten." : "Versandbestellungen geben wir in der Regel innerhalb von 3 Werktagen bei DHL ein; eine Abholung stimmen wir persönlich mit Ihnen ab.",
     "",
     `Anhänge: ${attachments}`,
     "",
@@ -131,11 +132,11 @@ export function paymentConfirmedEmail(order: EmailOrder, lines: EmailLine[]): { 
 /** Betreiberbenachrichtigung – ausschließlich nach bestätigter Zahlung. */
 export function operatorEmail(order: EmailOrder, lines: EmailLine[]): { subject: string; html: string } {
   return {
-    subject: `Zahlung bestätigt – ${order.fullName}`,
+    subject: `${lines.some(line => line.kind === "test") ? "Echter Testkauf – " : ""}Zahlung bestätigt – ${order.fullName}`,
     html: `<h2>Bestellung bezahlt</h2>
 <p><b>Bestellnummer:</b> ${esc(order.id)}</p>
 <p><b>Bestellung eingegangen am:</b> ${berlinDateTime(order.createdAt)}${order.paidAt ? `<br><b>Zahlung bestätigt am:</b> ${berlinDateTime(order.paidAt)}` : ""}</p>
-<table>${([["Name", order.fullName], ["E-Mail", order.email], ["Telefon", order.phone], ["Lieferart", order.delivery === "post" ? `DHL-Versand: ${order.street}, ${order.postalCode} ${order.city}` : "Abholung"], ["Empfänger", order.recipient || "-"], ["Geschenktext", order.giftText || "-"], ["Anmerkungen", order.notes || "-"]] as [string, string][]).map(([k, v]) => `<tr><td><b>${k}:</b></td><td>${esc(v)}</td></tr>`).join("")}</table>
+<table>${([["Name", order.fullName], ["E-Mail", order.email], ["Telefon", order.phone], ["Lieferart", order.delivery === "none" ? "Keine Lieferung (Testkauf)" : order.delivery === "post" ? `DHL-Versand: ${order.street}, ${order.postalCode} ${order.city}` : "Abholung"], ["Empfänger", order.recipient || "-"], ["Geschenktext", order.giftText || "-"], ["Anmerkungen", order.notes || "-"]] as [string, string][]).map(([k, v]) => `<tr><td><b>${k}:</b></td><td>${esc(v)}</td></tr>`).join("")}</table>
 ${linesTable(lines)}${totalsBlock(order, lines)}`,
   };
 }

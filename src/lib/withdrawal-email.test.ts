@@ -11,9 +11,9 @@ describe("withdrawal confirmation email", () => {
     const { text } = withdrawalConfirmationEmail(data);
     for (const s of ["2. November 2026", "18:05", "abc-123", "Max Muster", "max@example.de", "Bestellung 42", "Hiermit widerrufe ich meinen Vertrag.", "zur weiteren Bearbeitung gespeichert"]) expect(text).toContain(s);
   });
-  test("never sends from preview or localhost", () => {
+  test("allows hosted preview sending but never localhost", () => {
     expect(shouldSendWithdrawalEmail("localhost")).toBe(false);
-    expect(shouldSendWithdrawalEmail("id-preview--8b969554-43d1-4653-abfd-07ad93d8716c.lovable.app")).toBe(false);
+    expect(shouldSendWithdrawalEmail("id-preview--8b969554-43d1-4653-abfd-07ad93d8716c.lovable.app")).toBe(true);
     expect(shouldSendWithdrawalEmail("royalkrabi-thaimassage.de")).toBe(true);
   });
 });

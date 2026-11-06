@@ -43,6 +43,13 @@
       "when": 1793641825228,
       "tag": "0005_withdrawal_operator_management",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794001355787,
+      "tag": "0006_shop_email_delivery_claims",
+      "breakpoints": true
     }
   ]
 }

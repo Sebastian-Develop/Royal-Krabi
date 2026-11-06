@@ -26,7 +26,7 @@ const MUTED = rgb(0x6b / 255, 0x55 / 255, 0x40 / 255);
 const berlinDateTime = (iso: string) =>
   new Date(iso).toLocaleString("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) + " Uhr";
 
-const kindLabel = (kind: string) => (kind === "voucher" ? "Gutschein" : kind === "five" ? "5er-Karte" : "10er-Karte");
+const kindLabel = (kind: string) => (kind === "test" ? "Echter Testkauf" : kind === "voucher" ? "Gutschein" : kind === "five" ? "5er-Karte" : "10er-Karte");
 
 /** Only historical versions retain their original document presentation. */
 function validityEnd(paidAt: string, months: number): string {
@@ -170,7 +170,7 @@ function totals(ctx: Ctx, order: EmailOrder, lines: EmailLine[]): void {
 }
 
 const deliveryText = (order: EmailOrder) =>
-  order.delivery === "post"
+  order.delivery === "none" ? "Keine physische Lieferung und keine Versandkosten (echter Testkauf)" : order.delivery === "post"
     ? `Versand mit DHL (kostenfrei) an: ${order.street}, ${order.postalCode} ${order.city}`
     : "Abholung im Studio (wird persönlich abgestimmt)";
 
@@ -211,6 +211,7 @@ async function pdfOrderReceived(order: EmailOrder, lines: EmailLine[], meta: Ord
   heading(ctx, "Bestellte Positionen");
   positionsTable(ctx, lines);
   totals(ctx, order, lines);
+  if (lines.some(line => line.kind === "test")) paragraph(ctx, "Echter Testkauf: kein einlösbarer Gutschein, kein Massageguthaben und keine Royalpass-Sitzungen. Diese Unterlagen sind Zahlungs- und Bestellnachweise.");
   heading(ctx, "Produktbedingungen");
   if (meta.legalVersion === '2026-11-02-review' || meta.legalVersion === '2026-11-02-confirmed-review') {
     paragraph(ctx, "Gültigkeit und Nutzungsbedingungen finden Sie in den beigefügten AGB der zu dieser Bestellung gespeicherten Fassung.", { size: 9 });
@@ -237,6 +238,7 @@ async function pdfPaymentConfirmed(order: EmailOrder, lines: EmailLine[], meta: 
   paragraph(ctx, "Diese Bestätigung ist keine steuerlich vollständige Rechnung.", { size: 9, color: MUTED });
   heading(ctx, meta.legalVersion === '2026-11-02-review' || meta.legalVersion === '2026-11-02-confirmed-review' ? "Zugehörige Positionen" : "Zugehörige Positionen und Gültigkeit");
   positionsTable(ctx, lines);
+  if (lines.some(line => line.kind === "test")) paragraph(ctx, "Echter Testkauf: kein einlösbarer Gutschein, kein Massageguthaben und keine Royalpass-Sitzungen.");
   if (meta.legalVersion === '2026-11-02-review' || meta.legalVersion === '2026-11-02-confirmed-review') {
     paragraph(ctx, "Gültigkeit und Nutzungsbedingungen finden Sie in den beigefügten AGB der zu dieser Bestellung gespeicherten Fassung.", { size: 9 });
   } else {

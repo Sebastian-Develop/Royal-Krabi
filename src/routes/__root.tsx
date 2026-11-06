@@ -16,8 +16,9 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CookieBanner, SiteFooter, SiteHeader, TidioLoader } from "../components/site";
 import { GoldCursor } from "../components/gold-cursor";
 import { LaunchFooter, LaunchHeader } from "../components/coming-soon";
+import { getPreviewTestMode } from "../lib/preview-test-mode";
 import { getPublicLaunchMode } from "../lib/launch-mode";
-import { isLaunchPage, isOperatorPage, launch } from "../lib/launch";
+import { isLaunchPage, isOperatorPage, launch, previewPaymentWarning } from "../lib/launch";
 
 function NotFoundComponent() {
   return (
@@ -87,7 +88,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   beforeLoad: ({ location, search }) => {
     const publicLaunch = getPublicLaunchMode();
     if (publicLaunch && !isLaunchPage(location.pathname) && !isOperatorPage(location.pathname)) throw redirect({ to: "/", search: {} });
-    return { publicLaunch, launchShell: publicLaunch || search.ansicht === "coming-soon" || (launch.publicComingSoon && location.pathname === "/" && search.ansicht !== "website") };
+    return { publicLaunch, launchShell: publicLaunch || search.ansicht === "coming-soon" || (launch.publicComingSoon && publicLaunch && location.pathname === "/" && search.ansicht !== "website") };
   },
   head: () => ({
     meta: [
@@ -131,6 +132,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {launchShell ? <LaunchHeader/> : <SiteHeader />}
+      {getPreviewTestMode() && <aside className="border-b border-primary bg-background px-4 py-3 text-center text-sm font-semibold text-primary" role="note">{previewPaymentWarning}</aside>}
       <Outlet />
       {launchShell ? <LaunchFooter/> : <><SiteFooter /><CookieBanner /><TidioLoader /><GoldCursor /></>}
     </QueryClientProvider>

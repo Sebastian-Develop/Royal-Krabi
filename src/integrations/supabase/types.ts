@@ -100,6 +100,7 @@ export type Database = {
           country: string
           created_at: string
           currency: string
+          customer_email_claimed_at: string | null
           delivery: string
           discount_cents: number
           discount_checked_at: string | null
@@ -111,6 +112,7 @@ export type Database = {
           id: string
           legal_version: string
           notes: string
+          operator_email_claimed_at: string | null
           operator_notified_at: string | null
           order_email_sent_at: string | null
           paid_at: string | null
@@ -129,6 +131,7 @@ export type Database = {
           country?: string
           created_at?: string
           currency?: string
+          customer_email_claimed_at?: string | null
           delivery: string
           discount_cents?: number
           discount_checked_at?: string | null
@@ -140,6 +143,7 @@ export type Database = {
           id?: string
           legal_version?: string
           notes?: string
+          operator_email_claimed_at?: string | null
           operator_notified_at?: string | null
           order_email_sent_at?: string | null
           paid_at?: string | null
@@ -158,6 +162,7 @@ export type Database = {
           country?: string
           created_at?: string
           currency?: string
+          customer_email_claimed_at?: string | null
           delivery?: string
           discount_cents?: number
           discount_checked_at?: string | null
@@ -169,6 +174,7 @@ export type Database = {
           id?: string
           legal_version?: string
           notes?: string
+          operator_email_claimed_at?: string | null
           operator_notified_at?: string | null
           order_email_sent_at?: string | null
           paid_at?: string | null

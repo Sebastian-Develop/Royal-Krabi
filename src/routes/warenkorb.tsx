@@ -26,7 +26,7 @@ function Page() {
         <span className="cart-subtotal">Zwischensumme: <strong>{formatEuro(l.subtotal)}</strong></span>
         <Button variant="ghost" className="cart-remove" onClick={() => remove(l.key)}><Trash2 size={16}/> Entfernen</Button>
       </li>)}</ul>
-      <div className="cart-total"><p>{shippingNoticeShort}</p><p className="cart-total-sum">Gesamtsumme: <strong>{formatEuro(cartTotal(cart))}</strong></p></div><PriceVatNotice cautious={lines.some(l => isValueVoucher(l.product))}/>
+      <div className="cart-total"><p>{lines.length > 0 && lines.every(l => l.product.kind === "test") ? "Keine Lieferung · keine Versandkosten" : shippingNoticeShort}</p><p className="cart-total-sum">Gesamtsumme: <strong>{formatEuro(cartTotal(cart))}</strong></p></div><PriceVatNotice cautious={lines.some(l => isValueVoucher(l.product))}/>
       <div className="cart-actions"><Link className="btn btn-outline" to="/gutscheine">Weitere Gutscheine</Link><Link className="btn btn-outline" to="/abos">Weitere Abos</Link><Link className="btn btn-gold" to="/checkout">Zur Kasse</Link></div>
     </>}
   </main></>;

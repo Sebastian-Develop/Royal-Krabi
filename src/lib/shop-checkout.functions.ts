@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { buildOrderLines, centsToAmount, checkoutRequestSchema, orderTotalCents, validityMonthsFor } from "./shop-checkout";
-import { discountForLines, discountPaymentDeadline, isDiscountExpiredAt, openingDiscount } from "./discount";
+import { checkoutDiscount, discountPaymentDeadline, isDiscountExpiredAt, isTestCode, normalizeDiscountCode } from "./discount";
 
 const GENERIC_ERROR = "Die Bestellung konnte nicht übermittelt werden. Bitte versuchen Sie es erneut oder kontaktieren Sie uns telefonisch oder per E-Mail.";
 
@@ -19,6 +19,10 @@ export type CreateCheckoutResult =
 export const createShopCheckout = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => checkoutRequestSchema.parse(input))
   .handler(async ({ data }): Promise<CreateCheckoutResult> => {
+    const { canCreatePayment, isPaymentPreview, sumupCallbackUrl } = await import("./launch");
+    const hostname = new URL(getRequest().url).hostname;
+    if (!canCreatePayment(hostname)) return { ok: false, error: "Der Kauf ist auf dieser Adresse nicht freigegeben. Die öffentliche Website bleibt im Coming-soon-Modus; lokale Entwicklung löst keine Zahlungen aus." };
+    if (data.items.some(item => item.productId === "preview-test-1-eur") && !isPaymentPreview(hostname)) return { ok: false, error: "Der Testartikel ist ausschließlich im Vorschau-Testzugang erhältlich." };
     const built = buildOrderLines(data.items);
     if ("error" in built) return { ok: false, error: built.error };
     const subtotalCents = orderTotalCents(built.lines);
@@ -28,11 +32,11 @@ export const createShopCheckout = createServerFn({ method: "POST" })
     let discountCode = "";
     // Nach Aktionsende wird ein eingegebener Code automatisch ignoriert:
     // die Zahlungsseite wird ausschließlich zum normalen Preis erstellt.
-    if (data.discountCode && !isDiscountExpiredAt(new Date())) {
-      const discount = discountForLines(built.lines, data.discountCode, new Date());
+    if (data.discountCode && (isTestCode(data.discountCode) || !isDiscountExpiredAt(new Date()))) {
+      const discount = checkoutDiscount(built.lines, data.discountCode, new Date(), hostname);
       if (!discount.ok) return { ok: false, error: discount.error };
       discountCents = discount.discountCents;
-      discountCode = openingDiscount.code;
+      discountCode = normalizeDiscountCode(data.discountCode);
     }
     const totalCents = subtotalCents - discountCents;
 
@@ -40,10 +44,6 @@ export const createShopCheckout = createServerFn({ method: "POST" })
     const { CURRENT_ORDER_LEGAL_VERSION, orderLegalReleaseError } = await import('./legal-texts');
     const releaseError = orderLegalReleaseError();
     if (releaseError || !CURRENT_ORDER_LEGAL_VERSION) return { ok: false, error: releaseError ?? GENERIC_ERROR };
-
-    // Website not live yet: preview/local hosts never create a real SumUp payment.
-    const { isInternalPreview } = await import("./launch");
-    if (isInternalPreview(new URL(getRequest().url).hostname)) return { ok: false, error: "Vorschau: Hier wird keine echte Zahlung ausgelöst. Die Zahlung ist erst auf der veröffentlichten Website möglich." };
 
     const apiKey = process.env["SUMUP_API_KEY"];
     if (!apiKey) return { ok: false, error: "Die Online-Zahlung ist derzeit nicht erreichbar. Bitte kontaktieren Sie uns telefonisch oder per E-Mail." };
@@ -54,14 +54,14 @@ export const createShopCheckout = createServerFn({ method: "POST" })
     // Wiederholungsschlüssel: dieselbe Übermittlung liefert die vorhandene Bestellung.
     const { data: existing } = await supabaseAdmin
       .from("shop_orders")
-      .select("id, access_token, status, discount_cents")
+      .select("id, access_token, status, discount_cents, discount_code")
       .eq("submission_key", data.submissionKey)
       .maybeSingle();
     if (existing) {
       if (existing.status === "paid") return { ok: false, error: "Diese Bestellung wurde bereits bezahlt." };
       // Eine alte rabattierte Zahlungsseite darf nach Aktionsende nie wieder
       // ausgegeben werden: verwerfen und neu zum normalen Preis berechnen lassen.
-      if (existing.discount_cents > 0 && isDiscountExpiredAt(new Date())) {
+      if (existing.discount_cents > 0 && !isTestCode(existing.discount_code) && isDiscountExpiredAt(new Date())) {
         await supabaseAdmin.from("shop_payment_attempts").update({ status: "EXPIRED" }).eq("order_id", existing.id).eq("status", "PENDING");
         await supabaseAdmin.from("shop_orders").update({ status: "payment_failed" }).eq("id", existing.id).neq("status", "paid");
         return { ok: false, restart: true, error: "Der Aktionszeitraum ist beendet. Der Preis wurde auf den normalen Preis korrigiert. Bitte senden Sie die Bestellung erneut ab." };
@@ -85,7 +85,7 @@ export const createShopCheckout = createServerFn({ method: "POST" })
         full_name: data.fullName,
         email: data.email,
         phone: data.phone,
-        delivery: data.delivery,
+        delivery: built.lines.every(line => line.kind === "test") ? "none" : data.delivery,
         street: data.street,
         postal_code: data.postalCode,
         city: data.city,
@@ -138,18 +138,20 @@ export const createShopCheckout = createServerFn({ method: "POST" })
 
     const origin = new URL(getRequest().url).origin;
     const redirectUrl = `${origin}/bestellung-bestaetigt?bestellung=${order.id}&schluessel=${order.access_token}`;
-    const webhookUrl = `${origin}/api/public/sumup-webhook`;
+    const webhookUrl = sumupCallbackUrl;
     let checkout: { id: string; hostedUrl: string; status: string } | null = null;
     try {
       const merchantCode = await sumupMerchantCode(apiKey);
+      const recheck = checkoutDiscount(built.lines, discountCode, new Date(), hostname);
+      if (!recheck.ok || recheck.discountCents !== discountCents) throw new Error("Rabattfrist während der Vorbereitung abgelaufen; bitte erneut zum aktuellen Preis bestellen.");
       checkout = await sumupCreateCheckout(apiKey, {
         amount: centsToAmount(totalCents),
         reference: order.id,
-        description: "Royal Krabi Gutschein-/Abo-Bestellung",
+        description: built.lines.some(line => line.kind === "test") ? "Royal Krabi – echter Testkauf" : "Royal Krabi Gutschein-/Abo-Bestellung",
         merchantCode,
         redirectUrl,
         webhookUrl,
-        ...(discountCents > 0 ? { validUntil: discountPaymentDeadline.toISOString() } : {}),
+        ...(discountCents > 0 && !isTestCode(discountCode) ? { validUntil: discountPaymentDeadline.toISOString() } : {}),
       });
     } catch (error) {
       // Unklarer Ausgang (z. B. Timeout): erst nach einer möglicherweise bereits
@@ -159,7 +161,7 @@ export const createShopCheckout = createServerFn({ method: "POST" })
       if (!checkout || !checkout.hostedUrl) {
         await supabaseAdmin.from("shop_payment_attempts").update({ status: "FAILED" }).eq("id", attempt.id);
         await supabaseAdmin.from("shop_orders").update({ status: "payment_setup_failed" }).eq("id", order.id);
-        return { ok: false, error: "Die Zahlungsseite konnte nicht erstellt werden. Es wurde keine Zahlung ausgelöst. Bitte versuchen Sie es erneut oder kontaktieren Sie uns." };
+        return { ok: false, error: "SumUp konnte die Zahlungsseite für diesen Betrag nicht bereitstellen. Es wurde keine Zahlung bestätigt; der Preis bleibt unverändert. Bitte versuchen Sie es erneut oder kontaktieren Sie uns." };
       }
     }
     await supabaseAdmin
@@ -193,8 +195,7 @@ export const getShopOrderStatus = createServerFn({ method: "POST" })
     const apiKey = process.env["SUMUP_API_KEY"];
     if (!apiKey) return { status: "pending" };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { sumupGetCheckoutStatus } = await import("./shop-checkout.server");
-    const { finalizePaidOrder } = await import("./shop-payment.server");
+    const { verifyStoredPayment } = await import("./shop-payment.server");
 
     const { data: order } = await supabaseAdmin
       .from("shop_orders")
@@ -214,18 +215,12 @@ export const getShopOrderStatus = createServerFn({ method: "POST" })
     if (!attempt?.sumup_checkout_id) return { status: "pending", orderedAt: order.created_at };
 
     try {
-      const status = await sumupGetCheckoutStatus(apiKey, attempt.sumup_checkout_id);
+      const status = await verifyStoredPayment(supabaseAdmin, apiKey, attempt.sumup_checkout_id);
       if (status === "PAID") {
-        await supabaseAdmin.from("shop_payment_attempts").update({ status: "PAID", verified_at: new Date().toISOString() }).eq("id", attempt.id);
-        await finalizePaidOrder(supabaseAdmin, order.id);
         const { data: fresh } = await supabaseAdmin.from("shop_orders").select("paid_at").eq("id", order.id).maybeSingle();
         return { status: "paid", orderedAt: order.created_at, paidAt: fresh?.paid_at ?? undefined };
       }
-      if (status === "FAILED" || status === "EXPIRED") {
-        await supabaseAdmin.from("shop_payment_attempts").update({ status }).eq("id", attempt.id);
-        await supabaseAdmin.from("shop_orders").update({ status: "payment_failed" }).eq("id", order.id).eq("status", "awaiting_payment");
-        return { status: "failed", orderedAt: order.created_at };
-      }
+      if (status === "FAILED" || status === "EXPIRED") return { status: "failed", orderedAt: order.created_at };
       return { status: "pending", orderedAt: order.created_at };
     } catch (error) {
       console.error("[shop-checkout] Statusabfrage fehlgeschlagen:", error instanceof Error ? error.message : "unbekannt");

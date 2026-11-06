@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { shopProducts, type ShopProduct } from "./shop";
 import { isValueVoucher } from './value-voucher';
+import { isPaymentPreview } from "./launch";
 import { validCents } from './money';
 
 export type CartItem = { productId: string; quantity: number; amountCents?: number | undefined };
@@ -44,7 +45,7 @@ function write(c: CartItem[]) { try { sessionStorage.setItem(KEY, JSON.stringify
 /** Session-scoped cart; read after hydration to avoid SSR mismatches. */
 export function useCart() {
   const [cart, setCart] = useState<CartItem[]>([]);
-  useEffect(() => { setCart(read()); listeners.add(setCart); return () => { listeners.delete(setCart); }; }, []);
+  useEffect(() => { const initial = read().filter(item => item.productId !== "preview-test-1-eur" || isPaymentPreview(window.location.hostname)); write(initial); setCart(initial); listeners.add(setCart); return () => { listeners.delete(setCart); }; }, []);
   return {
     cart,
     add: (id: string, cents?: number) => write(addItem(read(), id, cents)),

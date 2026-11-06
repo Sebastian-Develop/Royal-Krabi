@@ -1,6 +1,6 @@
 import { brandEmailHtml, emailBlocks } from "./application-email";
 import { contact } from "./contact";
-import { isInternalPreview } from "./launch";
+import { isInternalPreview, isPaymentPreview } from "./launch";
 import { formatReceivedAt, withdrawalDeclaration } from "./withdrawal-request";
 
 export const withdrawalConfirmationSubject = "Bestätigung Ihres Widerrufs – Royal Krabi Serenity Thaimassage";
@@ -40,4 +40,4 @@ export function withdrawalConfirmationEmail(d: WithdrawalEmailData) {
 }
 
 /** Real sending only on the live domain; preview/local hosts never send. */
-export const shouldSendWithdrawalEmail = (hostname: string) => !!hostname && !isInternalPreview(hostname);
+export const shouldSendWithdrawalEmail = (hostname: string) => !!hostname && (isPaymentPreview(hostname) || !isInternalPreview(hostname));
