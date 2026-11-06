@@ -5,10 +5,10 @@ import { contact } from "./contact";
 export const openingEvent = {
   tagline: "Wo thailändische Tradition auf königliche Ruhe trifft",
   heading: "Thaimassage Offenbach",
-  subheading: "Ein Stück Thailand kommt nach Offenbach-Bürgel – Neueröffnung & Tag der offenen Tür am 07.11.2026",
+  subheading: "Ein Stück Thailand kommt nach Offenbach-Bürgel",
   date: "07.11.2026",
-  time: null as string | null,
-  invitation: "Feiern Sie mit uns die Eröffnung unseres neuen Thai-Massagestudios! Freuen Sie sich auf kleine thailändische Snacks, traditionellen Thai-Tanz und Einblicke in unsere neuen Räume. Lernen Sie uns persönlich kennen und reservieren Sie Ihren nächsten Wohlfühltermin direkt vor Ort.",
+  time: "07.11.2026 · 11:00 Uhr",
+  invitation: "Wir eröffnen am 07.11.2026 um 11:00 Uhr! Ihr seid alle herzlich eingeladen. Wir freuen uns darauf, euch bei Royal Krabi Serenity Thaimassage in Offenbach-Bürgel willkommen zu heißen!",
   freeEntry: "Eintritt frei – bringen Sie gerne Familie und Freunde mit!",
   location: "Offenbacher Straße 32 · 63075 Offenbach am Main – Bürgel",
   programHeading: "Das erwartet Sie am Eröffnungstag",

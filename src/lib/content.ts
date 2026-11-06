@@ -97,7 +97,7 @@ export const faqs = [
   ["Welcher Zeitpunkt gilt für den Eröffnungsrabatt?", openingPaymentNotice + " " + openingEligibilityNotice],
   ["Kann ich einen Massagegutschein teilweise einlösen?", massageVoucherPartialNotice + " Beispiel: Ein 90-Minuten-Massagegutschein wird zunächst für eine 60-Minuten-Massage genutzt. Es verbleiben 30 Minuten Guthaben, die später für dieselbe oder eine andere Massageart verwendet werden können. Preisunterschiede werden ausgeglichen."],
   ["Kann ich mit meinem Massagegutschein die Massageart wechseln?", massageVoucherChangeNotice],
-  ["Was gilt bei einer Preiserhöhung nach dem Kauf?", priceIncreaseNotice + " Diese Regel ist Bestandteil unserer AGB."],
+  ["Was gilt bei einer Preiserhöhung nach dem Kauf?", priceIncreaseNotice],
   ["Werden Gutscheine oder Royalpässe in Bargeld ausgezahlt?", noCashPayoutNotice],
   ["Muss ich einen Termin vereinbaren?", "Ja. Massagen erfolgen ausschließlich nach vorheriger Terminvereinbarung – telefonisch unter 069 60511884 oder per E-Mail an kontakt@royalkrabi-thaimassage.de."],
   ["Was soll ich zur Massage mitbringen?", "Sie müssen nichts Besonderes mitbringen. Bequeme Kleidung und ein paar Minuten Zeit zum Ankommen genügen."],

@@ -7,8 +7,8 @@ test("Opening discount is 20 % from 60 minutes, 07.11.–21.11.2026", () => {
   expect(openingEvent.offer.validFrom).toBe("2026-11-07");
   expect(openingEvent.offer.validUntil).toBe("2026-11-21");
 });
-test("Event time is not shown until confirmed", () => {
-  expect(openingEvent.time).toBeNull();
+test("Event time shows the confirmed opening date and time", () => {
+  expect(openingEvent.time).toBe("07.11.2026 · 11:00 Uhr");
 });
 test("No '14 Tage' wording anywhere in the opening copy", () => {
   expect(JSON.stringify(openingEvent)).not.toContain("14 Tage");
