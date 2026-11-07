@@ -3,3 +3,5 @@
 - [x] Callback-Bereitstellung: separate Veröffentlichungsfreigabe und danach echte Tests ausschließlich durch Nutzer/Tester erforderlich.
 - [x] Veröffentlichungs- und Verkaufsfreigabe 07.11.2026: Coming-soon-Schalter standardmäßig aus, vollständige Website inkl. Shop/Kasse/SumUp öffentlich; Testartikel und TESTCODE20 bleiben Vorschau-only (serverseitig gesperrt), Verwaltung geschützt, Rückerstattungen manuell; 263 Tests bestanden.
 - [ ] Offene Prüfungen (nur durch echte Nutzervorgänge prüfbar): reguläre Gutschein-/Royalpass-Aktivierung und Guthaben, Zahlung ohne Browser-Rückkehr, Widerrufserfassung in der Verwaltung, manuelle Rückerstattung.
+
+- [x] 07.11.2026: Flyer-Pop-up automatisch beim Seitenaufruf (Startseite + Coming-soon), einmal pro Sitzung; Veröffentlichung vom Nutzer angefordert.

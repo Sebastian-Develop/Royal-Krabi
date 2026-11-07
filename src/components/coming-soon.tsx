@@ -4,6 +4,7 @@ import logoMark from "@/assets/royal-krabi-logo-trimmed.webp";
 import { contact } from "@/lib/contact";
 import { launch, websiteStartStatus } from "@/lib/launch";
 import { OpeningInvitation } from "./opening-invitation";
+import { FlyerAutoPopup } from "./flyer-popup";
 import { SocialLinks } from "./social-links";
 
 export function LaunchHeader() {
@@ -23,5 +24,6 @@ export function ComingSoon() {
       <h2 id="launch-update-title">{launch.updateHeading}</h2>
       <p>{launch.updateText}</p>
     </section>
+    <FlyerAutoPopup/>
   </main>;
 }
