@@ -12,6 +12,7 @@ import oils from "@/assets/orchid-oils.jpg";
 import stones from "@/assets/hot-stones.jpg";
 import lounge from "@/assets/relax-lounge.jpg";
 import { ComingSoon } from "@/components/coming-soon";
+import { FlyerAutoPopup } from "@/components/flyer-popup";
 import { launch } from "@/lib/launch";
 
 /** Confirmed business facts only; shown on both the coming-soon page and the full home page. */
@@ -45,5 +46,6 @@ function FullHome() {
     <section className="section gallery-teaser container"><div className="section-heading"><span className="eyebrow">EINBLICKE</span><h2>Ein Ort zum Ankommen</h2></div><div className="gallery-grid home-gallery">{[heroImage.url,room,oils,stones,lounge].map((src,i)=><img key={src} src={src} loading="lazy" alt={["Empfang von Royal Krabi","Massagezimmer","Duftöle und Orchideen","Hot-Stone-Arrangement","Ruhebereich"][i]}/>)}</div><div className="center"><ButtonLink to="/galerie" outline>GALERIE ENTDECKEN</ButtonLink></div></section>
     <section className="location-band"><MapPin/><div><span className="eyebrow">OFFENBACH AM MAIN</span><h2>Ihre Thaimassage in Offenbach-Bürgel</h2><p><AddressLink>{address}</AddressLink></p></div><RouteButton/></section>
     <BookingCta/>
+    <FlyerAutoPopup/>
   </main>;
 }
