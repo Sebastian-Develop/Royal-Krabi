@@ -1,6 +1,6 @@
-/** The static GitHub-Pages copy is built with an explicit "false"; anything else keeps the gate on. */
+/** Public release approved 07.11.2026: the gate stays off unless a build explicitly sets "true". */
 export function resolvePublicComingSoon(flag: string | boolean | undefined): boolean {
-  return !(flag === false || flag === "false");
+  return flag === true || flag === "true";
 }
 
 /** Central launch switch and all interim customer copy. No confirmed date yet. */

@@ -28,10 +28,11 @@ describe("approved preview test rules", () => {
   });
   test("public and local callers cannot redeem test code", () => {
     for (const h of ["localhost", "royalkrabi-thaimassage.de", "www.royalkrabi-thaimassage.de", "royalkrabi-thaimassage.lovable.app"]) {
-      expect(canCreatePayment(h)).toBe(false);
       expect(isPaymentPreview(h)).toBe(false);
       expect(checkoutDiscount(lines, testDiscount.code, new Date("2026-11-06T12:00:00Z"), h).ok).toBe(false);
     }
+    expect(canCreatePayment("localhost")).toBe(false);
+    expect(canCreatePayment("royalkrabi-thaimassage.de")).toBe(true);
   });
   test("mixed cart discounts only test item; normal code excludes test item", () => {
     const product = shopProducts.find(p => p.kind === "voucher" && p.duration === 60 && p.price !== null);
@@ -42,9 +43,9 @@ describe("approved preview test rules", () => {
     expect(discountForLines(lines, "ROYALKRABI20", new Date("2026-11-07T12:00:00Z")).ok).toBe(false);
     expect(checkoutDiscount(lines, "TESTCODE20 ROYALKRABI20", new Date("2026-11-06T12:00:00Z"), host).ok).toBe(false);
   });
-  test("only the exact callback is a new public exception", () => {
+  test("public release serves shop and checkout without redirects", () => {
     expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/api/public/sumup-webhook"))).toBe(false);
-    for (const path of ["/shop", "/checkout", "/api/public/sumup-webhook/extra", "/_serverFn/checkout"]) expect(shouldRedirectDuringLaunch(new URL(`https://royalkrabi-thaimassage.de${path}?ansicht=website`))).toBe(true);
+    for (const path of ["/shop", "/checkout", "/_serverFn/checkout"]) expect(shouldRedirectDuringLaunch(new URL(`https://royalkrabi-thaimassage.de${path}?ansicht=website`))).toBe(false);
   });
   test("test-only checkout requires no delivery and mixed carts need a regular delivery", () => {
     const customer = { fullName: "Anna Beispiel", email: "anna@example.de", phone: "06960511884", street: "", postalCode: "", city: "", country: "DE", recipient: "", giftText: "", notes: "", acceptTerms: true, acknowledgePrivacy: true, submissionKey: "0f3b3d7a-1c2e-4b5a-9c8d-7e6f5a4b3c2d", items: [{ productId: previewTestProduct.id, quantity: 1 }] };

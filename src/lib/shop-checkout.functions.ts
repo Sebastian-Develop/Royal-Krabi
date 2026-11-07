@@ -21,7 +21,7 @@ export const createShopCheckout = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<CreateCheckoutResult> => {
     const { canCreatePayment, isPaymentPreview, sumupCallbackUrl } = await import("./launch");
     const hostname = new URL(getRequest().url).hostname;
-    if (!canCreatePayment(hostname)) return { ok: false, error: "Der Kauf ist auf dieser Adresse nicht freigegeben. Die öffentliche Website bleibt im Coming-soon-Modus; lokale Entwicklung löst keine Zahlungen aus." };
+    if (!canCreatePayment(hostname)) return { ok: false, error: "Der Kauf ist auf dieser Adresse nicht freigegeben. Lokale Entwicklung löst keine Zahlungen aus." };
     if (data.items.some(item => item.productId === "preview-test-1-eur") && !isPaymentPreview(hostname)) return { ok: false, error: "Der Testartikel ist ausschließlich im Vorschau-Testzugang erhältlich." };
     const built = buildOrderLines(data.items);
     if ("error" in built) return { ok: false, error: built.error };

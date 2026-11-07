@@ -8,34 +8,19 @@ test("No launch date or countdown is assumed without confirmation", () => {
 test("Flyer destination stays the permanent primary address", () => {
   expect(launch.permanentUrl).toBe("https://royalkrabi-thaimassage.de");
 });
-test("Only explicitly allowed pages remain public during launch", () => {
-  for (const path of ["/", "/impressum", "/datenschutz", "/jobs", "/flyer", "/widerruf", "/verwaltung/widerrufe"]) {
+test("Public release: the full website is served on the live domain without redirects", () => {
+  for (const path of ["/", "/massagen-preise", "/gutscheine", "/abos", "/shop", "/warenkorb", "/checkout", "/termine", "/widerruf", "/impressum", "/datenschutz", "/cookies", "/jobs", "/flyer", "/verwaltung/widerrufe"]) {
     expect(shouldRedirectDuringLaunch(new URL(`https://royalkrabi-thaimassage.de${path}`))).toBe(false);
   }
-  for (const path of ["/massagen-preise", "/gutscheine", "/abos", "/warenkorb", "/checkout", "/termine", "/cookies", "/api/public/test", "/impressum/extra", "/?ansicht=website"]) {
-    const url = new URL(`https://royalkrabi-thaimassage.de${path}`);
-    expect(isPublicComingSoon(url.hostname)).toBe(true);
-    expect(shouldRedirectDuringLaunch(url)).toBe(url.pathname !== "/");
-  }
-  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/api/public/flyer-image"))).toBe(false);
-  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/robots.txt"))).toBe(false);
-  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/sitemap.xml"))).toBe(false);
-  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/llms.txt"))).toBe(false);
-  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/.well-known/ard.json"))).toBe(false);
+  expect(isPublicComingSoon("royalkrabi-thaimassage.de")).toBe(false);
+  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/gutscheine?ansicht=website"))).toBe(false);
 });
-test("Withdrawal remains reachable on both live hostnames without opening other pages", () => {
+test("Public release: withdrawal and server calls are reachable on both live hostnames", () => {
   for (const host of ["royalkrabi-thaimassage.de", "www.royalkrabi-thaimassage.de"]) {
-    expect(shouldRedirectDuringLaunch(new URL(`https://${host}/widerruf`))).toBe(false);
-    for (const path of ["/shop", "/checkout", "/gutscheine", "/abos", "/widerruf/extra", "/verwaltung/extra"]) {
-      expect(shouldRedirectDuringLaunch(new URL(`https://${host}${path}`))).toBe(true);
+    for (const path of ["/widerruf", "/shop", "/checkout", "/gutscheine", "/abos", "/_serverFn/checkout", "/_serverFn/withdrawal"]) {
+      expect(shouldRedirectDuringLaunch(new URL(`https://${host}${path}`))).toBe(false);
     }
   }
-});
-test("Only exact withdrawal RPCs are launch exceptions", () => {
-  const paths = ["/_serverFn/withdrawal", "/_serverFn/withdrawal-admin"];
-  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/_serverFn/withdrawal"), paths)).toBe(false);
-  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/_serverFn/checkout"), paths)).toBe(true);
-  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/_serverFn/withdrawal/extra"), paths)).toBe(true);
 });
 test("Full website remains available on main, draft, commit and local previews", () => {
   for (const host of ["localhost", "id-preview--example.lovable.app", "id-preview-6--example.lovable.app", "id-preview-abc123--example.lovable.app", "preview-3--example.workspace.lovable.app", "project--example-dev.lovable.app", "example.lovableproject.com"]) {
@@ -43,26 +28,26 @@ test("Full website remains available on main, draft, commit and local previews",
     expect(shouldRedirectDuringLaunch(new URL(`http://${host}/checkout`))).toBe(false);
   }
 });
-test("Public hosts and spoofed preview prefixes cannot bypass launch restrictions", () => {
+test("Spoofed preview prefixes are not treated as internal previews", () => {
   for (const host of ["www.royalkrabi-thaimassage.de", "royalkrabi-thaimassage.de", "example.lovable.app", "project--example.lovable.app", "id-preview--example.evil.com", "id-preview--example.lovable.app.evil.com"]) {
     expect(isInternalPreview(host)).toBe(false);
-    expect(shouldRedirectDuringLaunch(new URL(`https://${host}/gutscheine?ansicht=website`))).toBe(true);
   }
 });
-test("Launch gate stays on unless a build explicitly switches it off", () => {
-  expect(resolvePublicComingSoon(undefined)).toBe(true);
-  expect(resolvePublicComingSoon("true")).toBe(true);
-  expect(resolvePublicComingSoon("anything")).toBe(true);
+test("Launch gate stays off unless a build explicitly switches it on", () => {
+  expect(resolvePublicComingSoon(undefined)).toBe(false);
   expect(resolvePublicComingSoon("false")).toBe(false);
+  expect(resolvePublicComingSoon("anything")).toBe(false);
   expect(resolvePublicComingSoon(false)).toBe(false);
+  expect(resolvePublicComingSoon("true")).toBe(true);
+  expect(resolvePublicComingSoon(true)).toBe(true);
 });
-test("real preview purchases allowed; public and local direct RPCs blocked", () => {
+test("Purchases allowed on live domain and previews; local direct RPCs blocked", () => {
   expect(canCreatePayment("id-preview--8b969554-43d1-4653-abfd-07ad93d8716c.lovable.app")).toBe(true);
-  for (const host of ["localhost", "127.0.0.1", "royalkrabi-thaimassage.de", "www.royalkrabi-thaimassage.de", "royalkrabi-thaimassage.lovable.app"]) expect(canCreatePayment(host)).toBe(false);
+  for (const host of ["royalkrabi-thaimassage.de", "www.royalkrabi-thaimassage.de", "royalkrabi-thaimassage.lovable.app"]) expect(canCreatePayment(host)).toBe(true);
+  for (const host of ["localhost", "127.0.0.1"]) expect(canCreatePayment(host)).toBe(false);
 });
-test("only exact SumUp callback bypasses public launch", () => {
+test("SumUp callback stays reachable", () => {
   expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/api/public/sumup-webhook"))).toBe(false);
-  expect(shouldRedirectDuringLaunch(new URL("https://royalkrabi-thaimassage.de/api/public/sumup-webhook/extra"))).toBe(true);
 });
 test("branded main and draft previews supported, unrelated domains rejected", () => {
   expect(isPaymentPreview("live--8b969554-43d1-4653-abfd-07ad93d8716c.workspace.lovable.app")).toBe(true);

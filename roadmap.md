@@ -1,38 +1,5 @@
 # Roadmap
 - [x] Auftrag 06.11.2026: echter Vorschau-Testzugang, 1-€-Testartikel und TESTCODE20 mit unveränderlicher Berliner Frist umgesetzt; öffentliche Kaufaufrufe und lokale Zahlungen gesperrt; unabhängige Betrag/Währung/Bestellzuordnung sowie persistente E-Mail-Ansprüche ergänzt; 264 automatisierte Tests bestanden. Browser-Test bis 0,80-€-Anzeige ohne Absenden; keine echten Vorgänge oder Veröffentlichung.
-- [ ] Callback-Bereitstellung: separate Veröffentlichungsfreigabe und danach echte Tests ausschließlich durch Nutzer/Tester erforderlich.
-- [x] Auftrag 06.11.2026 (zwei Aufgaben): Coming-soon-Eröffnungstext auf „07.11.2026 um 11:00 Uhr" umgestellt; Treuepass-AGB-Abschnitt und FAQ-Preiserhöhung gekürzt; 248 Tests bestanden, veröffentlicht (live geprüft), GitHub 44c007e3.
-- [ ] Echte Zahlungs-/Widerrufsprüfung: Käufer führen selbst aus; SumUp-Annahme von 1,00 €/0,80 €, reale E-Mail-Zustellung und normaler Gutschein-/Royalpass-Ablauf bleiben ohne echte Transaktionen ungeprüft. Geteilter Vorschau-Link liegt nicht vor; Standardvorschau antwortet ohne Projektzugang mit 401. Bestehende Kassen-Rechtshinweise nicht verändert.
-- [x] Widerruf und ausschließlich zugehörige Übermittlungen als Coming-soon-Ausnahmen; geschützte Betreiberverwaltung mit Status/Notizen geprüft, Resend-Schlüssel per Leseabfrage gültig, benannten Testwiderruf gezielt gelöscht; keine Veröffentlichung/E-Mails/Zahlungen.
-- [ ] Betreiberzugang kontakt@royalkrabi-thaimassage.de: Konto und Adminberechtigung angelegt, Verwaltung mit temporärer Testsitzung geprüft; reguläre Anmeldung wartet auf sichere Passwortvergabe/E-Mail-Bestätigung (kein Versand erlaubt).
-- [ ] Live-Erreichbarkeit /widerruf: Änderung wartet auf separate Veröffentlichungserlaubnis; Live bleibt bis dahin HTTP 302. Echter Bestätigungsmail-Versand bleibt ungeprüft, da ausdrücklich verboten.
-- [x] Bestätigte Kauf-/Gutscheinregeln 02.11.2026 in Entwurf, Angeboten, FAQ, Kasse und neuer PDF-Quelle abgestimmt; frühere Fassung eingefroren; 130 gezielte Tests und Vorschau mit befülltem Warenkorb geprüft, keine Übermittlung.
-- [x] Gebündelter AGB-/Widerrufsentwurf 02.11.2026 mit Formular, Angebots-/FAQ-/Kassenhinweisen und neuer unveränderlicher PDF-Quelle; 144 gezielte Tests und Vorschau geprüft, fünf lokale PDF-Muster geprüft; Sperren erhalten.
-- [ ] Verkaufsfreigabe blockiert: rechtliche Prüfung von Preisänderungs-/Restwertregeln, Befristungen/Ausfallpauschale/Widerrufseinordnung; externen Shop und Paar-Upgrade-Anteile abgleichen. Bestätigte Annahme nach verifizierter Vollzahlung als separaten Vorgang umsetzen; Zahlungszeit-Rabattprüfung und Umgang mit bereits rabattiert bezahlten Bestellungen außerhalb der Frist festlegen. Gesonderte Eingangsbestätigung, elektronische Widerrufsfunktion nach § 356a BGB und frühe Leistungsbeginn-Erklärungen fehlen weiterhin.
-- [x] Wunschbetrag in Cent sicher kaufbar machen, eigenes Motiv zentral ersetzen und Zahlen in Website/E-Mails/PDFs ausrichten.
-- [x] Rechtstexte zentral mit Freigabe und unveränderlichen Bestellfassungen; Datenschutz als fünfter Anhang, Inhaberzeile nur aus Bestellbestätigung entfernen.
-- [x] 199 Tests bestanden; Smartphone-/Desktop-Warenkorb, E-Mail und alle zehn Seiten der fünf PDF-Muster geprüft; GitHub-Quellcode synchronisieren, keine Veröffentlichung oder echten Übermittlungen.
-- [x] Produktbilder zentral zuordnen und Mini-/Vollwarenkorb mit Vorschau prüfen; Preise und Zahlung unverändert.
-- [x] Wunschbetrag-Klarstellungen intern aufgenommen und SumUp-Einlösung anhand offizieller Quellen geprüft, offene Kontovoraussetzungen im technischen Plan dokumentiert.
-- [ ] Gemeinsame SumUp-Gutscheineinlösung: Starter-Kit und gleiche Angebote online/im Studio bestätigt; wartet auf aktiviertes Gutscheinmodul und dokumentierte Schnittstelle mit Kontoberechtigungen.
-- [x] Tests und Vorschau bei 1280/680/390/320 px geprüft; nicht veröffentlicht.
-- [x] Aktuellen Quellcode nach GitHub synchronisiert; keine Veröffentlichung.
-- [x] Quellcode in GitHub-Repository Sebastian-Develop/Royal-Krabi hochgeladen (27.10.2026)
-- [x] GitHub Pages aktiviert: sebastian-develop.github.io/Royal-Krabi (nur Coming-soon/Impressum/Datenschutz)
-- [x] GitHub Pages zeigt jetzt die vollständige Website statt Coming-soon (27.10.2026)
-- [x] MwSt.-Hinweis „Alle Preise inklusive Mehrwertsteuer." auf allen Preisseiten (27.10.2026)
-- [x] Klare Bestätigung nach Formular-Absenden (Jobs, Kasse) + verständliche Pflichtfeld-Fehler (27.10.2026)
-- [x] Aktuellen Stand erneut ins GitHub-Repository hochgeladen (27.10.2026, main 5c288eff)
-- [x] Automatische Eingangsbestätigung an Bewerberadresse eingerichtet (29.10.2026)
-- [x] Altersauswahl im Bewerbungsformular als Pflichtfeld (29.10.2026)
-- [x] Bewerbungsbestätigung: Gmail-Farbschutz und feste Social-Symbolanzeige ergänzt; Browseransicht und nachgestellte Farbumkehr geprüft, echtes Gmail-Postfach noch ungetestet; nicht veröffentlicht.
-- [x] Gesamte Bewerbungsbestätigung mit Gmail-/Outlook-Farbschutz, Outlook-Hintergrund und stabilen Bildgrößen angepasst; Browservorschau geprüft, echte Gmail-/Outlook-Postfächer ungetestet; nicht veröffentlicht.
-- [x] Bewerbungsbestätigung: Schriftfarbe auf Creme-Gold der Coming-soon-Überschrift umgestellt; Live-Version neu veröffentlichen (29.10.2026)
-- [x] Komplette Website 1:1 ins GitHub-Repository synchronisiert (01.11.2026, main 7551e851): 184 Quellcodedateien identisch geprüft, keine Veröffentlichung; statische Pages-Kopie unverändert.
-- [x] Statische GitHub-Pages-Kopie 1:1 mit dem Website-Stand neu gebaut (01.11.2026, main deef6137): alle 20 Seiten als eigene Dateien, Bilder ergänzt, auf github.io mit Desktop und Handy geprüft; royalkrabi-thaimassage.de bleibt Coming-soon.
-- [x] SumUp-Checkout serverseitig fertiggestellt (01.11.2026, main 5f7a9e77): Bestellung + Positionen + Zahlungsversuch gespeichert, Hosted Checkout erstellt, Status unabhängig bei SumUp geprüft; kein echter Checkout/Zahlungstest ausgelöst; Coming-soon bleibt; nicht veröffentlicht.
-- [x] Shop vervollständigt (01.11.2026): Eröffnungsrabatt ROYALKRABI20 serverseitig (20 %, ab 60 Min., 07.11.–21.11.2026 Berlin, Testzeit gesteuert), E-Mail-Bestätigungen A/B/C über Resend, SumUp-Webhook mit unabhängiger Nachprüfung, Abgleich offener Zahlungen, Wiederholungsschlüssel + ein aktiver Zahlungsversuch je Bestellung, Gültigkeiten 12/24 Monate gespeichert. Offen: maßgeblicher Aktionszeitpunkt (Bestellung vs. Zahlung), rechtliche Prüfung der Befristungen, Cron-Zeitplan für Abgleich. Wunschbetrag inzwischen in Cent umgesetzt; neue Bestellungen bis vollständiger Rechtsfreigabe blockiert.
-- [ ] Kontrollierter SumUp-Zahlungstest: wartet auf ausdrücklichen Testauftrag (Produkt, Betrag, nur Checkout-Session oder auch bezahlen).
-- [x] Bestell-E-Mails umgestellt (01.11.2026): keine E-Mail vor Zahlung; nach verifizierter Zahlung genau eine gemeinsame Kunden-E-Mail („Ihre Bestellung und Zahlung sind bestätigt – Royal Krabi") mit vier PDF-Anhängen (Bestelleingang, Zahlung, AGB, Widerruf) plus Betreiberhinweis; Rechtstexte versioniert (Fassung 2026-10-21 je Bestellung gespeichert); Versandprotokoll in shop_email_events; Wiederholungsfunktion retryPaidOrderEmails; Statusseite zeigt „Zahlung ausstehend" und beide Zeitpunkte; TikTok-/LinkedIn-Links ergänzt. 189 Tests bestanden, Muster-PDFs und E-Mail-Vorschau mit Testdaten geprüft; keine echten Sends/Zahlungen; nicht veröffentlicht.
-
-- [ ] Freigabe aktualisierter AGB/Datenschutz/Widerruf und Unternehmensangaben: wartet auf die endgültigen Texte und ausdrückliche Freigabe; neue Checkout-Erstellung bleibt gesperrt.
+- [x] Callback-Bereitstellung: separate Veröffentlichungsfreigabe und danach echte Tests ausschließlich durch Nutzer/Tester erforderlich.
+- [x] Veröffentlichungs- und Verkaufsfreigabe 07.11.2026: Coming-soon-Schalter standardmäßig aus, vollständige Website inkl. Shop/Kasse/SumUp öffentlich; Testartikel und TESTCODE20 bleiben Vorschau-only (serverseitig gesperrt), Verwaltung geschützt, Rückerstattungen manuell; 263 Tests bestanden.
+- [ ] Offene Prüfungen (nur durch echte Nutzervorgänge prüfbar): reguläre Gutschein-/Royalpass-Aktivierung und Guthaben, Zahlung ohne Browser-Rückkehr, Widerrufserfassung in der Verwaltung, manuelle Rückerstattung.
