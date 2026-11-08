@@ -10,11 +10,18 @@ import { fileURLToPath } from "node:url";
 export default defineConfig({
   vite: {
     resolve: {
-      alias: {
-        "entities/lib/decode.js": fileURLToPath(new URL("./node_modules/entities/lib/decode.js", import.meta.url)),
-        "entities/lib/encode.js": fileURLToPath(new URL("./node_modules/entities/lib/encode.js", import.meta.url)),
-        "entities": fileURLToPath(new URL("./node_modules/entities", import.meta.url)),
-      },
+      // Only map React Email's legacy imports. A package-wide alias also
+      // rewrites htmlparser2's entities/decode export to a nonexistent file.
+      alias: [
+        {
+          find: /^entities\/lib\/decode\.js$/,
+          replacement: fileURLToPath(new URL("./node_modules/entities/lib/decode.js", import.meta.url)),
+        },
+        {
+          find: /^entities\/lib\/encode\.js$/,
+          replacement: fileURLToPath(new URL("./node_modules/entities/lib/encode.js", import.meta.url)),
+        },
+      ],
     },
   },
   tanstackStart: {
