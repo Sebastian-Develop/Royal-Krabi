@@ -86,6 +86,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     return view === "website" || view === "coming-soon" ? { ansicht: view } : {};
   },
   beforeLoad: ({ location, search }) => {
+    if (location.pathname.startsWith("/lovable/")) return { publicLaunch: false, launchShell: false };
     const publicLaunch = getPublicLaunchMode();
     if (publicLaunch && !isLaunchPage(location.pathname) && !isOperatorPage(location.pathname)) throw redirect({ to: "/", search: {} });
     return { publicLaunch, launchShell: publicLaunch || search.ansicht === "coming-soon" || (launch.publicComingSoon && publicLaunch && location.pathname === "/" && search.ansicht !== "website") };

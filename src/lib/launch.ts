@@ -54,6 +54,8 @@ export const isWithdrawalRpcPath = (path: string, allowed: readonly string[]) =>
 
 /** Exact page allowlist; no query string can bypass the public launch gate. */
 export function shouldRedirectDuringLaunch(url: URL, withdrawalRpcPaths: readonly string[] = []) {
+  // Managed email endpoints verify their own callers and must never be redirected.
+  if (url.pathname.startsWith("/lovable/")) return false;
   if (!isPublicComingSoon(url.hostname) || isLaunchPage(url.pathname) || isOperatorPage(url.pathname) || isWithdrawalRpcPath(url.pathname, withdrawalRpcPaths)) return false;
   // Hosting serves bundled/static resources separately; keep their fallback requests usable.
   if (/^\/(?:assets|__l5e\/assets-v1)\//.test(url.pathname)) return false;
