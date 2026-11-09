@@ -1,0 +1,1 @@
+- Keep operator dispatch notifications separate from payment/PDF flows; atomically persist a permanent order fulfillment claim before calling the existing Resend sender, with no automatic retries, to prevent duplicate messages after uncertain outcomes.

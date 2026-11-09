@@ -106,6 +106,7 @@ export type Database = {
           discount_checked_at: string | null
           discount_code: string
           discount_valid: boolean | null
+          dispatch: Json | null
           email: string
           full_name: string
           gift_text: string
@@ -137,6 +138,7 @@ export type Database = {
           discount_checked_at?: string | null
           discount_code?: string
           discount_valid?: boolean | null
+          dispatch?: Json | null
           email: string
           full_name: string
           gift_text?: string
@@ -168,6 +170,7 @@ export type Database = {
           discount_checked_at?: string | null
           discount_code?: string
           discount_valid?: boolean | null
+          dispatch?: Json | null
           email?: string
           full_name?: string
           gift_text?: string

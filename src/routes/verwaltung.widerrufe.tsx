@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { listWithdrawals, updateWithdrawalHandling } from "@/lib/withdrawal-admin.functions";
 import { formatReceivedAt } from "@/lib/withdrawal-request";
+import { OrderDispatchAdmin } from "@/components/order-dispatch-admin";
 
 export const Route = createFileRoute("/verwaltung/widerrufe")({
   head: () => ({ meta: [
@@ -34,6 +35,7 @@ function Page() {
   const [status, setStatus] = useState<"open" | "processed">("open");
   const [notes, setNotes] = useState("");
   const [saved, setSaved] = useState(false);
+  const [tab, setTab] = useState<"withdrawals" | "orders">("withdrawals");
   const list = useServerFn(listWithdrawals);
   const update = useServerFn(updateWithdrawalHandling);
   const query = useQuery({ queryKey: ["operator-withdrawals"], queryFn: () => list(), enabled: signedIn, retry: false });
@@ -52,6 +54,7 @@ function Page() {
   async function logout() {
     await queryClient.cancelQueries({ queryKey: ["operator-withdrawals"] });
     queryClient.removeQueries({ queryKey: ["operator-withdrawals"] });
+    queryClient.removeQueries({ queryKey: ["operator-orders"] });
     setSelected(null); setSignedIn(false);
     await supabase.auth.signOut();
     await router.navigate({ to: "/verwaltung/widerrufe", replace: true });
@@ -67,7 +70,8 @@ function Page() {
     <div className="mb-8 flex flex-wrap items-center justify-between gap-4"><h1 className="text-3xl text-primary">Widerrufsverwaltung</h1>
       {signedIn && <div className="flex gap-2"><Button variant="outline" aria-label="Aktualisieren" onClick={() => void query.refetch()}><RefreshCw size={18}/></Button><Button variant="outline" onClick={() => void logout()}><LogOut size={18}/> Abmelden</Button></div>}
     </div>
-    {!ready ? <p>Wird geladen …</p> : !signedIn ? <form className="grid max-w-sm gap-4" onSubmit={login}>
+    {signedIn && <nav className="mb-6 flex gap-3" aria-label="Betreiberverwaltung"><Button variant={tab === "withdrawals" ? "default" : "outline"} onClick={() => setTab("withdrawals")}>Widerrufe</Button><Button variant={tab === "orders" ? "default" : "outline"} onClick={() => setTab("orders")}>Bestellungen</Button></nav>}
+    {signedIn && tab === "orders" ? <OrderDispatchAdmin/> : !ready ? <p>Wird geladen …</p> : !signedIn ? <form className="grid max-w-sm gap-4" onSubmit={login}>
       <h2 className="text-xl">Betreiberanmeldung</h2>
       <label className="grid gap-2">E-Mail<input className="rounded-md border border-input bg-background p-3" type="email" autoComplete="username" value={email} onChange={e => setEmail(e.target.value)} required/></label>
       <label className="grid gap-2">Passwort<input className="rounded-md border border-input bg-background p-3" type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required/></label>

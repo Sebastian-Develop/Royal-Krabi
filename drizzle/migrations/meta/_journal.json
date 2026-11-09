@@ -50,6 +50,13 @@
       "when": 1794001355787,
       "tag": "0006_shop_email_delivery_claims",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794183560305,
+      "tag": "0007_order_dispatch_state",
+      "breakpoints": true
     }
   ]
 }
