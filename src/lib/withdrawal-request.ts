@@ -7,7 +7,7 @@ export const withdrawalRequestSchema = z.object({
   fullName: z.string().trim().min(2, "Bitte Vor- und Nachnamen angeben.").max(120),
   email: z.string().trim().email("Bitte eine gültige E-Mail-Adresse angeben.").max(255),
   orderReference: z.string().trim().min(3, "Bitte Bestellnummer oder eine andere eindeutige Bestellkennung angeben.").max(200),
-  declarationConfirmed: z.literal(true, { errorMap: () => ({ message: "Bitte die Widerrufserklärung bestätigen." }) }),
+  declarationConfirmed: z.literal(true, { error: "Bitte die Widerrufserklärung bestätigen." }),
   remark: z.string().trim().max(2000).default(""),
 });
 export type WithdrawalRequestInput = z.input<typeof withdrawalRequestSchema>;

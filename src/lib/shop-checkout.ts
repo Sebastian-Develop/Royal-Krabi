@@ -4,6 +4,7 @@ import { orderAddressRefinement, orderSchemaBase, shopProducts } from "./shop";
 import { isValueVoucher, valueVoucherLabel } from './value-voucher';
 import { MAX_STORED_CENTS, validCents, formatCents } from './money';
 import { cartItemKey, type CartItem } from './cart';
+import { assertCheckoutInputShape, MAX_CHECKOUT_ITEMS } from './checkout-input-limits';
 
 /** Eine Warenkorbposition, wie sie das Bestellformular an den Server schickt. */
 export const checkoutItemSchema = z.object({
@@ -19,8 +20,8 @@ export const checkoutItemSchema = z.object({
  * Vollständige Bestellanfrage: Kundendaten wie im bisherigen Formular,
  * plus alle Warenkorbpositionen. Preise werden nie vom Client übernommen.
  */
-export const checkoutRequestSchema = orderSchemaBase.omit({ productId: true }).extend({
-  items: z.array(checkoutItemSchema).min(1, "Ihr Warenkorb ist leer.").max(50),
+const validatedCheckoutSchema = orderSchemaBase.omit({ productId: true }).extend({
+  items: z.array(checkoutItemSchema).min(1, "Ihr Warenkorb ist leer.").max(MAX_CHECKOUT_ITEMS),
   /** Freiwilliger Rabattcode; wird serverseitig gegen Code, Frist und Berechtigung geprüft. */
   discountCode: z.string().trim().max(40).optional().default(""),
   /** Wiederholungsschlüssel des Formulars: dieselbe Übermittlung erzeugt keine zweite Bestellung. */
@@ -29,6 +30,10 @@ export const checkoutRequestSchema = orderSchemaBase.omit({ productId: true }).e
   const onlyTests = data.items.every(item => item.productId === "preview-test-1-eur");
   if ((data.delivery === "none") !== onlyTests) ctx.addIssue({ code: "custom", path: ["delivery"], message: "Testartikel werden nicht geliefert; für reguläre Produkte wählen Sie Versand oder Abholung." });
 });
+export const checkoutRequestSchema = z.unknown().transform((input, ctx) => {
+  try { assertCheckoutInputShape(input); return input; }
+  catch (error) { ctx.addIssue({ code: 'custom', message: error instanceof Error ? error.message : 'Ungültige Bestellanfrage.' }); return z.NEVER; }
+}).pipe(validatedCheckoutSchema);
 export type CheckoutRequest = z.infer<typeof checkoutRequestSchema>;
 
 /** Bestätigte Laufzeiten ab verifiziertem Zahlungseingang (rechtliche Prüfung bleibt offen). */

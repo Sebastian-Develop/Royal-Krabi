@@ -1,1 +1,3 @@
 - Keep operator dispatch notifications separate from payment/PDF flows; atomically persist a permanent order fulfillment claim before calling the existing Resend sender, with no automatic retries, to prevent duplicate messages after uncertain outcomes.
+- Bound the checkout RPC body at the server entry before framework parsing and inspect its flat input before item validation; derive budgets from existing checkout field and position limits so ordinary purchases stay unchanged.
+- Pin targeted security overrides for Seroval and shell-quote within their parents' existing ranges and unify Zod on tested v4; this removes vulnerable nested copies without broad TanStack/tooling upgrades.

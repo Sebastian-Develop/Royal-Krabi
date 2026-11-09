@@ -3,6 +3,8 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { shouldRedirectDuringLaunch } from "./lib/launch";
+import { MAX_CHECKOUT_BODY_BYTES } from "./lib/checkout-input-limits";
+import { limitRequestBody } from "./lib/limited-request.server";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -50,6 +52,12 @@ export default {
     const url = new URL(request.url);
     let withdrawalRpcPaths: string[] = [];
     if (url.pathname.startsWith("/_serverFn/")) {
+      const { createShopCheckout } = await import("./lib/shop-checkout.functions");
+      if (request.method === "POST" && url.pathname === new URL(createShopCheckout.url, url.origin).pathname) {
+        const bounded = await limitRequestBody(request, MAX_CHECKOUT_BODY_BYTES);
+        if (bounded instanceof Response) return bounded;
+        request = bounded;
+      }
       const { submitWithdrawal } = await import("./lib/withdrawal-request.functions");
       const { listWithdrawals, updateWithdrawalHandling } = await import("./lib/withdrawal-admin.functions");
       const { getWithdrawalPdf } = await import("./lib/withdrawal-pdf.functions");
