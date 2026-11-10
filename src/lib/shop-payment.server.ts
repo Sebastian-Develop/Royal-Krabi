@@ -5,8 +5,8 @@
  * verifizierter Zahlung raus – niemals schon bei der Bestellung.
  */
 import type { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { contact } from "./contact";
-import { operatorEmail, paymentConfirmedEmail, sendOrderEmail, type EmailAttachment, type EmailLine, type EmailOrder } from "./order-email";
+import { operatorNotificationEmail } from "./contact";
+import { operatorEmail, paymentConfirmedEmail, sendOrderEmailResult, type EmailAttachment, type EmailLine, type EmailOrder } from "./order-email";
 
 type Admin = typeof supabaseAdmin;
 
@@ -31,8 +31,8 @@ export async function loadOrderForEmail(admin: Admin, orderId: string): Promise<
 }
 
 /** Protokolliert jeden Versandversuch – ohne E-Mail-Inhalte, nur Art und Ergebnis. */
-async function logEmailEvent(admin: Admin, orderId: string, kind: string, success: boolean, error?: string): Promise<void> {
-  await admin.from("shop_email_events").insert({ order_id: orderId, kind, success, error: error ?? null });
+async function logEmailEvent(admin: Admin, orderId: string, kind: string, success: boolean, error?: string, providerId?: string | null, providerStatus?: string): Promise<void> {
+  await admin.from("shop_email_events").insert({ order_id: orderId, kind, success, error: error ?? null, provider_id: providerId ?? null, provider_status: providerStatus ?? null });
 }
 
 /** Uint8Array → Base64, in Blöcken für große Anhänge. */
@@ -87,10 +87,11 @@ export async function sendPaidOrderEmails(admin: Admin, orderId: string): Promis
     if (!claimed?.length) continue;
     const mail = kind === "customer" ? paymentConfirmedEmail(order, lines) : operatorEmail(order, lines);
     try {
-      const ok = await sendOrderEmail({ to: kind === "customer" ? order.email : contact.email,
+      const outcome = await sendOrderEmailResult({ to: kind === "customer" ? order.email : operatorNotificationEmail,
         subject: mail.subject, html: mail.html, ...(kind === "customer" ? { text: paymentConfirmedEmail(order, lines).text, attachments } : { replyTo: order.email }),
         idempotencyKey: `order-${orderId}-${kind}` });
-      await logEmailEvent(admin, orderId, kind === "customer" ? "customer_confirmation" : "operator_notice", ok, ok ? undefined : "Versand fehlgeschlagen");
+      const ok = outcome.accepted;
+      await logEmailEvent(admin, orderId, kind === "customer" ? "customer_confirmation" : "operator_notice", ok, outcome.error ?? undefined, outcome.providerId, outcome.status);
       if (ok) await admin.from("shop_orders").update(kind === "customer" ? { paid_email_sent_at: now } : { operator_notified_at: now }).eq("id", orderId);
       // Fail closed on an uncertain result: retain the claim rather than double-send.
     } catch {

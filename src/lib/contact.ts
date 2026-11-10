@@ -53,3 +53,9 @@ export const withdrawalMailHref = `mailto:${withdrawalEmail}?subject=${encodeURI
 /** Signature massage inquiry: standard appointment request with the massage prefilled. */
 export const signatureMassageName = "Royal Sound Healing – Royal Krabi Signature";
 export const signatureMailHref = `mailto:${contact.email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailTemplate.replace("Gewünschte Massage:", `Gewünschte Massage: ${signatureMassageName}`))}`;
+
+/** Explicitly confirmed operator notice recipient; never derived from a browser request. */
+export const operatorNotificationEmail = "j.rudklang@royalkrabi-thaimassage.de";
+export function operatorCaseUrl(kind: "order" | "withdrawal", id: string) {
+  return `${contact.website}/verwaltung/widerrufe?${kind}=${encodeURIComponent(id)}`;
+}

@@ -57,6 +57,20 @@
       "when": 1794183560305,
       "tag": "0007_order_dispatch_state",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794269875594,
+      "tag": "0008_operator_email_history",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794284035319,
+      "tag": "0009_operator_retry_audit",
+      "breakpoints": true
     }
   ]
 }

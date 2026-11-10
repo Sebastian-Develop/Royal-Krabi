@@ -11,8 +11,10 @@ export async function dispatchRepository(): Promise<DispatchRepository> {
       if (order.error || items.error) throw new Error("Bestellung konnte nicht geladen werden.");
       return { order: order.data as unknown as DispatchOrder, items: items.data ?? [] };
     },
-    async claim(id, record) {
-      const result = await admin.from("shop_orders").update({ dispatch: record as unknown as Json }).eq("id", id).eq("status", "paid").not("paid_at", "is", null).is("dispatch", null).select("id");
+    async claim(id, record, previous) {
+      let update = admin.from("shop_orders").update({ dispatch: record as unknown as Json }).eq("id", id).eq("status", "paid").not("paid_at", "is", null);
+      update = previous ? update.eq("dispatch", JSON.stringify(previous)) : update.is("dispatch", null);
+      const result = await update.select("id");
       if (result.error) throw new Error("Versandstatus konnte nicht gespeichert werden; keine E-Mail ausgelöst.");
       return Boolean(result.data?.length);
     },

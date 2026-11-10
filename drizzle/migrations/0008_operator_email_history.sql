@@ -1,0 +1,5 @@
+ALTER TABLE public.shop_email_events ADD COLUMN IF NOT EXISTS provider_id text, ADD COLUMN IF NOT EXISTS provider_status text;
+ALTER TABLE public.withdrawal_requests ADD COLUMN IF NOT EXISTS email_history jsonb NOT NULL DEFAULT '[]'::jsonb, ADD COLUMN IF NOT EXISTS operator_email_claimed_at timestamptz;
+COMMENT ON COLUMN public.withdrawal_requests.email_history IS 'Server-written customer/operator email outcomes; provider acceptance is not delivery proof.';
+CREATE OR REPLACE FUNCTION public.guard_withdrawal_email_fields() RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$ BEGIN IF current_user IN ('authenticated','anon') AND (NEW.email_history IS DISTINCT FROM OLD.email_history OR NEW.operator_email_claimed_at IS DISTINCT FROM OLD.operator_email_claimed_at) THEN RAISE EXCEPTION 'Email audit fields are server-managed'; END IF; RETURN NEW; END $$;
+CREATE TRIGGER guard_withdrawal_email_fields BEFORE UPDATE ON public.withdrawal_requests FOR EACH ROW EXECUTE FUNCTION public.guard_withdrawal_email_fields();

@@ -21,6 +21,9 @@ export type Database = {
           id: string
           kind: string
           order_id: string
+          provider_id: string | null
+          provider_status: string | null
+          retry_claimed_at: string | null
           success: boolean
         }
         Insert: {
@@ -29,6 +32,9 @@ export type Database = {
           id?: string
           kind: string
           order_id: string
+          provider_id?: string | null
+          provider_status?: string | null
+          retry_claimed_at?: string | null
           success: boolean
         }
         Update: {
@@ -37,6 +43,9 @@ export type Database = {
           id?: string
           kind?: string
           order_id?: string
+          provider_id?: string | null
+          provider_status?: string | null
+          retry_claimed_at?: string | null
           success?: boolean
         }
         Relationships: [
@@ -252,11 +261,13 @@ export type Database = {
         Row: {
           declaration: string
           email: string
+          email_history: Json
           full_name: string
           handling_status: string
           id: string
           internal_notes: string
           matched_order_id: string | null
+          operator_email_claimed_at: string | null
           order_reference: string
           processed_at: string | null
           received_at: string
@@ -267,11 +278,13 @@ export type Database = {
         Insert: {
           declaration: string
           email: string
+          email_history?: Json
           full_name: string
           handling_status?: string
           id?: string
           internal_notes?: string
           matched_order_id?: string | null
+          operator_email_claimed_at?: string | null
           order_reference: string
           processed_at?: string | null
           received_at?: string
@@ -282,11 +295,13 @@ export type Database = {
         Update: {
           declaration?: string
           email?: string
+          email_history?: Json
           full_name?: string
           handling_status?: string
           id?: string
           internal_notes?: string
           matched_order_id?: string | null
+          operator_email_claimed_at?: string | null
           order_reference?: string
           processed_at?: string | null
           received_at?: string

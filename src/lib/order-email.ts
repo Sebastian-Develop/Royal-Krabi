@@ -1,7 +1,7 @@
 import { contractAcceptanceNotice } from "./purchase-rules";
 import { formatCents as eur } from "./money";
 import { legalTextsFor } from "./legal-texts";
-import { contact, withdrawalEmail } from "./contact";
+import { contact, withdrawalEmail, operatorCaseUrl } from "./contact";
 import { brandEmailHtml, emailBlocks } from "./application-email";
 
 export interface EmailAttachment {
@@ -11,26 +11,37 @@ export interface EmailAttachment {
 }
 
 /** Versand über Resend – gleiches Muster wie das Bewerbungsformular, mit Anhängen und Textversion. */
-export async function sendOrderEmail(opts: { to: string; subject: string; html: string; text?: string; replyTo?: string; attachments?: EmailAttachment[]; idempotencyKey?: string }): Promise<boolean> {
+export type OrderMailOptions = { to: string; subject: string; html: string; text?: string; replyTo?: string; attachments?: EmailAttachment[]; idempotencyKey?: string };
+export type MailOutcome = { accepted: boolean; providerId: string | null; status: "accepted" | "failed" | "uncertain"; error: string | null };
+export async function sendOrderEmailResult(opts: OrderMailOptions): Promise<MailOutcome> {
   const key = process.env["RESEND_API_KEY"];
-  if (!key) { console.error("[order-email] RESEND_API_KEY fehlt."); return false; }
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", ...(opts.idempotencyKey ? { "Idempotency-Key": opts.idempotencyKey } : {}) },
-    body: JSON.stringify({
-      from: process.env["RESEND_SHOP_FROM"] || process.env["RESEND_FROM"] || "Royal Krabi Shop <shop@royalkrabi-thaimassage.de>",
-      to: [opts.to],
-      reply_to: opts.replyTo ?? contact.email,
-      subject: opts.subject,
-      html: opts.html,
-      ...(opts.text ? { text: opts.text } : {}),
-      ...(opts.attachments?.length
-        ? { attachments: opts.attachments.map(a => ({ filename: a.filename, content: a.contentBase64 })) }
-        : {}),
-    }),
-  });
-  if (!res.ok) { console.error(`[order-email] Versand fehlgeschlagen [${res.status}]: ${await res.text()}`); return false; }
-  return true;
+  if (!key) return { accepted: false, providerId: null, status: "failed", error: "Resend ist nicht konfiguriert." };
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", ...(opts.idempotencyKey ? { "Idempotency-Key": opts.idempotencyKey } : {}) },
+      body: JSON.stringify({
+        from: process.env["RESEND_SHOP_FROM"] || process.env["RESEND_FROM"] || "Royal Krabi Shop <shop@royalkrabi-thaimassage.de>",
+        to: [opts.to], reply_to: opts.replyTo ?? contact.email, subject: opts.subject, html: opts.html,
+        ...(opts.text ? { text: opts.text } : {}),
+        ...(opts.attachments?.length ? { attachments: opts.attachments.map(a => ({ filename: a.filename, content: a.contentBase64 })) } : {}),
+      }),
+    });
+    if (!res.ok) {
+      // A definite 4xx rejection is retryable; network/5xx outcomes stay locked.
+      console.error(`[order-email] Anbieterfehler [${res.status}]: ${await res.text()}`);
+      return { accepted: false, providerId: null, status: res.status >= 500 || res.status === 408 ? "uncertain" : "failed", error: `Resend hat die Anfrage nicht bestätigt (HTTP ${res.status}).` };
+    }
+    const body = await res.json() as { id?: string };
+    if (!body.id) return { accepted: false, providerId: null, status: "uncertain", error: "Keine Anbieter-ID erhalten; Annahme unklar." };
+    return { accepted: true, providerId: body.id, status: "accepted", error: null };
+  } catch {
+    return { accepted: false, providerId: null, status: "uncertain", error: "Resend-Ergebnis unklar; vor Wiederholung beim Anbieter prüfen." };
+  }
+}
+/** Compatibility for existing customer/PDF sends: the provider contract remains unchanged. */
+export async function sendOrderEmail(opts: OrderMailOptions): Promise<boolean> {
+  return (await sendOrderEmailResult(opts)).accepted;
 }
 
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
@@ -137,6 +148,6 @@ export function operatorEmail(order: EmailOrder, lines: EmailLine[]): { subject:
 <p><b>Bestellnummer:</b> ${esc(order.id)}</p>
 <p><b>Bestellung eingegangen am:</b> ${berlinDateTime(order.createdAt)}${order.paidAt ? `<br><b>Zahlung bestätigt am:</b> ${berlinDateTime(order.paidAt)}` : ""}</p>
 <table>${([["Name", order.fullName], ["E-Mail", order.email], ["Telefon", order.phone], ["Lieferart", order.delivery === "none" ? "Keine Lieferung (Testkauf)" : order.delivery === "post" ? `DHL-Versand: ${order.street}, ${order.postalCode} ${order.city}` : "Abholung"], ["Empfänger", order.recipient || "-"], ["Geschenktext", order.giftText || "-"], ["Anmerkungen", order.notes || "-"]] as [string, string][]).map(([k, v]) => `<tr><td><b>${k}:</b></td><td>${esc(v)}</td></tr>`).join("")}</table>
-${linesTable(lines)}${totalsBlock(order, lines)}`,
+${linesTable(lines)}${totalsBlock(order, lines)}<p><a href="${operatorCaseUrl("order", order.id)}">Bestellung bearbeiten</a></p>`,
   };
 }

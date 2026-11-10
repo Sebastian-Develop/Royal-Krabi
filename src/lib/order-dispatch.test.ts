@@ -8,7 +8,7 @@ function fixture(delivery = "post") {
   const items = [{ product_name: "Massagegutschein", product_kind: "voucher", quantity: 1 }];
   const repo: DispatchRepository = {
     async load() { return { order: { ...order }, items }; },
-    async claim(_id, record) { if (order.dispatch) return false; order.dispatch = { ...record }; return true; },
+    async claim(_id, record, previous) { if (previous ? JSON.stringify(order.dispatch) !== JSON.stringify(previous) : Boolean(order.dispatch)) return false; order.dispatch = { ...record }; return true; },
     async finish(_id, record) { order.dispatch = { ...record }; },
   };
   return { order, items, repo, input: async () => ({ id, previewToken: await dispatchPreviewToken(dispatchMessage(order, items)) }) };
@@ -46,6 +46,7 @@ test("changed recipient invalidates the reviewed message before any action", asy
 test("digital and pickup fulfillment use their actual mode, not postal dispatch", async () => {
   for (const mode of ["digital", "pickup"]) {
     const f = fixture(mode);
+    if (mode === "digital") f.order.digital_provision_url = "https://royalkrabi-thaimassage.de/secure-test-provision";
     const result = await performDispatch(f.repo, await f.input(), "operator", async () => true);
     expect(result.record?.mode).toBe(mode);
   }
@@ -91,4 +92,25 @@ test("database claim failure never sends a customer message", async () => {
   f.repo.claim = async () => { throw new Error("database unavailable"); };
   await expect(performDispatch(f.repo, await f.input(), "operator", async () => { calls++; return true; })).rejects.toThrow("database unavailable");
   expect(calls).toBe(0);
+});
+test("digital delivery without a real provision route never claims or sends", async () => {
+  const f = fixture("digital"); let calls = 0;
+  await expect(performDispatch(f.repo, { id, previewToken: "a".repeat(64) }, "operator", async () => { calls++; return true; })).rejects.toThrow("Bereitstellungsweg");
+  expect(calls).toBe(0); expect(f.order.dispatch).toBeNull();
+});
+test("explicit retry of a definite rejection is claimed once and retains fulfillment", async () => {
+  const f = fixture(); const input = await f.input();
+  await performDispatch(f.repo, input, "operator", async () => false);
+  const when = f.order.dispatch?.fulfilledAt; let calls = 0;
+  await Promise.all(Array.from({ length: 10 }, () => performDispatch(f.repo, { ...input, retry: true }, "operator", async () => { calls++; return { accepted: true, providerId: "simulated-provider-id", status: "accepted", error: null }; })));
+  expect(calls).toBe(1); expect(f.order.dispatch?.fulfilledAt).toBe(when);
+  expect(f.order.dispatch?.history?.length).toBe(2); expect(f.order.dispatch?.providerId).toBe("simulated-provider-id");
+  await performDispatch(f.repo, { ...input, retry: true }, "operator", async () => { calls++; return true; });
+  expect(calls).toBe(1);
+});
+test("uncertain provider outcome cannot be retried even with explicit request", async () => {
+  const f = fixture(); const input = await f.input(); let calls = 0;
+  await performDispatch(f.repo, input, "operator", async () => ({ accepted: false, providerId: null, status: "uncertain", error: "timeout" }));
+  await performDispatch(f.repo, { ...input, retry: true }, "operator", async () => { calls++; return true; });
+  expect(calls).toBe(0); expect(f.order.dispatch?.emailStatus).toBe("uncertain");
 });

@@ -86,10 +86,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     return view === "website" || view === "coming-soon" ? { ansicht: view } : {};
   },
   beforeLoad: ({ location, search }) => {
-    if (location.pathname.startsWith("/lovable/")) return { publicLaunch: false, launchShell: false };
+    const previewTestMode = getPreviewTestMode();
+    if (location.pathname.startsWith("/lovable/")) return { publicLaunch: false, launchShell: false, previewTestMode };
     const publicLaunch = getPublicLaunchMode();
     if (publicLaunch && !isLaunchPage(location.pathname) && !isOperatorPage(location.pathname)) throw redirect({ to: "/", search: {} });
-    return { publicLaunch, launchShell: publicLaunch || search.ansicht === "coming-soon" || (launch.publicComingSoon && publicLaunch && location.pathname === "/" && search.ansicht !== "website") };
+    return { publicLaunch, previewTestMode, launchShell: publicLaunch || search.ansicht === "coming-soon" || (launch.publicComingSoon && publicLaunch && location.pathname === "/" && search.ansicht !== "website") };
   },
   head: () => ({
     meta: [
@@ -128,12 +129,12 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient, launchShell } = Route.useRouteContext();
+  const { queryClient, launchShell, previewTestMode } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
       {launchShell ? <LaunchHeader/> : <SiteHeader />}
-      {getPreviewTestMode() && <aside className="border-b border-primary bg-background px-4 py-3 text-center text-sm font-semibold text-primary" role="note">{previewPaymentWarning}</aside>}
+      {previewTestMode && <aside className="border-b border-primary bg-background px-4 py-3 text-center text-sm font-semibold text-primary" role="note">{previewPaymentWarning}</aside>}
       <Outlet />
       {launchShell ? <LaunchFooter/> : <><SiteFooter /><CookieBanner /><TidioLoader /><GoldCursor /></>}
     </QueryClientProvider>

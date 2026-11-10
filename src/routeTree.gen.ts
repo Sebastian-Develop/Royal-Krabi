@@ -27,6 +27,7 @@ import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as MassagenPreiseRouteImport } from './routes/massagen-preise'
 import { Route as OnlineBuchenRouteImport } from './routes/online-buchen'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermineRouteImport } from './routes/termine'
@@ -131,6 +132,11 @@ const OnlineBuchenRoute = OnlineBuchenRouteImport.update({
   path: '/online-buchen',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -216,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/kontakt': typeof KontaktRoute
   '/massagen-preise': typeof MassagenPreiseRoute
   '/online-buchen': typeof OnlineBuchenRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/termine': typeof TermineRoute
@@ -249,6 +256,7 @@ export interface FileRoutesByTo {
   '/kontakt': typeof KontaktRoute
   '/massagen-preise': typeof MassagenPreiseRoute
   '/online-buchen': typeof OnlineBuchenRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/termine': typeof TermineRoute
@@ -283,6 +291,7 @@ export interface FileRoutesById {
   '/kontakt': typeof KontaktRoute
   '/massagen-preise': typeof MassagenPreiseRoute
   '/online-buchen': typeof OnlineBuchenRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/termine': typeof TermineRoute
@@ -318,6 +327,7 @@ export interface FileRouteTypes {
     | '/kontakt'
     | '/massagen-preise'
     | '/online-buchen'
+    | '/reset-password'
     | '/shop'
     | '/sitemap.xml'
     | '/termine'
@@ -351,6 +361,7 @@ export interface FileRouteTypes {
     | '/kontakt'
     | '/massagen-preise'
     | '/online-buchen'
+    | '/reset-password'
     | '/shop'
     | '/sitemap.xml'
     | '/termine'
@@ -384,6 +395,7 @@ export interface FileRouteTypes {
     | '/kontakt'
     | '/massagen-preise'
     | '/online-buchen'
+    | '/reset-password'
     | '/shop'
     | '/sitemap.xml'
     | '/termine'
@@ -418,6 +430,7 @@ export interface RootRouteChildren {
   KontaktRoute: typeof KontaktRoute
   MassagenPreiseRoute: typeof MassagenPreiseRoute
   OnlineBuchenRoute: typeof OnlineBuchenRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermineRoute: typeof TermineRoute
@@ -561,6 +574,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnlineBuchenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
@@ -674,6 +694,7 @@ const rootRouteChildren: RootRouteChildren = {
   KontaktRoute: KontaktRoute,
   MassagenPreiseRoute: MassagenPreiseRoute,
   OnlineBuchenRoute: OnlineBuchenRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermineRoute: TermineRoute,

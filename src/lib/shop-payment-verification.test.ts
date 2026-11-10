@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { verifyStoredPayment } from "./shop-payment.server";
+import { operatorNotificationEmail } from "./contact";
 
 /** In-memory database and HTTP stubs only; no real orders, provider requests or emails. */
 function fixture() {
@@ -22,11 +23,12 @@ test("independent callback processing pays once and sends one email per recipien
   const originalFetch = globalThis.fetch;
   const originalKey = process.env.RESEND_API_KEY;
   let emails = 0;
+  const payloads: { to: string[]; html: string; subject: string }[] = [];
   process.env.RESEND_API_KEY = "mock-key";
-  globalThis.fetch = (async (input: string | URL | Request) => {
+  globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
     const url = String(input);
     if (url.startsWith("https://api.sumup.com/")) return Response.json({ id: "checkout-1", checkout_reference: "order-1", amount: 0.8, currency: "EUR", status: "PAID" });
-    if (url === "https://api.resend.com/emails") { emails++; return Response.json({ id: "mock-email" }); }
+    if (url === "https://api.resend.com/emails") { emails++; payloads.push(JSON.parse(String(init?.body))); return Response.json({ id: "mock-email" }); }
     return new Response("", { status: 404 });
   }) as typeof fetch;
   try {
@@ -35,6 +37,10 @@ test("independent callback processing pays once and sends one email per recipien
     expect(f.order.status).toBe("paid");
     expect(f.attempt.status).toBe("PAID");
     expect(emails).toBe(2);
+    expect(operatorNotificationEmail).toBe("j.rudklang@royalkrabi-thaimassage.de");
+    expect(payloads.filter(p => p.to[0] === operatorNotificationEmail).length).toBe(1);
+    expect(payloads.find(p => p.to[0] === operatorNotificationEmail)?.html).toContain("https://royalkrabi-thaimassage.de/verwaltung/widerrufe?order=order-1");
+    expect(payloads.some(p => p.subject.includes("versendet") || p.subject.includes("bereitgestellt"))).toBe(false);
     expect(f.order.paid_email_sent_at).toBeString();
   } finally { globalThis.fetch = originalFetch; if (originalKey === undefined) delete process.env.RESEND_API_KEY; else process.env.RESEND_API_KEY = originalKey; }
 });

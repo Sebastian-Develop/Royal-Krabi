@@ -47,7 +47,7 @@ export function isLaunchPage(path: string) {
 }
 
 /** Public login shell only; all operator data operations independently require an admin role. */
-export const isOperatorPage = (path: string) => path === "/verwaltung/widerrufe";
+export const isOperatorPage = (path: string) => ["/verwaltung/widerrufe", "/reset-password"].includes(path);
 
 /** Only explicitly supplied withdrawal RPC paths bypass launch presentation, never other server functions. */
 export const isWithdrawalRpcPath = (path: string, allowed: readonly string[]) => allowed.includes(path);

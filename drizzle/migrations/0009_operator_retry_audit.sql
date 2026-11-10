@@ -1,0 +1,2 @@
+ALTER TABLE public.shop_email_events ADD COLUMN IF NOT EXISTS retry_claimed_at timestamptz;
+CREATE OR REPLACE FUNCTION public.audit_withdrawal_handling() RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$ BEGIN IF NEW.handling_status IS DISTINCT FROM OLD.handling_status OR NEW.internal_notes IS DISTINCT FROM OLD.internal_notes THEN NEW.updated_at = now(); NEW.updated_by = auth.uid(); IF NEW.handling_status = 'processed' THEN NEW.processed_at = COALESCE(OLD.processed_at, now()); ELSE NEW.processed_at = NULL; END IF; END IF; RETURN NEW; END; $$;
