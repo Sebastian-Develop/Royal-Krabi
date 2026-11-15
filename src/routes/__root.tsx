@@ -13,7 +13,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { CookieBanner, SiteFooter, SiteHeader, TidioLoader } from "../components/site";
+import { SiteFooter, SiteHeader } from "../components/site";
 import { GoldCursor } from "../components/gold-cursor";
 import { LaunchFooter, LaunchHeader } from "../components/coming-soon";
 import { getPreviewTestMode } from "../lib/preview-test-mode";
@@ -136,7 +136,7 @@ function RootComponent() {
       {launchShell ? <LaunchHeader/> : <SiteHeader />}
       {previewTestMode && <aside className="border-b border-primary bg-background px-4 py-3 text-center text-sm font-semibold text-primary" role="note">{previewPaymentWarning}</aside>}
       <Outlet />
-      {launchShell ? <LaunchFooter/> : <><SiteFooter /><CookieBanner /><TidioLoader /><GoldCursor /></>}
+      {launchShell ? <LaunchFooter/> : <><SiteFooter /><GoldCursor /></>}
     </QueryClientProvider>
   );
 }

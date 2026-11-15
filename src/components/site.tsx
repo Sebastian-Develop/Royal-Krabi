@@ -15,7 +15,6 @@ function useAnsicht(): { ansicht?: "website" | "coming-soon" } {
 import { SocialLinks } from "./social-links";
 import { contact, mailHref, mailHrefPlain, mapsRouteHint, mapsRouteUrl } from "@/lib/contact";
 import { vatNotice, vatNoticeCautious } from "@/lib/content";
-import { CONSENT_EVENT, loadTidio, readConsent, saveConsent } from "@/lib/consent";
 
 export const address = `${contact.street}, ${contact.city}`;
 
@@ -115,43 +114,4 @@ export function Notice({ children }: { children: ReactNode }) { return <div clas
 /** Subtle VAT note placed directly beneath every displayed price list. `cautious` uses the wording for not-yet-classified value vouchers. */
 export function PriceVatNotice({ align = "start", cautious = false }: { align?: "start" | "center"; cautious?: boolean }) {
   return <p className={`price-vat-notice${align === "center" ? " price-vat-center" : ""}`}>{cautious ? vatNoticeCautious : vatNotice}</p>;
-}
-
-export function openCookieSettings() { window.dispatchEvent(new Event("rk-open-cookies")); }
-
-/** Lädt Tidio nur, wenn eine gespeicherte Zustimmung vorliegt (einmalig, auch bei Seitenwechseln). */
-export function TidioLoader() {
-  useEffect(() => {
-    const sync = () => { if (readConsent()?.chat) loadTidio(); };
-    sync(); window.addEventListener(CONSENT_EVENT, sync);
-    return () => window.removeEventListener(CONSENT_EVENT, sync);
-  }, []);
-  return null;
-}
-
-export function ChatPlaceholder() {
-  const [chat, setChat] = useState<boolean | null>(null);
-  useEffect(() => {
-    const sync = () => setChat(readConsent()?.chat === true);
-    sync(); window.addEventListener(CONSENT_EVENT, sync);
-    return () => window.removeEventListener(CONSENT_EVENT, sync);
-  }, []);
-  if (chat) return null;
-  return <div className="chat-placeholder"><p>Für den Live-Chat wird Tidio geladen. Dabei werden Daten an Tidio übermittelt.</p><button className="btn btn-outline" onClick={() => saveConsent({ chat: true })}>Tidio-Chat aktivieren</button></div>;
-}
-
-export function CookieBanner() {
-  const [show, setShow] = useState(false);
-  const [chat, setChat] = useState(false);
-  const ansicht = useAnsicht();
-  useEffect(() => {
-    const c = readConsent();
-    if (!c) setShow(true);
-    const open = () => { setChat(readConsent()?.chat === true); setShow(true); };
-    window.addEventListener("rk-open-cookies", open);
-    return () => window.removeEventListener("rk-open-cookies", open);
-  }, []);
-  const save = (value: boolean) => { setShow(false); saveConsent({ chat: value }); };
-  if (!show) return null;
-  return <div className="cookie-banner" role="dialog" aria-label="Datenschutzeinstellungen"><p><strong>Datenschutzeinstellungen</strong><br/>Technisch notwendig ist nur die Speicherung Ihrer Auswahl in Ihrem Browser. Den Live-Chat von Tidio laden wir ausschließlich mit Ihrer Zustimmung. Mehr in der <Link to="/datenschutz" search={ansicht}>Datenschutzerklärung</Link>.</p><label><input type="checkbox" checked={chat} onChange={(e) => setChat(e.target.checked)}/><span>Live-Chat (Tidio)</span></label><div className="cookie-actions"><button className="btn btn-gold" onClick={() => save(true)}>Alle akzeptieren</button><button className="btn btn-outline" onClick={() => save(false)}>Alle ablehnen</button><button className="btn btn-outline" onClick={() => save(chat)}>Auswahl speichern</button></div></div>;
 }

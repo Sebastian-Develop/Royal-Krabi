@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { UtensilsCrossed, Sparkles, Flower2, CalendarHeart, MapPin, Phone, Mail, MessageCircle, Share2, Clock } from "lucide-react";
 import receptionA from "@/assets/royal-krabi-reception-clean.jpg.asset.json";
 import receptionB from "@/assets/royal-krabi-reception-2.webp.asset.json";
 import { contact, mapsRouteUrl, mapsRouteHint } from "@/lib/contact";
 import { OpeningDiscountNotice } from "./opening-discount-notice";
-import { FlyerModal } from "./flyer-popup";
 import { openingEvent as ev, whatsappContactHref, whatsappShareHref } from "@/lib/opening-event";
 
 const icons = { snacks: UtensilsCrossed, dance: Sparkles, studio: Flower2, advice: CalendarHeart };
@@ -12,7 +10,6 @@ const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
 
 /** Reusable opening invitation; can later be placed on the full home page unchanged. */
 export function OpeningInvitation() {
-  const [flyerOpen, setFlyerOpen] = useState(false);
   return <div className="opening">
     <section className="opening-hero" aria-labelledby="opening-title">
       <p className="opening-brand">{contact.name}</p>
@@ -26,7 +23,7 @@ export function OpeningInvitation() {
       <p className="opening-location"><MapPin size={17}/> {ev.location}</p>
       <div className="opening-actions">
         <a href="#programm" className="btn btn-gold">Das erwartet Sie</a>
-        <button type="button" className="btn btn-outline" onClick={() => setFlyerOpen(true)}>Flyer ansehen</button>
+        <a href="/flyer" className="btn btn-outline">Flyer ansehen</a>
         <a href={mapsRouteUrl} {...ext} aria-label={mapsRouteHint} className="btn btn-outline">Anfahrt planen</a>
       </div>
     </section>
@@ -70,9 +67,8 @@ export function OpeningInvitation() {
     <section className="opening-section" aria-label="Einladung teilen">
       <div className="opening-share-actions">
         <a href={whatsappShareHref} {...ext} className="btn btn-gold"><Share2 size={17}/><span>Familie & Freunde per WhatsApp einladen</span></a>
-        <button type="button" className="btn btn-outline" onClick={() => setFlyerOpen(true)}>Flyer ansehen</button>
+        <a href="/flyer" className="btn btn-outline">Flyer ansehen</a>
       </div>
     </section>
-    {flyerOpen && <FlyerModal onClose={() => setFlyerOpen(false)}/>}
   </div>;
 }
